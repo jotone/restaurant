@@ -9,8 +9,8 @@ class MealDish extends Model
 	protected $table = 'meal_dishes';
 	public $fillable = [
 		'title','slug','category_id','img_url','model_3d',
-		'price','dish_weight','calories','ingredients','cooking_time','is_recommended',
-		'views', 'enabled'
+		'price','dish_weight','calories','text','cooking_time','is_recommended',
+		'views','enabled'
 	];
 
 	public function category(){

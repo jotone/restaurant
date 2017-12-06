@@ -23,7 +23,7 @@ class CreateMealDishesTable extends Migration
 			$table->string('price')->nullable();
 			$table->double('dish_weight',10,3)->nullable();
 			$table->double('calories',10,3)->nullable();
-			$table->text('ingredients')->nullable();
+			$table->text('text')->nullable();
 			$table->string('cooking_time')->nullable();
 			$table->boolean('is_recommended')->unsigned();
 			$table->integer('views')->unsigned()->default(0);
