@@ -56,15 +56,14 @@ Route::group(['middleware' => 'admin', 'prefix'=>'/admin', 'as'=>'admin.', 'name
 		Route::delete('/category/{category}', 'CategoriesController@destroy')->name('category.destroy');
 
 
-	//News
-	Route::resource('/news', 'NewsController');
-		Route::get('/news/get_tag/{tag}', 'NewsController@getTag');
+	//Dishes
+	Route::resource('/restaurant/menu/dish', 'MealDishController');
+	Route::post('/restaurant/menu/dish/create_model_file', 'MealDishController@create_model_file');
+	//Dish Menus
+	Route::resource('/restaurant/menu', 'MealMenuController');
+	//Restaurants
+	Route::resource('/restaurant', 'RestaurantController');
 
-
-	//Products
-	Route::resource('/products','ProductController');
-	//Promotions
-	Route::resource('/promo', 'PromoController');
 
 	//Comments
 	Route::resource('/comments', 'CommentsController', ['except' => ['create','store']]);
