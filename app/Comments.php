@@ -11,6 +11,6 @@ class Comments extends Model
 		'user_id', 'type', 'post_id', 'refer_to_comment', 'text'
 	];
 	public function user(){
-		return $this->belongsTo('App\User');
+		return $this->belongsTo('App\Visitors');
 	}
 }
