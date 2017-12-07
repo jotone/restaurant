@@ -28,7 +28,9 @@ class CreateRestaurantsTable extends Migration
 			$table->text('rating')->nullable();
 			$table->integer('views')->unsigned()->default(0);
 			$table->boolean('enabled')->unsigned();
-			$table->integer('category_id');
+			$table->text('category_id');
+			$table->integer('created_by')->unsigned();
+			$table->integer('updated_by')->unsigned();
 			$table->timestamps();
 		});
 	}

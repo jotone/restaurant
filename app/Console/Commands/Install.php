@@ -172,50 +172,37 @@ class Install extends Command
 				'position'	=> 3
 			],
 			[
-				'title'		=> 'News',
-				'slug'		=> 'news',
+				'title'		=> 'Restaurants',
+				'slug'		=> 'restaurant',
 				'options'	=> json_encode([
 					'category_type'	=> 0,
 					'category_multiselect'=> 0,
 					'slider'		=> 1,
-					'description'	=>1,
 					'text'			=>1,
-					'tags'			=>1,
-					'meta_data'		=>1,
-					'seo_data'		=>1
 				]),
 				'type'		=> 'settings',
 				'position'	=> 0
 			],
 			[
-				'title'		=> 'Products',
-				'slug'		=> 'products',
+				'title'		=> 'Meal Menu',
+				'slug'		=> 'meal_menu',
 				'options'	=> json_encode([
 					'category_type'	=> 0,
 					'category_multiselect	'=> 0,
-					'vendor_code'	=> 1,
-					'quantity'		=> 1,
 					'slider'		=> 1,
-					'description'	=> 1,
 					'text'			=> 1,
-					'tags'			=> 1,
-					'meta_data'		=> 1,
-					'seo_data'		=> 1,
-					'characteristics_table'	=> 1,
-					'default_characteristics'	=> ''
 				]),
 				'type'		=> 'settings',
 				'position'	=> 1
 			],
 			[
-				'title'		=> 'Promotions',
-				'slug'		=> 'promo',
+				'title'		=> 'Dishes',
+				'slug'		=> 'dish',
 				'options'	=> json_encode([
+					'category_type'	=> 0,
+					'category_multiselect	'=> 0,
 					'slider'		=> 1,
-					'description'	=> 1,
 					'text'			=> 1,
-					'meta_data'		=> 1,
-					'seo_data'		=> 1
 				]),
 				'type'		=> 'settings',
 				'position'	=> 2

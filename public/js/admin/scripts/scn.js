@@ -12,9 +12,38 @@ function goTo(href){
 	$(scroller).animate({scrollTop:target},500);
 }
 
+function rus2translit(str){
+	str = str.trim();
+	var converter = {
+		'а':'a',	'б':'b',	'в':'v',	'г':'g',	'д':'d',	'е':'e',
+		'ё':'e',	'ж':'zh',	'з':'z',	'и':'i',	'й':'j',	'к':'k',
+		'л':'l',	'м':'m',	'н':'n',	'о':'o',	'п':'p',	'р':'r',
+		'с':'s',	'т':'t',	'у':'u',	'ф':'f',	'х':'h',	'ц':'ts',
+		'ч':'ch',	'ш':'sh',	'щ':'shch',	'ь':'',		'ы':'y',	'ъ':'',
+		'э':'e',	'ю':'yu',	'я':'ya',	'і':'i',	'ї':'i',	'є':'ie',
+		'А':'A',	'Б':'B',	'В':'V',	'Г':'G',	'Д':'D',	'Е':'E',
+		'Ё':'E',	'Ж':'Zh',	'З':'Z',	'И':'I',	'Й':'J',	'К':'K',
+		'Л':'L',	'М':'M',	'Н':'N',	'О':'O',	'П':'P',	'Р':'R',
+		'С':'S',	'Т':'T',	'У':'U',	'Ф':'F',	'Х':'H',	'Ц':'Ts',
+		'Ч':'Ch',	'Ш':'Sh',	'Щ':'Shch',	'Ь':'',		'Ы':'Y',	'Ъ':'',
+		'Э':'E',	'Ю':'Yu',	'Я':'Ya',	'І':'I',	'Ї':'I',	'Є':'Ie'
+	};
+	str = str.split('');
+	var result = '';
+	for(var char in str){
+		if(converter[str[char]] != undefined){
+			result += converter[str[char]];
+		}else{
+			result += str[char];
+		}
+	}
+	return result;
+}
+
 function str2url(str){
+	str = rus2translit(str);
 	str = str.toLowerCase();
-	str = str.replace(/[^-a-z0-9_\/\.\#]/g, '_');
+	str = str.replace(/[^-a-z0-9_\.\#]/g, '_');
 	return str;
 }
 
@@ -316,29 +345,16 @@ $(document).ready(function(){
 //CKE replace
 	CKEDITOR.replaceAll('needCKE');
 
-	$('form .needDatepick').datepicker({
-		language: {
-			days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-			daysShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-			daysMin: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
-			months: ['January','February','March','April','May','June', 'July','August','September','October','November','December'],
-			monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-			today: 'Today',
-			clear: 'Clear',
-			dateFormat: 'dd/mm/yyyy',
-			timeFormat: 'hh:ii aa',
-			firstDay: 0
-		}
-	});
+	$('form .needDatepick').datepicker();
 
 //Single image loader
 	//Browse click
 	$(document).on('click', 'button[name=fakeSingleImageLoad]',function(){
-		$(this).closest('.preview-image-controls').find('input[name=image]').trigger('click');
+		$(this).closest('.preview-image-controls').find('input[type=file]').trigger('click');
 	});
 
 	//User pick the image
-	$(document).on('change', '.preview-image input[name=image]', function(){
+	$(document).on('change', '.preview-image-controls input[type=file]', function(){
 		var reader = new FileReader();
 		var _this = $(this);
 		reader.onload = function(e){

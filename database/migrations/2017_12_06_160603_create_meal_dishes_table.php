@@ -17,7 +17,7 @@ class CreateMealDishesTable extends Migration
 			$table->increments('id');
 			$table->string('title');
 			$table->string('slug');
-			$table->integer('category_id')->unsigned();
+			$table->text('category_id');
 			$table->text('img_url')->nullable();
 			$table->text('model_3d')->nullable();
 			$table->string('price')->nullable();
@@ -28,6 +28,8 @@ class CreateMealDishesTable extends Migration
 			$table->boolean('is_recommended')->unsigned();
 			$table->integer('views')->unsigned()->default(0);
 			$table->boolean('enabled')->unsigned();
+			$table->integer('created_by')->unsigned();
+			$table->integer('updated_by')->unsigned();
 			$table->timestamps();
 		});
 	}

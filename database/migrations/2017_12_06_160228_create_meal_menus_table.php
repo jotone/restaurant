@@ -20,7 +20,9 @@ class CreateMealMenusTable extends Migration
 			$table->integer('restaurant_id')->unsigned();
 			$table->text('dishes')->nullable();
 			$table->boolean('enabled')->unsigned();
-			$table->integer('category_id')->unsigned();
+			$table->text('category_id');
+			$table->integer('created_by')->unsigned();
+			$table->integer('updated_by')->unsigned();
 			$table->timestamps();
 		});
 	}

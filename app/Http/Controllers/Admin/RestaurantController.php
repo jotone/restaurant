@@ -7,6 +7,7 @@ use App\MealMenu;
 use App\Restaurant;
 use App\Settings;
 
+use Auth;
 use App\Http\Controllers\AppController;
 use Illuminate\Http\Request;
 
@@ -38,16 +39,19 @@ class RestaurantController extends AppController
 			}
 
 			//Get restaurants from DB and paginate 'em
-			$restaurants = Restaurant::select('id','title','slug','logo_img','address','rating','views','created_at', 'updated_at')
-				->orderBy($sorting_settings['sort'], $sorting_settings['dir']);
+			$restaurants = Restaurant::select(
+				'id','title','slug','logo_img','address','rating','views',
+				'created_at','updated_by','created_at','updated_at'
+			)->orderBy($sorting_settings['sort'], $sorting_settings['dir']);
 
 			//run search request
 			if (isset($request_data['search']) && !empty(trim($request_data['search']))) {
 				$search = explode(' ', $request_data['search']);
 				foreach ($search as $word) {
-					$restaurants = $restaurants->where('id', 'LIKE', '%' . $word . '%')
-						->orWhere('title', 'LIKE', '%' . $word . '%')
-						->orWhere('address', 'LIKE', '%' . $word . '%');
+					$restaurants = $restaurants->where('id', 'LIKE', '%'.$word.'%')
+						->orWhere('title', 'LIKE', '%'.$word.'%')
+						->orWhere('slug', 'LIKE', '%'.$word.'%')
+						->orWhere('address', 'LIKE', '%'.$word.'%');
 				}
 			}
 			$restaurants = $restaurants->paginate(20);
@@ -55,6 +59,10 @@ class RestaurantController extends AppController
 			$content = [];
 			foreach($restaurants as $restaurant){
 				$menus = $restaurant->mealMenus()->select('id','title')->get();
+				//Get creator
+				$created_by = $restaurant->createdBy()->select('name','email')->first();
+				//Get updater
+				$updated_by = $restaurant->updatedBy()->select('name','email')->first();
 				$content[] = [
 					'id'		=> $restaurant->id,
 					'title'		=> $restaurant->title,
@@ -65,7 +73,13 @@ class RestaurantController extends AppController
 					'rating'	=> ($this->isJson($restaurant->rating))? json_decode($restaurant->rating): null,
 					'views'		=> $restaurant->views,
 					'created'	=> date('Y /m /d H:i', strtotime($restaurant->created_at)),
-					'updated'	=> date('Y /m /d H:i', strtotime($restaurant->updated_at))
+					'updated'	=> date('Y /m /d H:i', strtotime($restaurant->updated_at)),
+					'created_by'=> (!empty($created_by))
+									? ['name' => $created_by->name, 'email' => $created_by->email]
+									: [],
+					'updated_by'=> (!empty($updated_by))
+									? ['name' => $updated_by->name, 'email' => $updated_by->email]
+									: [],
 				];
 			}
 
@@ -96,10 +110,12 @@ class RestaurantController extends AppController
 
 			$menus = MealMenu::select('id','title')->where('enabled','=',1)->get();
 
-			//Get categories settings
-			$settings = Settings::select('category_type_id')->where('type','=','restaurant')->first();
+			//Get products settings
+			$settings = Settings::select('options')->where('slug','=','restaurant')->first()->toArray();
+			$settings = json_decode($settings['options']);
+
 			//Get available categories
-			$categories = Category::select('id','title')->where('category_type','=',$settings->category_type_id)->get();
+			$categories = Category::select('id','title')->where('category_type','=',$settings->category_type)->get();
 
 			return view('admin.add.restaurant', [
 				'start'			=> $start,
@@ -108,7 +124,7 @@ class RestaurantController extends AppController
 				'title'			=> 'Добавление ресторана',
 				'menus'			=> $menus,
 				'categories'	=> $categories,
-				'allow_categories'=> $settings->category_type_id
+				'settings'		=> $settings
 			]);
 		}
 	}
@@ -138,10 +154,11 @@ class RestaurantController extends AppController
 
 			$content = $this->getRestaurantContent($content);
 
-			//Get categories settings
-			$settings = Settings::select('category_type_id')->where('type','=','restaurant')->first();
+			//Get products settings
+			$settings = Settings::select('options')->where('slug','=','restaurant')->first()->toArray();
+			$settings = json_decode($settings['options']);
 			//Get available categories
-			$categories = Category::select('id','title')->where('category_type','=',$settings->category_type_id)->get();
+			$categories = Category::select('id','title')->where('category_type','=',$settings->category_type)->get();
 
 			return view('admin.add.restaurant', [
 				'start'			=> $start,
@@ -151,7 +168,7 @@ class RestaurantController extends AppController
 				'menus'			=> $menus,
 				'content'		=> $content,
 				'categories'	=> $categories,
-				'allow_categories'=> $settings->category_type_id
+				'settings'		=> $settings
 			]);
 		}
 	}
@@ -207,9 +224,11 @@ class RestaurantController extends AppController
 	 * @return \Illuminate\Http\RedirectResponse|string
 	 */
 	public function store(Request $request){
+		$user = Auth::user();
 		$temp = $this->processData($request);
 		$data	= $temp['data'];
 		$logo	= $temp['logo'];
+
 		$img_url= $temp['img_url'];
 
 		//If there are restaurants with such link
@@ -235,7 +254,9 @@ class RestaurantController extends AppController
 				'n'	=> $data['dislikes']
 			]),
 			'enabled'		=> $data['enabled'],
-			'category_id'	=> (isset($data['category_id']))? $data['category_id']: 0
+			'category_id'	=> $data['category'],
+			'created_by'		=> $user['id'],
+			'updated_by'		=> $user['id']
 		]);
 		if($result != false){
 			if(isset($data['menus'])){
@@ -257,6 +278,7 @@ class RestaurantController extends AppController
 	 * @return \Illuminate\Http\RedirectResponse|string
 	 */
 	public function update($id, Request $request){
+		$user = Auth::user();
 		$temp = $this->processData($request);
 		$data	= $temp['data'];
 		$logo	= $temp['logo'];
@@ -268,24 +290,25 @@ class RestaurantController extends AppController
 			: $data['slug'];
 
 		$result = Restaurant::find($id);
-		$result->title		= $data['title'];
-		$result->slug		= $data['slug'];
-		$result->logo_img	= $logo;
-		$result->img_url	= json_encode($img_url);
-		$result->text		= $data['text'];
-		$result->address	= $data['address'];
-		$result->work_time	= json_encode([
+		$result->title			= $data['title'];
+		$result->slug			= $data['slug'];
+		$result->logo_img		= $logo;
+		$result->img_url		= json_encode($img_url);
+		$result->text			= $data['text'];
+		$result->address		= $data['address'];
+		$result->work_time		= json_encode([
 			'begin'	=>$data['time_begin'],
 			'finish'=> $data['time_finish']
 		]);
-		$result->has_delivery= $data['has_delivery'];
-		$result->has_wifi	= $data['has_wifi'];
-		$result->rating		= json_encode([
+		$result->has_delivery	= $data['has_delivery'];
+		$result->has_wifi		= $data['has_wifi'];
+		$result->rating			= json_encode([
 			'p'	=> $data['likes'],
 			'n'	=> $data['dislikes']
 		]);
-		$result->enabled	= $data['enabled'];
-		$result->category_id=  (isset($data['category_id']))? $data['category_id']: 0;
+		$result->enabled		= $data['enabled'];
+		$result->category_id	= $data['category'];
+		$result->updated_by		= $user['id'];
 		$result->save();
 
 		if($result != false){
@@ -385,11 +408,22 @@ class RestaurantController extends AppController
 			//Create wi-fi flag
 			$data['has_wifi'] = (isset($data['has_wifi']) && ($data['has_wifi'] == 'on'))? 1: 0;
 		}
+
+		//Create Category
+		if(isset($data['category'])){
+			$data['category'] =(is_array($data['category']))
+				? json_encode($data['category'])
+				: '["'.$data['category'].'"]';
+		}else{
+			$data['category'] = '["0"]';
+		}
+
 		//Work time
 		if(!isset($data['time_begin']) || !isset($data['time_finish'])){
 			$data['time_begin'] = '00:00';
 			$data['time_finish'] = '00:00';
 		}
+
 		//Create rating
 		$data['likes'] = (isset($data['likes']) && !empty($data['likes']))? $data['likes']: 0;
 		$data['dislikes'] = (isset($data['dislikes']) && !empty($data['dislikes']))? $data['dislikes']: 0;
@@ -436,7 +470,7 @@ class RestaurantController extends AppController
 					}
 				}
 			}
-			//If image data was sent by form
+		//If image data was sent by form
 		}else if(!empty($request->file())){
 			foreach($request->file('images') as $image){
 				if($image->isValid()){

@@ -10,10 +10,18 @@ class MealDish extends Model
 	public $fillable = [
 		'title','slug','category_id','img_url','model_3d',
 		'price','dish_weight','calories','text','cooking_time','is_recommended',
-		'views','enabled'
+		'views','enabled','created_by','updated_by'
 	];
 
 	public function category(){
 		return $this->belongsTo('App\Category');
+	}
+
+	public function createdBy(){
+		return $this->belongsTo('App\User','created_by','id');
+	}
+
+	public function updatedBy(){
+		return $this->belongsTo('App\User','updated_by','id');
 	}
 }
