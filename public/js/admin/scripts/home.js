@@ -1,3 +1,9 @@
+function processStep(step){
+	for(var i = 0; i<=step; i++){
+		$('#step_'+i).show();
+	}
+}
+
 $(document).ready(function(){
 	$('button[name=send_phone]').click(function () {
 		var phone = $('input[name=phone]').val();
@@ -10,6 +16,7 @@ $(document).ready(function(){
 			},
 			success:function(data){
 				data = JSON.parse(data);
+				processStep(data.step);
 				$('input[name=id]').val(data.id);
 			}
 		});
@@ -26,8 +33,33 @@ $(document).ready(function(){
 				showError(jqXHR.responseText, 'PUT::/api/submit_sms_code/'+id);
 			},
 			success:function(data){
-				console.log(data);
+				data = JSON.parse(data);
+				processStep(data.step);
 			}
 		});
 	});
+
+	$('button[name=save]').click(function () {
+		var id = $('input[name=id]').val();
+		$.ajax({
+			url:	'/api/submit_profile/'+id,
+			type:	'PUT',
+			data:	{
+				email:		$('input[name=email]').val(),
+				name:		$('input[name=name]').val(),
+				surname:	$('input[name=surname]').val(),
+				pass:		$('input[name=password]').val(),
+				confirm:	$('input[name=confirm_password]').val()
+			},
+			error:	function(jqXHR){
+				showError(jqXHR.responseText, 'PUT::/api/submit_profile/'+id);
+			},
+			success:function(data){
+				data = JSON.parse(data);
+				if(data.step == 3){
+					alert("WELL DONE!!");
+				}
+			}
+		});
+	})
 });

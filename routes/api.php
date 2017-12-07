@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 });*/
 Route::group(['middleware'=>'api', 'namespace'=> 'Api'], function(){
 	//Registration
-	Route::post('/create_account', 'RegisterController@createAccount');
-	Route::put('/submit_sms_code/{id}', 'RegisterController@submitSmsCode');
+	Route::post('/create_account',		'RegisterController@createAccount');
+	Route::put('/submit_sms_code/{id}',	'RegisterController@submitSmsCode');
+	Route::put('/submit_profile/{id}',	'RegisterController@submitProfile');
 });

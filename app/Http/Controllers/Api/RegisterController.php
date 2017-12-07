@@ -10,6 +10,12 @@ use Illuminate\Support\Facades\Crypt;
 
 class RegisterController extends ApiController
 {
+	protected function sendSMStoUser(){
+		/*
+		 * SEND SMS TO USER
+		 */
+	}
+
 	/**
 	 * Create user Account with phone number
 	 * @param Request $request
@@ -33,9 +39,7 @@ class RegisterController extends ApiController
 						'sms_code'=>$code
 					]);
 
-					/*
-					 * SEND SMS TO USER
-					 */
+					$this->sendSMStoUser();
 
 					return response(json_encode([
 						'step'	=> 1,
@@ -50,7 +54,9 @@ class RegisterController extends ApiController
 				break;
 				case '2':
 					return response(json_encode([
-						'Такой пользователь уже существует.'
+						'input_error'	=> 1,
+						'type'			=> 'phone',
+						'message'		=> 'Такой пользователь уже существует.'
 					]), 400);
 				break;
 			}
@@ -63,9 +69,7 @@ class RegisterController extends ApiController
 			'sms_code'	=> $code
 		]);
 
-		/*
-		 * SEND SMS TO USER
-		 */
+		$this->sendSMStoUser();
 
 		return response(json_encode([
 			'step'	=> 1,
@@ -82,6 +86,7 @@ class RegisterController extends ApiController
 	public function submitSmsCode($id, Request $request){
 		$data = $request->all();
 		$id = Crypt::decrypt($id);
+		$data['sms'] = preg_replace('/\D+/', '', $data['sms']);
 		//If there is user with such ID and sms code
 		if(Visitors::where('id','=',$id)->where('sms_code','=',$data['sms'])->count() == 1){
 			$user = Visitors::find($id);
@@ -90,12 +95,61 @@ class RegisterController extends ApiController
 
 			return response(json_encode([
 				'step'	=> 2,
-				'id'	=> Crypt::encrypt($user->id)
+				'id'	=> $id
 			]), 201);
 		}else{
 			return response(json_encode([
-				'Код СМС не подтвержден.'
+				'input_error'	=> 1,
+				'type'			=> 'sms_code',
+				'message'		=> 'Код СМС не подтвержден.'
 			]), 400);
 		}
+	}
+
+	public function submitProfile($id, Request $request){
+		$data = $request->all();
+
+		foreach($data as $key => $val){
+			$data[$key] = trim($val);
+		}
+
+		if(strlen($data['pass']) < 6){
+			return response(json_encode([
+				'input_error'	=> 1,
+				'type'			=> 'pass',
+				'message'		=> 'Пароль должен содержать как минимум 6 символов'
+			]), 400);
+		}
+
+		if($data['pass'] != $data['confirm']){
+			return response(json_encode([
+				'input_error'	=> 1,
+				'type'			=> 'confirm',
+				'message'		=> 'Пароль не подтвержден'
+			]), 400);
+		}
+
+		if(Visitors::where('email','=',$data['email'])->count() > 0){
+			return response(json_encode([
+				'input_error'	=> 1,
+				'type'			=> 'email',
+				'message'		=> 'Пользователь с данной почтой уже существует'
+			]), 400);
+		}
+
+		$id = Crypt::decrypt($id);
+
+		$user = Visitors::find($id);
+		$user->name		= $data['name'];
+		$user->surname	= $data['surname'];
+		$user->email	= $data['email'];
+		$user->password	= md5($data['pass']);
+		$user->status	= 2;
+		$user->save();
+
+		return response(json_encode([
+			'step'	=> 3,
+			'id'	=> $id
+		]), 201);
 	}
 }
