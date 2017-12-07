@@ -2,7 +2,7 @@
 Auth::routes();
 Route::any('/logout', 'Auth\LoginController@logout')->name('logout');
 
-Route::get('/', 'Site\HomeController@index')->name('home');
+//Route::get('/', 'Site\HomeController@index')->name('home');
 
 /*Admin Block*/
 

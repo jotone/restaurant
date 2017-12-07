@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Crypt;
 
 class RegisterController extends ApiController
 {
+	/**
+	 * Create user Account with phone number
+	 * @param Request $request
+	 * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+	 */
 	public function createAccount(Request $request){
 		$phone = $request->input('phone');
 		//Drop all chars from phone
@@ -68,8 +73,29 @@ class RegisterController extends ApiController
 		]), 201);
 	}
 
-	public function submitSmsCode(Request $request){
+	/**
+	 * SMS Code acknowledge
+	 * @param $id
+	 * @param Request $request
+	 * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+	 */
+	public function submitSmsCode($id, Request $request){
 		$data = $request->all();
+		$id = Crypt::decrypt($id);
+		//If there is user with such ID and sms code
+		if(Visitors::where('id','=',$id)->where('sms_code','=',$data['sms'])->count() == 1){
+			$user = Visitors::find($id);
+			$user->status = 1;
+			$user->save();
 
+			return response(json_encode([
+				'step'	=> 2,
+				'id'	=> Crypt::encrypt($user->id)
+			]), 201);
+		}else{
+			return response(json_encode([
+				'Код СМС не подтвержден.'
+			]), 400);
+		}
 	}
 }
