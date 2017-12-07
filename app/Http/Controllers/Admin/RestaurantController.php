@@ -199,10 +199,11 @@ class RestaurantController extends AppController
 			$content = $this->getRestaurantContent($content);
 			unset($content->id);
 
-			//Get categories settings
-			$settings = Settings::select('category_type_id')->where('type','=','restaurant')->first();
+			//Get products settings
+			$settings = Settings::select('options')->where('slug','=','restaurant')->first()->toArray();
+			$settings = json_decode($settings['options']);
 			//Get available categories
-			$categories = Category::select('id','title')->where('category_type','=',$settings->category_type_id)->get();
+			$categories = Category::select('id','title')->where('category_type','=',$settings->category_type)->get();
 
 			return view('admin.add.restaurant', [
 				'start'			=> $start,
@@ -212,7 +213,7 @@ class RestaurantController extends AppController
 				'menus'			=> $menus,
 				'content'		=> $content,
 				'categories'	=> $categories,
-				'allow_categories'=> $settings->category_type_id
+				'settings'		=> $settings
 			]);
 		}
 	}
@@ -312,9 +313,14 @@ class RestaurantController extends AppController
 		$result->save();
 
 		if($result != false){
-			foreach($data['menus'] as $menu){
-				MealMenu::where('id','=',$menu)->update(['restaurant_id'=>$result->id]);
+			if(isset($data['menus'])){
+				foreach($data['menus'] as $menu){
+					MealMenu::where('id','=',$menu)->update(['restaurant_id'=>$result->id]);
+				}
+			}else{
+				MealMenu::where('restaurant_id','=',$result->id)->update(['restaurant_id'=>0]);
 			}
+
 			return (isset($data['ajax']))
 				? json_encode(['message'=>'success'])
 				: redirect()->route('admin.restaurant.index');
