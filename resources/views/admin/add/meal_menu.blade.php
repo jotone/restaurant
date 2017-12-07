@@ -64,7 +64,7 @@
 											<option value="{{ $category->id }}" @if(isset($content) && ($content->category_id == $category->id))selected="selected"@endif>{{ $category->title }}</option>
 										@endforeach
 									</select>
-									<span>Категория ресторана</span>
+									<span>Категория меню</span>
 								</label>
 							@else
 								<p>Отнести к категориям:</p>

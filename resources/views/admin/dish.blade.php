@@ -48,7 +48,7 @@
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=price&dir=desc') }}" class="desc fa fa-caret-down"></a>
 					</div>
 				</th>
-				<th>Инградиенты</th>
+				<th>Текст</th>
 				<th>Входит в меню</th>
 				<th>Рекомендовано
 					<div class="direction" id="is_recommended">
@@ -113,7 +113,7 @@
 							0
 						@endif
 					</td>
-					<td>{{ $item['ingredients'] }}</td>
+					<td>{{ $item['text'] }}</td>
 					<td>
 						@foreach($item['menus'] as $menu)
 							<p>
@@ -141,8 +141,20 @@
 						@endif
 					</td>
 					<td>{{ $item['views'] }}</td>
-					<td>{{ $item['created'] }}</td>
-					<td>{{ $item['updated'] }}</td>
+					<td>
+						<p>{{ $item['created'] }}</p>
+						@if(!empty($item['created_by']))
+							<p>{{ $item['created_by']['name'] }}</p>
+							<p>{{ $item['created_by']['email'] }}</p>
+						@endif
+					</td>
+					<td>
+						<p>{{ $item['updated'] }}</p>
+						@if(!empty($item['updated_by']))
+							<p>{{ $item['updated_by']['name'] }}</p>
+							<p>{{ $item['updated_by']['email'] }}</p>
+						@endif
+					</td>
 				</tr>
 			@endforeach
 			</tbody>

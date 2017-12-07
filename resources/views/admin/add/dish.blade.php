@@ -16,10 +16,10 @@
 				</div>
 
 				<form	name="mealDish"
-				         method="post"
-				         target="_self"
-				         action="@if(isset($content->id)){{ route('admin.dish.update', $content->id) }}@else{{ route('admin.dish.store') }}@endif"
-				         enctype="multipart/form-data">
+						method="post"
+						target="_self"
+						action="@if(isset($content->id)){{ route('admin.dish.update', $content->id) }}@else{{ route('admin.dish.store') }}@endif"
+						enctype="multipart/form-data">
 					{{ csrf_field() }}
 					@if(isset($content))
 						{{ method_field('PUT') }}
@@ -32,47 +32,65 @@
 							<label>
 								@if(!isset($content) || isset($content->id))
 									<input	name="title"
-									          class="input-text col_1_2"
-									          type="text"
-									          required="required"
-									          placeholder="Название&hellip;"
-									          value="@if(isset($content)){{ $content->title }}@endif">
+											class="input-text col_1_2"
+											type="text"
+											required="required"
+											placeholder="Название&hellip;"
+											value="@if(isset($content)){{ $content->title }}@endif">
 									<span>Название</span>
 								@else
 									<span>Название: {{ $content->title }}</span>
 								@endif
 							</label>
 						</div>
-						@if($allow_categories > 0)
+						@if($settings->category_type > 0)
 							<div class="row-wrap">
-								<label>
-									<select name="category_id" class="input-text" @if(isset($content) && !isset($content->id)) disabled="disabled" @endif>
-										<option value="0">Не относится</option>
+								@if($settings->category_multiselect == 0)
+									<label>
+										<select name="category" class="input-text" @if(isset($content) && !isset($content->id)) disabled="disabled" @endif>
+											<option value="0">Не относится</option>
+											@foreach($categories as $category)
+												<option value="{{ $category->id }}" @if(isset($content) && ($content->category_id == $category->id))selected="selected"@endif>{{ $category->title }}</option>
+											@endforeach
+										</select>
+										<span>Категория ресторана</span>
+									</label>
+								@else
+									<p>Отнести к категориям:</p>
+									<div class="checkbox-group-wrap">
 										@foreach($categories as $category)
-											<option value="{{ $category->id }}" @if(isset($content) && ($content->category_id == $category->id))selected="selected"@endif>{{ $category->title }}</option>
+											<div class="checkbox-group-item">
+												<label>
+													<input	name="category[]"
+															type="checkbox"
+															class="chbox-input"
+															value="{{ $category['id'] }}"
+															@if((isset($content)) && (in_array($category['id'], $content->category_id))) checked="checked" @endif>
+													<span>{{ $category['title'] }}</span>
+												</label>
+											</div>
 										@endforeach
-									</select>
-									<span>Категория блюда</span>
-								</label>
+									</div>
+								@endif
 							</div>
 						@endif
 						<div class="row-wrap">
 							<label>
 								<input	name="is_recommended"
-								          class="chbox-input"
-								          type="checkbox"
-								          @if(isset($content) && ($content->is_recommended == 1)) checked="checked" @endif
-									      @if(isset($content) && !isset($content->id)) disabled="disabled" @endif>
+										class="chbox-input"
+										type="checkbox"
+										@if(isset($content) && ($content->is_recommended == 1)) checked="checked" @endif
+										@if(isset($content) && !isset($content->id)) disabled="disabled" @endif>
 								<span>Отнести к рекомендованым</span>
 							</label>
 						</div>
 						<div class="row-wrap">
 							<label>
 								<input	name="enabled"
-								          class="chbox-input"
-								          type="checkbox"
-								          @if(isset($content) && ($content->enabled == 1)) checked="checked" @endif
-									      @if(isset($content) && !isset($content->id)) disabled="disabled" @endif>
+										class="chbox-input"
+										type="checkbox"
+										@if(isset($content) && ($content->enabled == 1)) checked="checked" @endif
+										@if(isset($content) && !isset($content->id)) disabled="disabled" @endif>
 								<span>Опубликовать</span>
 							</label>
 						</div>
@@ -84,11 +102,11 @@
 							<label>
 								@if(!isset($content) || isset($content->id))
 									<input	name="price"
-									          class="input-text col_1_2"
-									          type="text"
-									          placeholder="Цена&hellip;"
-									          pattern="[0-9\.,]+"
-									          value="@if(isset($content)){{ $content->price }}@endif">
+											class="input-text col_1_2"
+											type="text"
+											placeholder="Цена&hellip;"
+											pattern="[0-9\.,]+"
+											value="@if(isset($content)){{ $content->price }}@endif">
 									<span>Цена</span>
 								@else
 									<span>Цена: {{ $content->price }}</span>
@@ -99,11 +117,11 @@
 							<label>
 								@if(!isset($content) || isset($content->id))
 									<input	name="dish_weight"
-									          class="input-text col_1_2"
-									          type="text"
-									          placeholder="Вес&hellip;"
-									          pattern="[0-9\.,]+"
-									          value="@if(isset($content)){{ $content->dish_weight }}@endif">
+											class="input-text col_1_2"
+											type="text"
+											placeholder="Вес&hellip;"
+											pattern="[0-9\.,]+"
+											value="@if(isset($content)){{ $content->dish_weight }}@endif">
 									<span>Вес, Кг</span>
 								@else
 									<span>Вес: {{ $content->dish_weight }}, Кг</span>
@@ -114,11 +132,11 @@
 							<label>
 								@if(!isset($content) || isset($content->id))
 									<input	name="calories"
-									          class="input-text col_1_2"
-									          type="text"
-									          placeholder="Калории&hellip;"
-									          pattern="[0-9\.,]+"
-									          value="@if(isset($content)){{ $content->calories }}@endif">
+											class="input-text col_1_2"
+											type="text"
+											placeholder="Калории&hellip;"
+											pattern="[0-9\.,]+"
+											value="@if(isset($content)){{ $content->calories }}@endif">
 									<span>Калории, ККал/100 грамм</span>
 								@else
 									<span>Калории: {{ $content->calories }}, ККал/100 грамм</span>
@@ -129,10 +147,10 @@
 							<label>
 								@if(!isset($content) || isset($content->id))
 									<input	name="cooking_time"
-									          class="input-text col_1_2"
-									          type="text"
-									          placeholder="Время готовки&hellip;"
-									          value="@if(isset($content)){{ $content->cooking_time }}@endif">
+											class="input-text col_1_2"
+											type="text"
+											placeholder="Время готовки&hellip;"
+											value="@if(isset($content)){{ $content->cooking_time }}@endif">
 									<span>Время готовки, мин.</span>
 								@else
 									<span>Время готовки: {{ $content->cooking_time }}, мин.</span>
@@ -141,6 +159,7 @@
 						</div>
 					</fieldset>
 
+					@if($settings->slider == 1)
 					<fieldset>
 						<legend>Изображения</legend>
 						<div class="slider-wrap">
@@ -161,10 +180,10 @@
 													</div>
 													<div class="slide-alt-wrap">
 														<input	name="altText"
-														          type="text"
-														          class="input-text"
-														          value="{{ $image['alt'] }}"
-														          placeholder="Альтернативый текст&hellip;">
+																type="text"
+																class="input-text"
+																value="{{ $image['alt'] }}"
+																placeholder="Альтернативый текст&hellip;">
 														<span class="drop-image-icon fa fa-times"></span>
 													</div>
 												</div>
@@ -206,6 +225,7 @@
 							</div>
 						</div>
 					</fieldset>
+					@endif
 
 					<fieldset>
 						<legend>3d Модель</legend>
@@ -218,16 +238,18 @@
 						</div>
 					</fieldset>
 
+					@if($settings->text == 1)
 					<fieldset>
-						<legend>Инградиенты</legend>
+						<legend>Текст</legend>
 						<div class="row-wrap">
 							@if(!isset($content) || isset($content->id))
-								<textarea name="ingredients" class="text-area needCKE">@if(isset($content)){{ $content->ingredients }}@endif</textarea>
+								<textarea name="text" class="text-area needCKE">@if(isset($content)){{ $content->text }}@endif</textarea>
 							@else
-								@if(isset($content)){{ $content->ingredients }}@endif
+								@if(isset($content)){{ $content->text }}@endif
 							@endif
 						</div>
 					</fieldset>
+					@endif
 
 					<div class="form-button-wrap">
 						@if(!isset($content) || isset($content->id))

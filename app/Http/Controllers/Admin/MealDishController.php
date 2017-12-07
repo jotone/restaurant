@@ -5,9 +5,10 @@ use App\AdminMenu;
 use App\Category;
 use App\MealDish;
 use App\MealMenu;
-
-use App\Http\Controllers\AppController;
 use App\Settings;
+
+use Auth;
+use App\Http\Controllers\AppController;
 use Illuminate\Http\Request;
 
 class MealDishController extends AppController
@@ -39,8 +40,8 @@ class MealDishController extends AppController
 
 			//Get dishes from DB and paginate 'em
 			$dishes = MealDish::select(
-				'id','title','img_url','category_id','price','ingredients',
-				'is_recommended','enabled','views','created_at','updated_at'
+				'id','title','img_url','category_id','price','text',
+				'is_recommended','enabled','views','created_by','updated_by','created_at','updated_at'
 			)->orderBy($sorting_settings['sort'], $sorting_settings['dir']);
 
 			//run search request
@@ -50,7 +51,7 @@ class MealDishController extends AppController
 					$dishes = $dishes->where('id', 'LIKE', '%'.$word.'%')
 						->orWhere('title', 'LIKE', '%'.$word.'%')
 						->orWhere('price', 'LIKE', '%'.$word.'%')
-						->orWhere('ingredients', 'LIKE', '%'.$word.'%');
+						->orWhere('text', 'LIKE', '%'.$word.'%');
 				}
 			}
 			$dishes = $dishes->paginate(20);
@@ -75,19 +76,29 @@ class MealDishController extends AppController
 				$category = $dish->category()->select('id','title')->first();
 				//Get dish preview image
 				$image = ($this->isJson($dish->img_url))? json_decode($dish->img_url): null;
+				//Get creator
+				$created_by = $dish->createdBy()->select('name','email')->first();
+				//Get updater
+				$updated_by = $dish->updatedBy()->select('name','email')->first();
 				$content[] = [
 					'id'			=> $dish->id,
 					'title'			=> $dish->title,
 					'img_url'		=> (!empty($image))? $image[0]: null,
 					'category'		=> (!empty($category))? $category->toArray(): null,
 					'price'			=> $dish->price,
-					'ingredients'	=> str_limit($dish->ingredients, 63),
+					'text'			=> str_limit($dish->text, 63),
 					'menus'			=> $menus_list,
 					'is_recommended'=> $dish->is_recommended,
 					'enabled'		=> $dish->enabled,
 					'views'			=> $dish->views,
 					'created'		=> date('Y /m /d H:i', strtotime($dish->created_at)),
-					'updated'		=> date('Y /m /d H:i', strtotime($dish->updated_at))
+					'updated'		=> date('Y /m /d H:i', strtotime($dish->updated_at)),
+					'created_by'=> (!empty($created_by))
+									? ['name' => $created_by->name, 'email' => $created_by->email]
+									: [],
+					'updated_by'=> (!empty($updated_by))
+									? ['name' => $updated_by->name, 'email' => $updated_by->email]
+									: [],
 				];
 			}
 
@@ -118,10 +129,11 @@ class MealDishController extends AppController
 			$page = AdminMenu::select('title')->where('slug', '=', $current_page)->first();
 			$breadcrumbs = $this->breadcrumbs($request->path(), 'meal_dishes');
 
-			//Get categories settings
-			$settings = Settings::select('category_type_id')->where('type','=','dish')->first();
+			//Get meal dish settings
+			$settings = Settings::select('options')->where('slug','=','dish')->first()->toArray();
+			$settings = json_decode($settings['options']);
 
-			$categories = Category::select('id','title')->where('category_type','=',$settings->category_type_id)->get();
+			$categories = Category::select('id','title')->where('category_type','=',$settings->category_type)->get();
 
 			return view('admin.add.dish', [
 				'start'			=> $start,
@@ -129,7 +141,7 @@ class MealDishController extends AppController
 				'breadcrumbs'	=> $breadcrumbs,
 				'categories'	=> $categories,
 				'title'			=> 'Добавление '.$page->title,
-				'allow_categories'=> $settings->category_type_id
+				'settings'		=> $settings
 			]);
 		}
 	}
@@ -151,8 +163,9 @@ class MealDishController extends AppController
 
 			//Get editable dish content
 			$content = MealDish::select(
-				'id','title','category_id','img_url','model_3d','price','dish_weight','calories','ingredients',
-				'cooking_time','is_recommended','enabled'
+				'id','title','category_id','img_url','model_3d','price','dish_weight','calories','text',
+				'cooking_time','is_recommended','enabled',
+				'created_by','updated_by','created_at','updated_at'
 			)->find($id);
 
 			//Create images array
@@ -168,10 +181,11 @@ class MealDishController extends AppController
 				];
 			}
 			$content->img_url = $images;
-			//Get categories settings
-			$settings = Settings::select('category_type_id')->where('type','=','dish')->first();
+			//Get meal dish settings
+			$settings = Settings::select('options')->where('slug','=','dish')->first()->toArray();
+			$settings = json_decode($settings['options']);
 			//Get available categories
-			$categories = Category::select('id','title')->where('category_type','=',$settings->category_type_id)->get();
+			$categories = Category::select('id','title')->where('category_type','=',$settings->category_type)->get();
 
 			return view('admin.add.dish', [
 				'start'			=> $start,
@@ -180,7 +194,7 @@ class MealDishController extends AppController
 				'categories'	=> $categories,
 				'title'			=> 'Редактирование '.$page->title.' "'.$content->title.'"',
 				'content'		=> $content,
-				'allow_categories'=> $settings->category_type_id
+				'settings'		=> $settings
 			]);
 		}
 	}
@@ -202,7 +216,7 @@ class MealDishController extends AppController
 
 			//Get editable dish content
 			$content = MealDish::select(
-				'title','category_id','img_url','model_3d','price','dish_weight','calories','ingredients',
+				'title','category_id','img_url','model_3d','price','dish_weight','calories','text',
 				'cooking_time','is_recommended','enabled'
 			)->find($id);
 
@@ -219,10 +233,11 @@ class MealDishController extends AppController
 				];
 			}
 			$content->img_url = $images;
-			//Get categories settings
-			$settings = Settings::select('category_type_id')->where('type','=','dish')->first();
+			//Get meal dish settings
+			$settings = Settings::select('options')->where('slug','=','dish')->first()->toArray();
+			$settings = json_decode($settings['options']);
 			//Get available categories
-			$categories = Category::select('id','title')->where('category_type','=',$settings->category_type_id)->get();
+			$categories = Category::select('id','title')->where('category_type','=',$settings->category_type)->get();
 
 			return view('admin.add.dish', [
 				'start'			=> $start,
@@ -231,7 +246,7 @@ class MealDishController extends AppController
 				'categories'	=> $categories,
 				'title'			=> 'Просмотр '.$page->title.' "'.$content->title.'"',
 				'content'		=> $content,
-				'allow_categories'=> $settings->category_type_id
+				'settings'		=> $settings
 			]);
 		}
 	}
@@ -243,6 +258,7 @@ class MealDishController extends AppController
 	 * @return \Illuminate\Http\RedirectResponse|string
 	 */
 	public function store(Request $request){
+		$user = Auth::user();
 		$temp = $this->processData($request);
 		$data = $temp['data'];
 		$img_url = $temp['img_url'];
@@ -255,16 +271,18 @@ class MealDishController extends AppController
 		$result = MealDish::create([
 			'title'			=> $data['title'],
 			'slug'			=> $data['slug'],
-			'category_id'	=> (isset($data['category_id']))? $data['category_id']: 0,
+			'category_id'	=> $data['category'],
 			'img_url'		=> json_encode($img_url),
 			'model_3d'		=> $data['model_3d'],
 			'price'			=> str_replace(',','.',$data['price']),
 			'dish_weight'	=> (float)str_replace(',','.',$data['dish_weight']),
 			'calories'		=> (!empty($data['calories']))? str_replace(',','.',$data['calories']): null,
 			'cooking_time'	=> $data['cooking_time'],
-			'ingredients'	=> $data['ingredients'],
+			'text'			=> (isset($data['text']))? $data['text']: '',
 			'is_recommended'=> $data['is_recommended'],
 			'enabled'		=> $data['enabled'],
+			'created_by'	=> $user['id'],
+			'updated_by'	=> $user['id']
 		]);
 		if($result != false){
 			return (isset($data['ajax']))
@@ -281,6 +299,7 @@ class MealDishController extends AppController
 	 * @return \Illuminate\Http\RedirectResponse|string
 	 */
 	public function update($id, Request $request){
+		$user = Auth::user();
 		$temp = $this->processData($request);
 		$data = $temp['data'];
 		$img_url = $temp['img_url'];
@@ -293,16 +312,17 @@ class MealDishController extends AppController
 		$result = MealDish::find($id);
 		$result->title			= $data['title'];
 		$result->slug			= $data['slug'];
-		$result->category_id	= (isset($data['category_id']))? $data['category_id']: 0;
+		$result->category_id	= $data['category'];
 		$result->img_url		= json_encode($img_url);
 		$result->model_3d		= $data['model_3d'];
 		$result->price			= str_replace(',','.',$data['price']);
 		$result->dish_weight	= (float)str_replace(',','.',$data['dish_weight']);
 		$result->calories		= (!empty($data['calories']))? str_replace(',','.',$data['calories']): null;
 		$result->cooking_time	= $data['cooking_time'];
-		$result->ingredients	= $data['ingredients'];
+		$result->text			= (isset($data['text']))? $data['text']: '';
 		$result->is_recommended	= $data['is_recommended'];
 		$result->enabled		= $data['enabled'];
+		$result->updated_by		= $user['id'];
 		$result->save();
 
 		if($result != false){
@@ -355,7 +375,14 @@ class MealDishController extends AppController
 		$data = $request->all();
 		//Create slug for dish
 		$data['slug'] = str_slug($this->str2url(trim($data['title'])));
-
+		//Create Category
+		if(isset($data['category'])){
+			$data['category'] =(is_array($data['category']))
+				? json_encode($data['category'])
+				: '["'.$data['category'].'"]';
+		}else{
+			$data['category'] = '["0"]';
+		}
 		//Create images array
 		$img_url = [];
 		//If image data was sent by ajax
