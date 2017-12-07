@@ -13,6 +13,11 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+/*Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});*/
+Route::group(['middleware'=>'api', 'namespace'=> 'Api'], function(){
+	//Registration
+	Route::post('/create_account', 'RegisterController@createAccount');
+	Route::post('/submit_sms_code', 'RegisterController@submitSmsCode');
 });
