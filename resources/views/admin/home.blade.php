@@ -25,5 +25,13 @@
 				<p><button class="button" type="button" name="save">Save</button></p>
 			</div>
 		</div>
+
+		<div style="padding: 60px 0px;">
+			<p><input name="user_login" type="email" placeholder="Email"></p>
+			<p><input name="user_pass" type="password" placeholder="PASSWORD"></p>
+			<p><button class="button" type="button" name="login">YARRR</button></p>
+		</div>
 	</div>
+
+
 @stop

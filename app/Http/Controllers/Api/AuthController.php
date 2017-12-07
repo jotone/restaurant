@@ -26,8 +26,8 @@ class AuthController extends ApiController
 				'message'		=> 'Логин или пароль введен неверно.'
 			]), 400);
 		}
-		$user->id = Crypt::encrypt($user->id);
 		$user = $user->toArray();
+		$user['id'] = Crypt::encrypt($user['id']);
 
 		return json_encode($user);
 	}

@@ -61,5 +61,22 @@ $(document).ready(function(){
 				}
 			}
 		});
+	});
+
+	$('button[name=login]').click(function () {
+		$.ajax({
+			url:	'/api/log_in',
+			type:	'POST',
+			data:	{
+				email:		$('input[name=user_login]').val(),
+				pass:		$('input[name=user_pass]').val(),
+			},
+			error:	function(jqXHR){
+				showError(jqXHR.responseText, 'POST::/api/log_in');
+			},
+			success:function(data){
+				console.log(data);
+			}
+		});
 	})
 });
