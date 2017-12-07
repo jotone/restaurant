@@ -124,15 +124,19 @@ class MealMenuController extends AppController
 				->get();
 			$dish_list = [];
 			foreach($dishes as $dish){
+				$dish->category_id = json_decode($dish->category_id);
 				//Get category
-				$category = $dish->category()->select('id','title')->first();
+				foreach($dish->category_id as $category_id){
+					$category = $dish->category()->select('id','title')->first();
+					$dish_list[$category_id]['caption'] = (!empty($category))? $category->title: 'Категория не указана';
 
-				$dish_list[$category->id]['caption'] = (!empty($category))? $category->title: 'Категория не указана';
-				$dish_list[$category->id]['items'][] = [
-					'id'		=> $dish->id,
-					'title'		=> $dish->title,
-					'price'		=> number_format((float)$dish->price, 2, '.', ' ')
-				];
+					$dish_list[$category_id]['items'] = [];
+					$dish_list[$category_id]['items'][] = [
+						'id'		=> $dish->id,
+						'title'		=> $dish->title,
+						'price'		=> number_format((float)$dish->price, 2, '.', ' ')
+					];
+				}
 			}
 
 			//Get meal menu settings
