@@ -110,7 +110,7 @@ class RestaurantController extends AppController
 
 			$menus = MealMenu::select('id','title')->where('enabled','=',1)->get();
 
-			//Get products settings
+			//Get restaurant settings
 			$settings = Settings::select('options')->where('slug','=','restaurant')->first()->toArray();
 			$settings = json_decode($settings['options']);
 
@@ -154,7 +154,7 @@ class RestaurantController extends AppController
 
 			$content = $this->getRestaurantContent($content);
 
-			//Get products settings
+			//Get restaurant settings
 			$settings = Settings::select('options')->where('slug','=','restaurant')->first()->toArray();
 			$settings = json_decode($settings['options']);
 			//Get available categories
@@ -199,7 +199,7 @@ class RestaurantController extends AppController
 			$content = $this->getRestaurantContent($content);
 			unset($content->id);
 
-			//Get products settings
+			//Get restaurant settings
 			$settings = Settings::select('options')->where('slug','=','restaurant')->first()->toArray();
 			$settings = json_decode($settings['options']);
 			//Get available categories

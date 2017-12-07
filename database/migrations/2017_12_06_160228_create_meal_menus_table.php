@@ -19,6 +19,8 @@ class CreateMealMenusTable extends Migration
 			$table->string('slug');
 			$table->integer('restaurant_id')->unsigned();
 			$table->text('dishes')->nullable();
+			$table->text('text')->nullable();
+			$table->text('img_url')->nullable();
 			$table->boolean('enabled')->unsigned();
 			$table->text('category_id');
 			$table->integer('created_by')->unsigned();

@@ -8,6 +8,7 @@ use App\MealMenu;
 use App\Restaurant;
 use App\Settings;
 
+use Auth;
 use App\Http\Controllers\AppController;
 use Illuminate\Http\Request;
 
@@ -62,9 +63,13 @@ class MealMenuController extends AppController
 						$dishes_list[$dish_id] = $dish->title;
 					}
 				}
-
+				//Get restaurant
 				$restaurant = $menu->restaurant()->select('id','title')->first();
 
+				//Get creator
+				$created_by = $menu->createdBy()->select('name','email')->first();
+				//Get updater
+				$updated_by = $menu->updatedBy()->select('name','email')->first();
 				$content[] = [
 					'id'		=> $menu->id,
 					'title'		=> $menu->title,
@@ -72,7 +77,13 @@ class MealMenuController extends AppController
 					'dishes'	=> $dishes_list,
 					'enabled'	=> $menu->enabled,
 					'created'	=> date('Y /m /d H:i', strtotime($menu->created_at)),
-					'updated'	=> date('Y /m /d H:i', strtotime($menu->updated_at))
+					'updated'	=> date('Y /m /d H:i', strtotime($menu->updated_at)),
+					'created_by'=> (!empty($created_by))
+								? ['name' => $created_by->name, 'email' => $created_by->email]
+								: [],
+					'updated_by'=> (!empty($updated_by))
+								? ['name' => $updated_by->name, 'email' => $updated_by->email]
+								: [],
 				];
 			}
 
@@ -124,10 +135,11 @@ class MealMenuController extends AppController
 				];
 			}
 
-			//Get categories settings
-			$settings = Settings::select('category_type_id')->where('type','=','menu')->first();
+			//Get meal menu settings
+			$settings = Settings::select('options')->where('slug','=','meal_menu')->first()->toArray();
+			$settings = json_decode($settings['options']);
 			//Get available categories
-			$categories = Category::select('id','title')->where('category_type','=',$settings->category_type_id)->get();
+			$categories = Category::select('id','title')->where('category_type','=',$settings->category_type)->get();
 
 			return view('admin.add.meal_menu', [
 				'start'			=> $start,
@@ -137,7 +149,7 @@ class MealMenuController extends AppController
 				'restaurants'	=> $restaurants,
 				'title'			=> 'Добавление '.$page->title,
 				'categories'	=> $categories,
-				'allow_categories'=> $settings->category_type_id
+				'settings'		=> $settings
 			]);
 		}
 	}
@@ -170,10 +182,11 @@ class MealMenuController extends AppController
 			//Inner dishes list
 			$dish_list = $temp['dish_list'];
 
-			//Get categories settings
-			$settings = Settings::select('category_type_id')->where('type','=','menu')->first();
+			//Get meal menu settings
+			$settings = Settings::select('options')->where('slug','=','meal_menu')->first()->toArray();
+			$settings = json_decode($settings['options']);
 			//Get available categories
-			$categories = Category::select('id','title')->where('category_type','=',$settings->category_type_id)->get();
+			$categories = Category::select('id','title')->where('category_type','=',$settings->category_type)->get();
 
 			return view('admin.add.meal_menu', [
 				'start'			=> $start,
@@ -184,7 +197,7 @@ class MealMenuController extends AppController
 				'title'			=> 'Редактирование меню '.$page->title,
 				'content'		=> $content,
 				'categories'	=> $categories,
-				'allow_categories'=> $settings->category_type_id
+				'settings'		=> $settings
 			]);
 		}
 	}
@@ -217,10 +230,11 @@ class MealMenuController extends AppController
 			//Inner dishes list
 			$dish_list = $temp['dish_list'];
 
-			//Get categories settings
-			$settings = Settings::select('category_type_id')->where('type','=','menu')->first();
+			//Get meal menu settings
+			$settings = Settings::select('options')->where('slug','=','meal_menu')->first()->toArray();
+			$settings = json_decode($settings['options']);
 			//Get available categories
-			$categories = Category::select('id','title')->where('category_type','=',$settings->category_type_id)->get();
+			$categories = Category::select('id','title')->where('category_type','=',$settings->category_type)->get();
 
 			return view('admin.add.meal_menu', [
 				'start'			=> $start,
@@ -231,7 +245,7 @@ class MealMenuController extends AppController
 				'title'			=> 'Редактирование меню '.$page->title,
 				'content'		=> $content,
 				'categories'	=> $categories,
-				'allow_categories'=> $settings->category_type_id
+				'settings'		=> $settings
 			]);
 		}
 	}
@@ -243,19 +257,26 @@ class MealMenuController extends AppController
 	 * @return \Illuminate\Http\RedirectResponse|string
 	 */
 	public function store(Request $request){
-		$data = $this->processData($request);
+		$user = Auth::user();
+		$temp = $this->processData($request);
+		$data = $temp['data'];
+		$img_url = $temp['img_url'];
 		//If there are menus with such link
 		$data['slug'] = (MealMenu::where('slug','=',$data['slug'])->count() > 0)
 			? $data['slug'].'_'.uniqid()
 			: $data['slug'];
 
 		$result = MealMenu::create([
-			'title'		=> $data['title'],
-			'slug'		=> $data['slug'],
-			'restaurant_id'=> $data['restaurant_id'],
-			'dishes'	=> $data['dish_id'],
-			'enabled'	=> $data['enabled'],
-			'category_id'=> (isset($data['category_id']))? $data['category_id']: 0
+			'title'			=> $data['title'],
+			'slug'			=> $data['slug'],
+			'restaurant_id'	=> $data['restaurant_id'],
+			'dishes'		=> $data['dish_ids'],
+			'text'			=> (isset($data['text']))? $data['text']: '',
+			'img_url'		=> json_encode($img_url),
+			'enabled'		=> $data['enabled'],
+			'category_id'	=> $data['category'],
+			'created_by'	=> $user['id'],
+			'updated_by'	=> $user['id']
 		]);
 		if($result != false){
 			return (isset($data['ajax']))
@@ -272,19 +293,25 @@ class MealMenuController extends AppController
 	 * @return \Illuminate\Http\RedirectResponse|string
 	 */
 	public function update($id, Request $request){
-		$data = $this->processData($request);
+		$user = Auth::user();
+		$temp = $this->processData($request);
+		$data = $temp['data'];
+		$img_url = $temp['img_url'];
 		//If there are menus with such link
 		$data['slug'] = (MealMenu::where('id','!=',$id)->where('slug','=',$data['slug'])->count() > 0)
 			? $data['slug'].'_'.uniqid()
 			: $data['slug'];
 
 		$result = MealMenu::find($id);
-		$result->title		= $data['title'];
-		$result->slug		= $data['slug'];
-		$result->restaurant_id= $data['restaurant_id'];
-		$result->dishes		= $data['dish_id'];
-		$result->enabled	= $data['enabled'];
-		$result->category_id= (isset($data['category_id']))? $data['category_id']: 0;
+		$result->title			= $data['title'];
+		$result->slug			= $data['slug'];
+		$result->restaurant_id	= $data['restaurant_id'];
+		$result->dishes			= $data['dish_ids'];
+		$result->text			= (isset($data['text']))? $data['text']: '';
+		$result->img_url		= json_encode($img_url);
+		$result->enabled		= $data['enabled'];
+		$result->category_id	= $data['category'];
+		$result->updated_by		= $user['id'];
 		$result->save();
 
 		if($result != false){
@@ -346,6 +373,14 @@ class MealMenuController extends AppController
 	public function processData($request){
 		$data = $request->all();
 		$data['slug'] = str_slug($this->str2url(trim($data['title'])));
+		//Create Category
+		if(isset($data['category'])){
+			$data['category'] =(is_array($data['category']))
+				? json_encode($data['category'])
+				: '["'.$data['category'].'"]';
+		}else{
+			$data['category'] = '["0"]';
+		}
 		//Create enabled flag
 		if(isset($data['ajax'])){
 			$data['enabled'] = (isset($data['enabled']))? $data['enabled']: 0;
@@ -354,8 +389,47 @@ class MealMenuController extends AppController
 		}
 		//Create inner dishes
 		if(!isset($data['ajax'])){
-			$data['dish_id'] = (isset($data['dish_id']))? json_encode($data['dish_id']): '[]';
+			$data['dish_ids'] = (isset($data['dish_ids']))? json_encode($data['dish_ids']): '[]';
 		}
-		return $data;
+
+		//Create images array
+		$img_url = [];
+		//If image data was sent by ajax
+		if(isset($data['ajax']) && isset($data['images'])){
+			if($this->isJson($data['images']) || is_array($data['images'])){
+				if($this->isJson($data['images'])){
+					$data['images'] = json_decode($data['images']);
+				}
+				foreach($data['images'] as $image){
+					$image = (array)$image;
+					if($image['type'] == 'file'){
+						$img_url[] = [
+							'src' => $image['src'],
+							'alt' => $image['alt']
+						];
+					}else if($image['type'] == 'upload'){
+						$img_url[] = [
+							'src' => $this->createImg($image['src']),
+							'alt' => $image['alt']
+						];
+					}
+				}
+			}
+			//If image data was sent by form
+		}else if(!empty($request->file())){
+			foreach($request->file('images') as $image){
+				if($image->isValid()){
+					$img_url[] = [
+						'src' => $this->createImg($image),
+						'alt' => ''
+					];
+				}
+			}
+		}
+
+		return [
+			'data'		=> $data,
+			'img_url'	=> $img_url
+		];
 	}
 }

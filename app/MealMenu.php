@@ -8,7 +8,7 @@ class MealMenu extends Model
 {
 	protected $table = 'meal_menus';
 	public $fillable = [
-		'title','slug','restaurant_id','dishes','enabled','category_id',
+		'title','slug','restaurant_id','dishes','enabled','category_id','img_url','text',
 		'created_by','updated_by'
 	];
 

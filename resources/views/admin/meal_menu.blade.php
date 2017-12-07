@@ -102,8 +102,20 @@
 							Выключено
 						@endif
 					</td>
-					<td>{{ $item['created'] }}</td>
-					<td>{{ $item['updated'] }}</td>
+					<td>
+						<p>{{ $item['created'] }}</p>
+						@if(!empty($item['created_by']))
+							<p>{{ $item['created_by']['name'] }}</p>
+							<p>{{ $item['created_by']['email'] }}</p>
+						@endif
+					</td>
+					<td>
+						<p>{{ $item['updated'] }}</p>
+						@if(!empty($item['updated_by']))
+							<p>{{ $item['updated_by']['name'] }}</p>
+							<p>{{ $item['updated_by']['email'] }}</p>
+						@endif
+					</td>
 				</tr>
 			@endforeach
 			</tbody>
