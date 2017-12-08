@@ -3,7 +3,7 @@
 	<script type="text/javascript" src="{{ asset('js/admin/scripts/home.js') }}"></script>
 @stop
 @section('content')
-	<div class="main-wrap">
+	{{--<div class="main-wrap">
 		<input name="id" type="hidden">
 		<div style="display: flex; align-items: flex-start; justify-content: flex-start;">
 			<div id="step_0" style="padding: 60px 20px;">
@@ -31,7 +31,5 @@
 			<p><input name="user_pass" type="password" placeholder="PASSWORD"></p>
 			<p><button class="button" type="button" name="login">YARRR</button></p>
 		</div>
-	</div>
-
-
+	</div>--}}
 @stop

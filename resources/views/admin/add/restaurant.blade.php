@@ -254,6 +254,32 @@
 				@endif
 
 				<fieldset>
+					<legend>Координаты</legend>
+					<div class="row-wrap">
+						<label>
+							<input	name="coordinateX"
+									class="input-text"
+									type="text"
+									placeholder="Координата Х&hellip;"
+									value="@if(isset($content)){{ $content->coordinates->x }}@endif"
+									@if(isset($content) && !isset($content->id))disabled="disabled"@endif>
+							<span>Координата Х</span>
+						</label>
+					</div>
+					<div class="row-wrap">
+						<label>
+							<input	name="coordinateY"
+									class="input-text"
+									type="text"
+									placeholder="Координата Y&hellip;"
+									value="@if(isset($content)){{ $content->coordinates->y }}@endif"
+									@if(isset($content) && !isset($content->id))disabled="disabled"@endif>
+							<span>Координата Y</span>
+						</label>
+					</div>
+				</fieldset>
+
+				<fieldset>
 					<legend>Вторичные данные</legend>
 					<div class="row-wrap">
 						<label>

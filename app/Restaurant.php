@@ -9,7 +9,7 @@ class Restaurant extends Model
 	protected $table = 'restaurants';
 	public $fillable = [
 		'title','slug','logo_img','text','img_url','address','work_time',
-		'has_delivery','has_wifi','etc_data',
+		'has_delivery','has_wifi','coordinates','etc_data',
 		'rating','views','enabled','category_id',
 		'created_by','updated_by'
 	];

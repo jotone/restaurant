@@ -42,6 +42,8 @@ $(document).ready(function(){
 					time_begin:		$('input[name=time_begin]').val(),
 					time_finish:	$('input[name=time_finish]').val(),
 					address:		CKEDITOR.instances.address.getData(),
+					coordinateX:	$('input[name=coordinateX]').val(),
+					coordinateY:	$('input[name=coordinateY]').val(),
 					has_delivery:	($('input[name=has_delivery]').prop('checked') == true)? 1: 0,
 					has_wifi:		($('input[name=has_wifi]').prop('checked') == true)? 1: 0,
 					likes:			$('input[name=likes]').val(),

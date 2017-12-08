@@ -146,7 +146,7 @@ class RestaurantController extends AppController
 
 			$content = Restaurant::select(
 				'id','title','logo_img','img_url','text','address','work_time','has_delivery','has_wifi',
-				'etc_data','rating','enabled','category_id'
+				'coordinates','etc_data','rating','enabled','category_id'
 			)->find($id);
 			if(empty($content)){
 				return abort(404);
@@ -190,7 +190,7 @@ class RestaurantController extends AppController
 
 			$content = Restaurant::select(
 				'id','title','logo_img','img_url','text','address','work_time','has_delivery','has_wifi',
-				'etc_data','rating','enabled','category_id'
+				'coordinates','etc_data','rating','enabled','category_id'
 			)->find($id);
 			if(empty($content)){
 				return abort(404);
@@ -248,6 +248,10 @@ class RestaurantController extends AppController
 				'begin'			=>$data['time_begin'],
 				'finish'		=> $data['time_finish']
 			]),
+			'coordinates'	=> json_encode([
+				'x' => (isset($data['coordinateX']))? $data['coordinateX']: 0,
+				'y' => (isset($data['coordinateY']))? $data['coordinateY']: 0
+			]),
 			'has_delivery'	=> $data['has_delivery'],
 			'has_wifi'		=> $data['has_wifi'],
 			'rating'		=> json_encode([
@@ -300,6 +304,10 @@ class RestaurantController extends AppController
 		$result->work_time		= json_encode([
 			'begin'	=>$data['time_begin'],
 			'finish'=> $data['time_finish']
+		]);
+		$result->coordinates	= json_encode([
+			'x' => (isset($data['coordinateX']))? $data['coordinateX']: 0,
+			'y' => (isset($data['coordinateY']))? $data['coordinateY']: 0
 		]);
 		$result->has_delivery	= $data['has_delivery'];
 		$result->has_wifi		= $data['has_wifi'];
@@ -371,6 +379,8 @@ class RestaurantController extends AppController
 				'begin'=>'00:00',
 				'finish'=> '00:00'
 			];
+		//Create coordinates array
+		$content->coordinates = json_decode($content->coordinates);
 		//Create rating array
 		$content->rating = ($this->isJson($content->rating))
 			? json_decode($content->rating)
