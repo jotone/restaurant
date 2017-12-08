@@ -6,7 +6,7 @@ use App\Category;
 use App\Roles;
 
 use Illuminate\Http\Request;
-
+use Intervention\Image\ImageManagerStatic as Image;
 use Auth;
 
 class AppController extends Controller implements CrudInterface
@@ -216,17 +216,48 @@ class AppController extends Controller implements CrudInterface
 			}
 			$extension = explode('/', $type);
 			$filename = '/img/' . uniqid() . '.' . $extension[1];
-			$destinationPath = base_path() . '/public/' . $filename;
+			$destinationPath = base_path() . '/public' . $filename;
 			try{
 				file_put_contents($destinationPath, $img);
 			}catch(\Exception $e){
 				return dump($e);
 			}
+
+			$img_resolution = getimagesize($destinationPath);
+			$img_resolution = [
+				'original' => [
+					'width' => $img_resolution[0],
+					'height'=> $img_resolution[1]
+				],
+				'modified' => [
+					'width' => $img_resolution[0] * 2,
+					'height'=> $img_resolution[1] * 2
+				]
+			];
+
+			$image = Image::make($destinationPath);
+			$image->resize($img_resolution['modified']['width'], $img_resolution['modified']['height']);
+			$image->save($destinationPath);
 			return $filename;
 		}else{
 			return 'Image is undefined';
 		}
 	}
+
+	public function makeRectangleImage($filename){
+		$img_resolution = getimagesize($filename);
+
+		$n = $img_resolution[0] / $img_resolution[1];
+		if($n <= 3){
+			//Cut
+			$cut_height = $img_resolution[1] - round($img_resolution[0] / 3);
+			$image = Image::make($filename);
+			$image->crop($img_resolution[0], $cut_height,0, $img_resolution[1]-$cut_height);
+			$image->save($filename);
+		}
+		return $filename;
+	}
+
 
 	/**
 	 * @param string $folder

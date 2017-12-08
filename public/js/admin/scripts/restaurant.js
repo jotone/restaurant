@@ -61,18 +61,46 @@ $(document).ready(function(){
 						data.category.push($(this).val());
 					})
 				}
+
 				//Logo
-				data.logo = {
+				data.logo_img = {
 					src: '',
 					type: 'file'
 				};
-				if($('.preview-image .preview-image-wrap img').length > 0){
-					data.logo.src = $('.preview-image .preview-image-wrap img').attr('src');
-					if(typeof $('.preview-image .preview-image-wrap img').attr('data-type') != 'undefined'){
-						data.logo.type = $('.preview-image .preview-image-wrap img').attr('data-type')
+				if($('#logo_img .preview-image-wrap img').length > 0){
+					data.logo_img.src = $('#logo_img .preview-image-wrap img').attr('src');
+					if(typeof $('#logo_img .preview-image-wrap img').attr('data-type') != 'undefined'){
+						data.logo_img.type = $('#logo_img .preview-image-wrap img').attr('data-type')
 					}
 				}
-				data.logo = JSON.stringify(data.logo);
+				data.logo_img = JSON.stringify(data.logo_img);
+
+				//SquareImage
+				data.square_img = {
+					src: '',
+					type: 'file'
+				};
+				if($('#square_img .preview-image-wrap img').length > 0){
+					data.square_img.src = $('#square_img .preview-image-wrap img').attr('src');
+					if(typeof $('#square_img .preview-image-wrap img').attr('data-type') != 'undefined'){
+						data.square_img.type = $('#square_img .preview-image-wrap img').attr('data-type')
+					}
+				}
+				data.square_img = JSON.stringify(data.square_img);
+
+				//LargeImage
+				data.large_img = {
+					src: '',
+					type: 'file'
+				};
+				if($('#large_img .preview-image-wrap img').length > 0){
+					data.large_img.src = $('#large_img .preview-image-wrap img').attr('src');
+					if(typeof $('#large_img .preview-image-wrap img').attr('data-type') != 'undefined'){
+						data.large_img.type = $('#large_img .preview-image-wrap img').attr('data-type')
+					}
+				}
+				data.large_img = JSON.stringify(data.large_img);
+
 				//Slider
 				if($('.slider-wrap').length > 0){
 					data.images = [];
@@ -85,6 +113,7 @@ $(document).ready(function(){
 						data.images.push(temp)
 					});
 				}
+
 				//Menus
 				data.menus = [];
 				$('.group-lists li input[name="menus[]"]').each(function(){
@@ -92,6 +121,7 @@ $(document).ready(function(){
 						data.menus.push($(this).val());
 					}
 				});
+
 				//Text
 				if(typeof CKEDITOR.instances.text != 'undefined'){
 					data.text = CKEDITOR.instances.text.getData();

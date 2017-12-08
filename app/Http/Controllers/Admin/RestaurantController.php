@@ -226,11 +226,12 @@ class RestaurantController extends AppController
 	 */
 	public function store(Request $request){
 		$user = Auth::user();
-		$temp = $this->processData($request);
-		$data	= $temp['data'];
-		$logo	= $temp['logo'];
 
-		$img_url= $temp['img_url'];
+		$temp = $this->processData($request);
+		dd($temp);
+		$data	= $temp['data'];
+		/*$logo	= $temp['logo'];
+
 
 		//If there are restaurants with such link
 		$data['slug'] = (Restaurant::where('slug','=',$data['slug'])->count() > 0)
@@ -272,7 +273,7 @@ class RestaurantController extends AppController
 			return (isset($data['ajax']))
 				? json_encode(['message'=>'success'])
 				: redirect()->route('admin.restaurant.index');
-		}
+		}*/
 	}
 
 
@@ -379,15 +380,6 @@ class RestaurantController extends AppController
 				'begin'=>'00:00',
 				'finish'=> '00:00'
 			];
-		//Create coordinates array
-		$content->coordinates = json_decode($content->coordinates);
-		//Create rating array
-		$content->rating = ($this->isJson($content->rating))
-			? json_decode($content->rating)
-			: (object)[
-				'p'=>0,
-				'n'=>0
-			];
 		//Get restaurant menus
 		$menus = MealMenu::select('id')->where('restaurant_id','=',$content->id)->get();
 		$menu_list = [];
@@ -444,23 +436,92 @@ class RestaurantController extends AppController
 		$data['likes'] = (isset($data['likes']) && !empty($data['likes']))? $data['likes']: 0;
 		$data['dislikes'] = (isset($data['dislikes']) && !empty($data['dislikes']))? $data['dislikes']: 0;
 
+		//Logo image
 		//If image was sent as $_FILE value
 		if(!empty($request->file())){
-			$logo = json_encode([
-				'src' => $this->createImg($request->file('logo')),
-				'alt' => ''
+			$img = $this->createImg($request->file('logo_img'));
+			$size = getimagesize($img);
+
+			$logo_img = json_encode([
+				'src'	=> $img,
+				'width'	=> $size[0],
+				'height'=> $size[1]
 			]);
 			//if image was sent as base64encoded file content
-		}else if(isset($data['logo']) && $this->isJson($data['logo'])){
-			$temp = json_decode($data['logo']);
-			$logo = json_encode([
-				'src' => ($temp->type == 'upload')
-					? $this->createImgBase64($temp->src)
-					: $temp->src,
-				'alt' => ''
+		}else if(isset($data['logo_img']) && $this->isJson($data['logo_img'])){
+			$data['logo_img'] = json_decode($data['logo_img']);
+
+			$img = ($data['logo_img']->type == 'upload')
+				? $this->createImgBase64($data['logo_img']->src)
+				: $data['logo_img']->src;
+
+			$size = getimagesize($img);
+
+			$logo_img = json_encode([
+				'src'	=> $img,
+				'width'	=> $size[0],
+				'height'=> $size[1]
 			]);
 		}else{
-			$logo = '';
+			$logo_img = '';
+		}
+
+		//Square image
+		if(!empty($request->file())){
+			$img = $this->createImg($request->file('logo_img'));
+			$size = getimagesize($img);
+
+			$square_img = json_encode([
+				'src'	=> $img,
+				'width'	=> $size[0],
+				'height'=> $size[1]
+			]);
+			//if image was sent as base64encoded file content
+		}else if(isset($data['square_img']) && $this->isJson($data['square_img'])){
+			$data['square_img'] = json_decode($data['square_img']);
+
+			$img = ($data['square_img']->type == 'upload')
+				? $this->createImgBase64($data['square_img']->src)
+				: $data['square_img']->src;
+
+			$size = getimagesize($img);
+
+			$square_img = json_encode([
+				'src'	=> $img,
+				'width'	=> $size[0],
+				'height'=> $size[1]
+			]);
+		}else{
+			$square_img = '';
+		}
+
+		//large Image
+		if(!empty($request->file())){
+			$img =  $this->makeRectangleImage($this->createImg($request->file('large_img')));
+			$size = getimagesize($img);
+
+			$large_img = json_encode([
+				'src'	=> $img,
+				'width'	=> $size[0],
+				'height'=> $size[1]
+			]);
+			//if image was sent as base64encoded file content
+		}else if(isset($data['large_img']) && $this->isJson($data['large_img'])){
+			$data['large_img'] = json_decode($data['large_img']);
+
+			$img = ($data['large_img']->type == 'upload')
+				? $this->makeRectangleImage($this->createImgBase64($data['large_img']->src))
+				: $this->makeRectangleImage($data['large_img']->src);
+
+			$size = getimagesize($img);
+
+			$large_img = json_encode([
+				'src'	=> $img,
+				'width'	=> $size[0],
+				'height'=> $size[1]
+			]);
+		}else{
+			$large_img = '';
 		}
 
 		//Create images array
@@ -500,7 +561,9 @@ class RestaurantController extends AppController
 
 		return [
 			'data'		=> $data,
-			'logo'		=> $logo,
+			'logo_img'	=> $logo_img,
+			'square_img'=> $square_img,
+			'large_img'	=> $large_img,
 			'img_url'	=> $img_url
 		];
 	}

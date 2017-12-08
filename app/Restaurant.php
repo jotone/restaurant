@@ -8,11 +8,19 @@ class Restaurant extends Model
 {
 	protected $table = 'restaurants';
 	public $fillable = [
-		'title','slug','logo_img','text','img_url','address','work_time',
+		'title','slug','logo_img','square_img','large_img','text','address','work_time',
 		'has_delivery','has_wifi','coordinates','etc_data',
 		'rating','views','enabled','category_id',
 		'created_by','updated_by'
 	];
+
+	public function getRatingAttribute($value){
+		return json_decode($value);
+	}
+
+	public function getCoordinatesAttribute($value){
+		return json_decode($value);
+	}
 
 	public function mealMenus(){
 		return $this->hasMany('App\MealMenu');
