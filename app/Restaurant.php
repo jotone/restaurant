@@ -23,7 +23,7 @@ class Restaurant extends Model
 	}
 
 	public function mealMenus(){
-		return $this->hasMany('App\MealMenu');
+		return $this->hasMany('App\MealMenu','restaurant_id','id');
 	}
 
 	public function createdBy(){

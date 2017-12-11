@@ -14,15 +14,15 @@ class MealDish extends Model
 	];
 
 	public function getSquareImgAttribute($value){
-		return json_decode($value);
+		return json_decode($value, true);
 	}
 
 	public function getLargeImgAttribute($value){
-		return json_decode($value);
+		return json_decode($value, true);
 	}
 
 	public function getCategoryIdAttribute($value){
-		return json_decode($value);
+		return json_decode($value, true);
 	}
 
 	public function createdBy(){
