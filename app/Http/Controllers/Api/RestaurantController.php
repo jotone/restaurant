@@ -9,7 +9,10 @@ use \App\Http\Controllers\ApiController;
 class RestaurantController extends ApiController
 {
 	public function getAll(){
-		$restaurants = Restaurant::where('enabled','=',1)->get();
+		$restaurants = Restaurant::select(
+			'id','title','logo_img','square_img','large_img','address','coordinates','rating'
+		)->where('enabled','=',1)
+			->get();
 		$content = [];
 		foreach($restaurants as $restaurant){
 			$content[] = [
@@ -19,9 +22,25 @@ class RestaurantController extends ApiController
 					'text'		=> $restaurant->address,
 					'coords'	=> $restaurant->coordinates
 				],
-				'image'		=> [],
+				'images'	=> [
+					'logo'		=> (!empty($restaurant->logo_img))
+						?	['src'		=> asset($restaurant->logo_img->src),
+							'width'		=> $restaurant->logo_img->width,
+							'height'	=> $restaurant->logo_img->height]
+						: null,
+					'square'	=> (!empty($restaurant->square_img))
+						?	['src'		=> asset($restaurant->square_img->src),
+							'width'		=> $restaurant->square_img->width,
+							'height'	=> $restaurant->square_img->height]
+						: null,
+					'large'		=> (!empty($restaurant->square_img))
+						?	['src'		=> asset($restaurant->large_img->src),
+							'width'		=> $restaurant->large_img->width,
+							'height'	=> $restaurant->large_img->height]
+						: null,
+				],
 				'kitchen_type' => [],
-				'like_bar'	=> []
+				'like_bar'	=> $restaurant->rating
 			];
 		}
 		return json_encode($restaurants->toArray());

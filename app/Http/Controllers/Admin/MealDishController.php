@@ -68,7 +68,7 @@ class MealDishController extends AppController
 						$menus_list[] = [
 							'id'		=> $menu->id,
 							'title'		=> $menu->title,
-							'restaurant'=> $restaurant->toArray()
+							'restaurant'=> (!empty($restaurant))? $restaurant->toArray(): null
 						];
 					}
 				}

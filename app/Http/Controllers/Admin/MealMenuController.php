@@ -356,8 +356,8 @@ class MealMenuController extends AppController
 			//Get category
 			$category = $dish->category()->select('id','title')->first();
 
-			$dish_list[$category->id]['caption'] = (!empty($category))? $category->title: 'Категория не указана';
-			$dish_list[$category->id]['items'][] = [
+			$dish_list[$dish->category_id]['caption'] = (!empty($category))? $category->title: 'Категория не указана';
+			$dish_list[$dish->category_id]['items'][] = [
 				'id'		=> $dish->id,
 				'title'		=> $dish->title,
 				'price'		=> number_format((float)$dish->price, 2, '.', ' ')

@@ -72,6 +72,7 @@ class RestaurantController extends AppController
 					'menus'		=> $menus->toArray(),
 					'rating'	=> ($this->isJson($restaurant->rating))? json_decode($restaurant->rating): null,
 					'views'		=> $restaurant->views,
+					'enabled'	=> $restaurant->enabled,
 					'created'	=> date('Y /m /d H:i', strtotime($restaurant->created_at)),
 					'updated'	=> date('Y /m /d H:i', strtotime($restaurant->updated_at)),
 					'created_by'=> (!empty($created_by))

@@ -26,7 +26,8 @@ class RegisterController extends ApiController
 		//Drop all chars from phone
 		$phone = preg_replace('/\D+/', '', $phone);
 
-		$code = mt_rand(0,9).mt_rand(0,9).mt_rand(0,9).mt_rand(0,9);
+		//$code = mt_rand(0,9).mt_rand(0,9).mt_rand(0,9).mt_rand(0,9);
+		$code = '1111';
 
 		if(Visitors::where('phone', '=', $phone)->count() > 0){
 			$user = Visitors::select('id','status','sms_code')
