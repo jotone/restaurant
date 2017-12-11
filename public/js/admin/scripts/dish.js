@@ -26,6 +26,33 @@ function sendAjax() {
 			data.category.push($(this).val());
 		})
 	}
+
+	//SquareImage
+	data.square_img = {
+		src: '',
+		type: 'file'
+	};
+	if($('#square_img .preview-image-wrap img').length > 0){
+		data.square_img.src = $('#square_img .preview-image-wrap img').attr('src');
+		if(typeof $('#square_img .preview-image-wrap img').attr('data-type') != 'undefined'){
+			data.square_img.type = $('#square_img .preview-image-wrap img').attr('data-type')
+		}
+	}
+	data.square_img = JSON.stringify(data.square_img);
+
+	//LargeImage
+	data.large_img = {
+		src: '',
+		type: 'file'
+	};
+	if($('#large_img .preview-image-wrap img').length > 0){
+		data.large_img.src = $('#large_img .preview-image-wrap img').attr('src');
+		if(typeof $('#large_img .preview-image-wrap img').attr('data-type') != 'undefined'){
+			data.large_img.type = $('#large_img .preview-image-wrap img').attr('data-type')
+		}
+	}
+	data.large_img = JSON.stringify(data.large_img);
+
 	//Slider
 	if($('.slider-wrap').length > 0){
 		data.images = [];

@@ -81,7 +81,7 @@ class MealDishController extends AppController
 				$content[] = [
 					'id'			=> $dish->id,
 					'title'			=> $dish->title,
-					'img_url'		=> ($this->isJson($dish->square_img))? json_decode($dish->square_img): null,
+					'img_url'		=> $dish->square_img,
 					'category'		=> (!empty($category))? $category->toArray(): null,
 					'price'			=> $dish->price,
 					'text'			=> str_limit($dish->text, 63),
@@ -260,6 +260,8 @@ class MealDishController extends AppController
 		$temp = $this->processData($request);
 		$data = $temp['data'];
 		$img_url = $temp['img_url'];
+		$square = $temp['square_img'];
+		$large = $temp['large_img'];
 
 		//If there are dishes with such link
 		$data['slug'] = (MealDish::where('slug','=',$data['slug'])->count() > 0)
@@ -270,6 +272,8 @@ class MealDishController extends AppController
 			'title'			=> $data['title'],
 			'slug'			=> $data['slug'],
 			'category_id'	=> $data['category'],
+			'square_img'	=> $square,
+			'large_img'		=> $large,
 			'img_url'		=> json_encode($img_url),
 			'model_3d'		=> $data['model_3d'],
 			'price'			=> str_replace(',','.',$data['price']),
@@ -301,6 +305,8 @@ class MealDishController extends AppController
 		$temp = $this->processData($request);
 		$data = $temp['data'];
 		$img_url = $temp['img_url'];
+		$square = $temp['square_img'];
+		$large = $temp['large_img'];
 
 		//If there are dishes with such link
 		$data['slug'] = (MealDish::where('id','!=',$id)->where('slug','=',$data['slug'])->count() > 0)
@@ -311,6 +317,8 @@ class MealDishController extends AppController
 		$result->title			= $data['title'];
 		$result->slug			= $data['slug'];
 		$result->category_id	= $data['category'];
+		$result->square_img		= $square;
+		$result->large_img		= $large;
 		$result->img_url		= json_encode($img_url);
 		$result->model_3d		= $data['model_3d'];
 		$result->price			= str_replace(',','.',$data['price']);
@@ -381,6 +389,65 @@ class MealDishController extends AppController
 		}else{
 			$data['category'] = '["0"]';
 		}
+
+		//Square image
+		if(!empty($request->file())){
+			$img = $this->createImg($request->file('logo_img'));
+			$size = getimagesize(base_path().'/public'.$img);
+
+			$square_img = json_encode([
+				'src'	=> $img,
+				'width'	=> $size[0],
+				'height'=> $size[1]
+			]);
+			//if image was sent as base64encoded file content
+		}else if(isset($data['square_img']) && $this->isJson($data['square_img'])){
+			$data['square_img'] = json_decode($data['square_img']);
+
+			$img = ($data['square_img']->type == 'upload')
+				? $this->createImgBase64($data['square_img']->src)
+				: $data['square_img']->src;
+
+			$size = getimagesize(base_path().'/public'.$img);
+
+			$square_img = json_encode([
+				'src'	=> $img,
+				'width'	=> $size[0],
+				'height'=> $size[1]
+			]);
+		}else{
+			$square_img = '';
+		}
+
+		//large Image
+		if(!empty($request->file())){
+			$img =  $this->makeRectangleImage($this->createImg($request->file('large_img')));
+			$size = getimagesize(base_path().'/public'.$img);
+
+			$large_img = json_encode([
+				'src'	=> $img,
+				'width'	=> $size[0],
+				'height'=> $size[1]
+			]);
+			//if image was sent as base64encoded file content
+		}else if(isset($data['large_img']) && $this->isJson($data['large_img'])){
+			$data['large_img'] = json_decode($data['large_img']);
+
+			$img = ($data['large_img']->type == 'upload')
+				? $this->makeRectangleImage($this->createImgBase64($data['large_img']->src))
+				: $this->makeRectangleImage($data['large_img']->src);
+
+			$size = getimagesize(base_path().'/public'.$img);
+
+			$large_img = json_encode([
+				'src'	=> $img,
+				'width'	=> $size[0],
+				'height'=> $size[1]
+			]);
+		}else{
+			$large_img = '';
+		}
+
 		//Create images array
 		$img_url = [];
 		//If image data was sent by ajax
@@ -430,7 +497,9 @@ class MealDishController extends AppController
 
 		return [
 			'data'		=> $data,
-			'img_url'	=> $img_url
+			'img_url'	=> $img_url,
+			'square_img'=> $square_img,
+			'large_img'	=> $large_img
 		];
 	}
 }

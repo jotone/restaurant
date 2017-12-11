@@ -13,6 +13,14 @@ class MealDish extends Model
 		'views','enabled','created_by','updated_by'
 	];
 
+	public function getSquareImgAttribute($value){
+		return json_decode($value);
+	}
+
+	public function getLargeImgAttribute($value){
+		return json_decode($value);
+	}
+
 	public function category(){
 		return $this->belongsTo('App\Category');
 	}
