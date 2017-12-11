@@ -468,7 +468,9 @@ class RestaurantController extends AppController
 				? $this->createImgBase64($data['logo_img']->src)
 				: $data['logo_img']->src;
 
-			$size = getimagesize(base_path().'/public'.$img);
+			$size = (!empty($data['logo_img']->src))
+				? getimagesize(base_path().'/public'.$img)
+				: [0,0];
 
 			$logo_img = json_encode([
 				'src'	=> $img,
@@ -497,7 +499,9 @@ class RestaurantController extends AppController
 				? $this->createImgBase64($data['square_img']->src)
 				: $data['square_img']->src;
 
-			$size = getimagesize(base_path().'/public'.$img);
+			$size = (!empty($data['square_img']->src))
+				? getimagesize(base_path().'/public'.$img)
+				: [0,0];
 
 			$square_img = json_encode([
 				'src'	=> $img,
@@ -526,7 +530,9 @@ class RestaurantController extends AppController
 				? $this->makeRectangleImage($this->createImgBase64($data['large_img']->src))
 				: $this->makeRectangleImage($data['large_img']->src);
 
-			$size = getimagesize(base_path().'/public'.$img);
+			$size = (!empty($data['large_img']->src))
+				? getimagesize(base_path().'/public'.$img)
+				: [0,0];
 
 			$large_img = json_encode([
 				'src'	=> $img,

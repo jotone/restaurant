@@ -71,9 +71,13 @@ class RestaurantController extends ApiController
 			]), 400);
 		}
 
+		//Convert work time
+		$restaurant->work_time = json_decode($restaurant->work_time, true);
+
 		//Convert images objects to arrays
 		$restaurant->logo_img = json_decode($restaurant->logo_img, true);
 		$restaurant->large_img = json_decode($restaurant->large_img, true);
+
 		//Get restaurant menus
 		$menus = $restaurant->mealMenus()->select('dishes')->get();
 		//Create restaurant dishes array
@@ -89,30 +93,28 @@ class RestaurantController extends ApiController
 
 		//Convert restaurant object to array
 		$restaurant = $restaurant->toArray();
-		//Make dishes array
-		$restaurant['dishes'] = [];
+		//Make kitchen types array
+		$restaurant['kitchen_type'] = [];
 
 		foreach($dishes as $dish_id){
 			//Search for dish data
-			$dish = MealDish::select('title','category_id','square_img','large_img','price','dish_weight','text','cooking_time')
+			$dish = MealDish::select('category_id','price')
 				->where('enabled','=',1)
 				->find($dish_id);
-
-			if(!empty($dish)){
-				$dish = $dish->toArray();
-				$categories_list = [];
-				//Get dish category
-				foreach($dish['category_id'] as $category_id){
+			foreach($dish->category_id as $category_id){
+				if(!isset($restaurant['kitchen_type'][$category_id])){
 					$category = Category::select('title')->find($category_id);
-					$categories_list[] = (!empty($category))
-						? $category->title
-						: null;
+					if(!empty($category)){
+						$restaurant['kitchen_type'][$category_id] = [
+							'title' => $category->title,
+							'min_price' => null
+						];
+					}
 				}
-				$dish['category_id'] = $categories_list;
-				$restaurant['dishes'][] = $dish;
 			}
 		}
 
+		dd($restaurant);
 		return json_encode($restaurant);
 	}
 }
