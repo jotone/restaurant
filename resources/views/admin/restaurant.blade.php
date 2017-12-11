@@ -60,6 +60,12 @@
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=rating&dir=desc') }}" class="desc fa fa-caret-down"></a>
 					</div>
 				</th>
+				<th>Статус
+					<div class="direction" id="enabled">
+						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=enabled&dir=asc') }}" class="asc fa fa-caret-up"></a>
+						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=enabled&dir=desc') }}" class="desc fa fa-caret-down"></a>
+					</div>
+				</th>
 				<th>Просмотры
 					<div class="direction" id="views">
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=views&dir=asc') }}" class="asc fa fa-caret-up"></a>
@@ -110,6 +116,15 @@
 						@if(!empty($item['rating']))
 							<p><span class="fa fa-thumbs-o-up">&nbsp;+&nbsp;{{ $item['rating']->p }}</span></p>
 							<p><span class="fa fa-thumbs-o-down">&nbsp;&minus;&nbsp;{{ $item['rating']->n }}</span></p>
+						@endif
+					</td>
+					<td>
+						@if($item['enabled'] == 1)
+							<span class="fa fa-check"></span>
+							Включено
+						@else
+							<span class="fa fa-ban"></span>
+							Выключено
 						@endif
 					</td>
 					<td>{{ $item['views'] }}</td>

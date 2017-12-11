@@ -40,7 +40,7 @@ class RestaurantController extends AppController
 
 			//Get restaurants from DB and paginate 'em
 			$restaurants = Restaurant::select(
-				'id','title','slug','logo_img','address','rating','views',
+				'id','title','slug','logo_img','address','rating','views','enabled',
 				'created_by','updated_by','created_at','updated_at'
 			)->orderBy($sorting_settings['sort'], $sorting_settings['dir']);
 
