@@ -53,6 +53,7 @@
 								switch($type){
 									case 'category': echo 'Categories:'; break;
 									case 'restaurant': echo 'Restaurants'; break;
+									case 'dish': echo 'Meal Dishes'; break;
 								}
 								?>
 								<ul>

@@ -5,6 +5,7 @@ use App\AdminMenu;
 use App\Category;
 
 use App\Http\Controllers\AppController;
+use App\MealDish;
 use App\Restaurant;
 use Illuminate\Http\Request;
 
@@ -40,14 +41,26 @@ class GalleryController extends AppController
 				}
 
 				//Check for image in restaurants
-				$restaurants = Restaurant::select('id','title','large_img','logo_img','square_img')
+				$restaurants = Restaurant::select('id','title','img_url','logo_img','large_img','square_img')
 					->where('logo_img','LIKE','%'.$temp.'%')
 					->orWhere('large_img','LIKE','%'.$temp.'%')
 					->orWhere('square_img','LIKE','%'.$temp.'%')
+					->orWhere('img_url','LIKE','%'.$temp.'%')
 					->get();
 				//Create array of image usage
 				foreach($restaurants as $restaurant){
 					$used_id['restaurant'][$restaurant->id] = $restaurant->title;
+				}
+
+				//Check for image in dishes
+				$dishes = MealDish::select('id','title','img_url','large_img','square_img')
+					->where('large_img','LIKE','%'.$temp.'%')
+					->orWhere('square_img','LIKE','%'.$temp.'%')
+					->orWhere('img_url','LIKE','%'.$temp.'%')
+					->get();
+				//Create array of image usage
+				foreach($dishes as $dish){
+					$used_id['dish'][$dish->id] = $dish->title;
 				}
 
 				$images_usage[] = [
