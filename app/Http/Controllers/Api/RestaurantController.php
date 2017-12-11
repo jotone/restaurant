@@ -102,13 +102,22 @@ class RestaurantController extends ApiController
 				->where('enabled','=',1)
 				->find($dish_id);
 			foreach($dish->category_id as $category_id){
+				//Get current price for dish
+				$current_price = (!empty($dish->price))? $dish->price: 0;
+
 				if(!isset($restaurant['kitchen_type'][$category_id])){
+					//Create kitchen type
 					$category = Category::select('title')->find($category_id);
 					if(!empty($category)){
 						$restaurant['kitchen_type'][$category_id] = [
 							'title' => $category->title,
-							'min_price' => null
+							'min_price' => $current_price
 						];
+					}
+				}else{
+					//If isset kitchen -> get min price
+					if($restaurant['kitchen_type'][$category_id]['min_price'] > $current_price){
+						$restaurant['kitchen_type'][$category_id]['min_price'] = $current_price;
 					}
 				}
 			}
