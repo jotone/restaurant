@@ -98,12 +98,18 @@
 					<td>{{ $item['title'] }}</td>
 					<td>
 						@if(!empty($item['img_url']))
-							<img src="{{ asset($item['img_url']->src) }}" alt="">
+							<img src="{{ asset($item['img_url']['src']) }}" alt="">
 						@endif
 					</td>
 					<td>
-						@if(!empty($item['category']))
-							<a href="{{ route('admin.category.edit', $item['category']['id']) }}">{{ $item['category']['title'] }}</a>
+						@if(!empty($item['categories']))
+							@foreach($item['categories'] as $category)
+								@if($category['id'] != 0)
+									<a href="{{ route('admin.category.edit', $category['id']) }}">{{ $category['title'] }}</a>
+								@else
+									<p>{{ $category['title'] }}</p>
+								@endif
+							@endforeach
 						@endif
 					</td>
 					<td>

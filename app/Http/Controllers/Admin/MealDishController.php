@@ -73,7 +73,13 @@ class MealDishController extends AppController
 					}
 				}
 				//Get dish category
-				$category = $dish->category()->select('id','title')->first();
+				$categories = [];
+				foreach($dish->category_id as $category_id){
+					$category = Category::select('id','title')->find($category_id);
+					$categories[] = (!empty($category))
+						? ['id' => $category->id, 'title' => $category->title]
+						: ['id' => 0, 'title' => 'Категория отсутствует.'];
+				}
 				//Get creator
 				$created_by = $dish->createdBy()->select('name','email')->first();
 				//Get updater
@@ -82,7 +88,7 @@ class MealDishController extends AppController
 					'id'			=> $dish->id,
 					'title'			=> $dish->title,
 					'img_url'		=> $dish->square_img,
-					'category'		=> (!empty($category))? $category->toArray(): null,
+					'categories'	=> $categories,
 					'price'			=> $dish->price,
 					'text'			=> str_limit($dish->text, 63),
 					'menus'			=> $menus_list,
