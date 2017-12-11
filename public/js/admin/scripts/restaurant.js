@@ -16,7 +16,7 @@ $(document).ready(function(){
 
 	if($('.preview-image .preview-image-wrap').length > 0){
 		$('.preview-image .preview-image-wrap').closest('.preview-image').append('' +
-			'<div class="preview-image-controls">'+
+		'<div class="preview-image-controls">'+
 			'<input name="logo" style="display: none" type="file">'+
 			'<button name="fakeSingleImageLoad" class="button" type="button">Обзор&hellip;</button>' +
 			'<button name="galleryOverview" class="button" type="button">Галерея&hellip;</button> ' +

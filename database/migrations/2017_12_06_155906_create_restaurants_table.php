@@ -20,6 +20,7 @@ class CreateRestaurantsTable extends Migration
 			$table->text('logo_img')->nullable();
 			$table->text('square_img')->nullable();
 			$table->text('large_img')->nullable();
+			$table->text('img_url')->nullable();
 			$table->text('text')->nullable();
 			$table->text('address')->nullable();
 			$table->text('work_time')->nullable();

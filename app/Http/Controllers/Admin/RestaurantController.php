@@ -145,7 +145,7 @@ class RestaurantController extends AppController
 			$menus = MealMenu::select('id','title')->where('enabled','=',1)->get();
 
 			$content = Restaurant::select(
-				'id','title','logo_img','img_url','text','address','work_time','has_delivery','has_wifi',
+				'id','title','logo_img','square_img','large_img','img_url','text','address','work_time','has_delivery','has_wifi',
 				'coordinates','etc_data','rating','enabled','category_id'
 			)->find($id);
 			if(empty($content)){
@@ -189,7 +189,7 @@ class RestaurantController extends AppController
 			$menus = MealMenu::select('id','title')->where('enabled','=',1)->get();
 
 			$content = Restaurant::select(
-				'id','title','logo_img','img_url','text','address','work_time','has_delivery','has_wifi',
+				'id','title','logo_img','square_img','large_img','img_url','text','address','work_time','has_delivery','has_wifi',
 				'coordinates','etc_data','rating','enabled','category_id'
 			)->find($id);
 			if(empty($content)){
@@ -228,10 +228,11 @@ class RestaurantController extends AppController
 		$user = Auth::user();
 
 		$temp = $this->processData($request);
-		dd($temp);
 		$data	= $temp['data'];
-		/*$logo	= $temp['logo'];
-
+		$logo	= $temp['logo_img'];
+		$square	= $temp['square_img'];
+		$large	= $temp['large_img'];
+		$img_url= $temp['img_url'];
 
 		//If there are restaurants with such link
 		$data['slug'] = (Restaurant::where('slug','=',$data['slug'])->count() > 0)
@@ -242,6 +243,8 @@ class RestaurantController extends AppController
 			'title'			=> $data['title'],
 			'slug'			=> $data['slug'],
 			'logo_img'		=> $logo,
+			'square_img'	=> $square,
+			'large_img'		=> $large,
 			'img_url'		=> json_encode($img_url),
 			'text'			=> $data['text'],
 			'address'		=> $data['address'],
@@ -273,7 +276,7 @@ class RestaurantController extends AppController
 			return (isset($data['ajax']))
 				? json_encode(['message'=>'success'])
 				: redirect()->route('admin.restaurant.index');
-		}*/
+		}
 	}
 
 
@@ -287,7 +290,9 @@ class RestaurantController extends AppController
 		$user = Auth::user();
 		$temp = $this->processData($request);
 		$data	= $temp['data'];
-		$logo	= $temp['logo'];
+		$logo	= $temp['logo_img'];
+		$square	= $temp['square_img'];
+		$large	= $temp['large_img'];
 		$img_url= $temp['img_url'];
 
 		//If there are restaurants with such link
@@ -299,6 +304,8 @@ class RestaurantController extends AppController
 		$result->title			= $data['title'];
 		$result->slug			= $data['slug'];
 		$result->logo_img		= $logo;
+		$result->square_img		= $square;
+		$result->large_img		= $large;
 		$result->img_url		= json_encode($img_url);
 		$result->text			= $data['text'];
 		$result->address		= $data['address'];
@@ -343,6 +350,9 @@ class RestaurantController extends AppController
 	 * @return json string
 	 */
 	public function destroy($id){
+		MealMenu::where('restaurant_id','=',$id)->update([
+			'restaurant_id' => 0
+		]);
 		$result = Restaurant::find($id)->delete();
 		if($result != false){
 			return json_encode(['message'=>'success']);
@@ -358,6 +368,8 @@ class RestaurantController extends AppController
 	public function getRestaurantContent($content){
 		//Create logo image
 		$content->logo_img = ($this->isJson($content->logo_img))? json_decode($content->logo_img): [];
+		$content->square_img = ($this->isJson($content->square_img))? json_decode($content->square_img): [];
+		$content->large_img = ($this->isJson($content->large_img))? json_decode($content->large_img): [];
 		//Create images array
 		$content->img_url = json_decode($content->img_url);
 		$images = [];
@@ -440,7 +452,7 @@ class RestaurantController extends AppController
 		//If image was sent as $_FILE value
 		if(!empty($request->file())){
 			$img = $this->createImg($request->file('logo_img'));
-			$size = getimagesize($img);
+			$size = getimagesize(base_path().'/public'.$img);
 
 			$logo_img = json_encode([
 				'src'	=> $img,
@@ -455,7 +467,7 @@ class RestaurantController extends AppController
 				? $this->createImgBase64($data['logo_img']->src)
 				: $data['logo_img']->src;
 
-			$size = getimagesize($img);
+			$size = getimagesize(base_path().'/public'.$img);
 
 			$logo_img = json_encode([
 				'src'	=> $img,
@@ -469,7 +481,7 @@ class RestaurantController extends AppController
 		//Square image
 		if(!empty($request->file())){
 			$img = $this->createImg($request->file('logo_img'));
-			$size = getimagesize($img);
+			$size = getimagesize(base_path().'/public'.$img);
 
 			$square_img = json_encode([
 				'src'	=> $img,
@@ -484,7 +496,7 @@ class RestaurantController extends AppController
 				? $this->createImgBase64($data['square_img']->src)
 				: $data['square_img']->src;
 
-			$size = getimagesize($img);
+			$size = getimagesize(base_path().'/public'.$img);
 
 			$square_img = json_encode([
 				'src'	=> $img,
@@ -498,7 +510,7 @@ class RestaurantController extends AppController
 		//large Image
 		if(!empty($request->file())){
 			$img =  $this->makeRectangleImage($this->createImg($request->file('large_img')));
-			$size = getimagesize($img);
+			$size = getimagesize(base_path().'/public'.$img);
 
 			$large_img = json_encode([
 				'src'	=> $img,
@@ -513,7 +525,7 @@ class RestaurantController extends AppController
 				? $this->makeRectangleImage($this->createImgBase64($data['large_img']->src))
 				: $this->makeRectangleImage($data['large_img']->src);
 
-			$size = getimagesize($img);
+			$size = getimagesize(base_path().'/public'.$img);
 
 			$large_img = json_encode([
 				'src'	=> $img,

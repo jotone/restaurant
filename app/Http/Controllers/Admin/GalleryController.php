@@ -5,6 +5,7 @@ use App\AdminMenu;
 use App\Category;
 
 use App\Http\Controllers\AppController;
+use App\Restaurant;
 use Illuminate\Http\Request;
 
 class GalleryController extends AppController
@@ -36,6 +37,17 @@ class GalleryController extends AppController
 				//Create array of image usage
 				foreach($categories as $category){
 					$used_id['category'][$category->id] = $category->title;
+				}
+
+				//Check for image in restaurants
+				$restaurants = Restaurant::select('id','title','large_img','logo_img','square_img')
+					->where('logo_img','LIKE','%'.$temp.'%')
+					->orWhere('large_img','LIKE','%'.$temp.'%')
+					->orWhere('square_img','LIKE','%'.$temp.'%')
+					->get();
+				//Create array of image usage
+				foreach($restaurants as $restaurant){
+					$used_id['restaurant'][$restaurant->id] = $restaurant->title;
 				}
 
 				$images_usage[] = [

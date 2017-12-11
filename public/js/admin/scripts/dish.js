@@ -95,6 +95,16 @@ $(document).ready(function(){
 
 	$('.slider-wrap .slider-previews-wrap, .slider-wrap .slider-controls-wrap').show();
 
+	if($('.preview-image .preview-image-wrap').length > 0){
+		$('.preview-image .preview-image-wrap').closest('.preview-image').append('' +
+		'<div class="preview-image-controls">'+
+			'<input name="logo" style="display: none" type="file">'+
+			'<button name="fakeSingleImageLoad" class="button" type="button">Обзор&hellip;</button>' +
+			'<button name="galleryOverview" class="button" type="button">Галерея&hellip;</button> ' +
+			'<button name="clear" class="button" type="button">Очистить</button>'+
+		'</div>');
+	}
+
 	$('button[name=file_3d]').click(function(){
 		$(this).closest('.row-wrap').find('input[name=model_3d]').trigger('click');
 	});

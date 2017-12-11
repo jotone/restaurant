@@ -245,15 +245,17 @@ class AppController extends Controller implements CrudInterface
 	}
 
 	public function makeRectangleImage($filename){
-		$img_resolution = getimagesize($filename);
+		$img_resolution = getimagesize(base_path().'/public'.$filename);
 
 		$n = $img_resolution[0] / $img_resolution[1];
 		if($n <= 3){
 			//Cut
 			$cut_height = $img_resolution[1] - round($img_resolution[0] / 3);
-			$image = Image::make($filename);
+			$image = Image::make(base_path().'/public'.$filename);
+			$image->rotate(180);
 			$image->crop($img_resolution[0], $cut_height,0, $img_resolution[1]-$cut_height);
-			$image->save($filename);
+			$image->rotate(180);
+			$image->save(base_path().'/public'.$filename);
 		}
 		return $filename;
 	}

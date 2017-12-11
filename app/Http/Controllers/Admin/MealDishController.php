@@ -40,7 +40,7 @@ class MealDishController extends AppController
 
 			//Get dishes from DB and paginate 'em
 			$dishes = MealDish::select(
-				'id','title','img_url','category_id','price','text',
+				'id','title','square_img','category_id','price','text',
 				'is_recommended','enabled','views','created_by','updated_by','created_at','updated_at'
 			)->orderBy($sorting_settings['sort'], $sorting_settings['dir']);
 
@@ -74,8 +74,6 @@ class MealDishController extends AppController
 				}
 				//Get dish category
 				$category = $dish->category()->select('id','title')->first();
-				//Get dish preview image
-				$image = ($this->isJson($dish->img_url))? json_decode($dish->img_url): null;
 				//Get creator
 				$created_by = $dish->createdBy()->select('name','email')->first();
 				//Get updater
@@ -83,7 +81,7 @@ class MealDishController extends AppController
 				$content[] = [
 					'id'			=> $dish->id,
 					'title'			=> $dish->title,
-					'img_url'		=> (!empty($image))? $image[0]: null,
+					'img_url'		=> ($this->isJson($dish->square_img))? json_decode($dish->square_img): null,
 					'category'		=> (!empty($category))? $category->toArray(): null,
 					'price'			=> $dish->price,
 					'text'			=> str_limit($dish->text, 63),
@@ -163,7 +161,7 @@ class MealDishController extends AppController
 
 			//Get editable dish content
 			$content = MealDish::select(
-				'id','title','category_id','img_url','model_3d','price','dish_weight','calories','text',
+				'id','title','category_id','square_img','large_img','img_url','model_3d','price','dish_weight','calories','text',
 				'cooking_time','is_recommended','enabled',
 				'created_by','updated_by','created_at','updated_at'
 			)->find($id);
@@ -216,7 +214,7 @@ class MealDishController extends AppController
 
 			//Get editable dish content
 			$content = MealDish::select(
-				'title','category_id','img_url','model_3d','price','dish_weight','calories','text',
+				'title','category_id','square_img','large_img','img_url','model_3d','price','dish_weight','calories','text',
 				'cooking_time','is_recommended','enabled'
 			)->find($id);
 

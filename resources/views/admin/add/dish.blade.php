@@ -159,6 +159,38 @@
 						</div>
 					</fieldset>
 
+					<fieldset>
+						<legend>Квадратное изображение</legend>
+						<div class="row-wrap">
+							<div class="preview-image" id="square_img">
+								<div class="preview-image-wrap">
+									@if(isset($content) && !empty($content->square_img))
+										<img src="{{ $content->square_img->src }}" alt="" data-type="file">
+									@endif
+								</div>
+								<noscript>
+									<input name="square_img" class="input-file" type="file">
+								</noscript>
+							</div>
+						</div>
+					</fieldset>
+
+					<fieldset>
+						<legend>Большое изображение</legend>
+						<div class="row-wrap">
+							<div class="preview-image" id="large_img">
+								<div class="preview-image-wrap">
+									@if(isset($content) && !empty($content->large_img))
+										<img src="{{ $content->large_img->src }}" alt="" data-type="file">
+									@endif
+								</div>
+								<noscript>
+									<input name="large_img" class="input-file" type="file">
+								</noscript>
+							</div>
+						</div>
+					</fieldset>
+
 					@if($settings->slider == 1)
 					<fieldset>
 						<legend>Изображения</legend>

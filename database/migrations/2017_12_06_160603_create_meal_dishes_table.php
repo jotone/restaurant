@@ -18,6 +18,8 @@ class CreateMealDishesTable extends Migration
 			$table->string('title');
 			$table->string('slug');
 			$table->text('category_id');
+			$table->text('square_img')->nullable();
+			$table->text('large_img')->nullable();
 			$table->text('img_url')->nullable();
 			$table->text('model_3d')->nullable();
 			$table->string('price')->nullable();
