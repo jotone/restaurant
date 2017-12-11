@@ -70,7 +70,7 @@ class RestaurantController extends AppController
 					'logo'		=> ($this->isJson($restaurant->logo_img))? json_decode($restaurant->logo_img): null,
 					'address'	=> str_limit($restaurant->address, 63),
 					'menus'		=> $menus->toArray(),
-					'rating'	=> ($this->isJson($restaurant->rating))? json_decode($restaurant->rating): null,
+					'rating'	=> $restaurant->rating,
 					'views'		=> $restaurant->views,
 					'enabled'	=> $restaurant->enabled,
 					'created'	=> date('Y /m /d H:i', strtotime($restaurant->created_at)),

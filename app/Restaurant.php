@@ -15,11 +15,11 @@ class Restaurant extends Model
 	];
 
 	public function getRatingAttribute($value){
-		return json_decode($value);
+		return json_decode($value, true);
 	}
 
 	public function getCoordinatesAttribute($value){
-		return json_decode($value);
+		return json_decode($value, true);
 	}
 
 	public function mealMenus(){

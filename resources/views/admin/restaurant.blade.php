@@ -114,8 +114,8 @@
 					</td>
 					<td>
 						@if(!empty($item['rating']))
-							<p><span class="fa fa-thumbs-o-up">&nbsp;+&nbsp;{{ $item['rating']->p }}</span></p>
-							<p><span class="fa fa-thumbs-o-down">&nbsp;&minus;&nbsp;{{ $item['rating']->n }}</span></p>
+							<p><span class="fa fa-thumbs-o-up">&nbsp;+&nbsp;{{ $item['rating']['p'] }}</span></p>
+							<p><span class="fa fa-thumbs-o-down">&nbsp;&minus;&nbsp;{{ $item['rating']['n'] }}</span></p>
 						@endif
 					</td>
 					<td>

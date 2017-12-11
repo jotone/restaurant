@@ -86,11 +86,11 @@ class RegisterController extends ApiController
 	 */
 	public function submitSmsCode($id, Request $request){
 		$data = $request->all();
-		$id = Crypt::decrypt($id);
+		$visitor_id = Crypt::decrypt($id);
 		$data['sms'] = preg_replace('/\D+/', '', $data['sms']);
 		//If there is user with such ID and sms code
-		if(Visitors::where('id','=',$id)->where('sms_code','=',$data['sms'])->count() == 1){
-			$user = Visitors::find($id);
+		if(Visitors::where('id','=',$visitor_id)->where('sms_code','=',$data['sms'])->count() == 1){
+			$user = Visitors::find($visitor_id);
 			$user->status = 1;
 			$user->save();
 
@@ -138,9 +138,9 @@ class RegisterController extends ApiController
 			]), 400);
 		}
 
-		$id = Crypt::decrypt($id);
+		$visitor_id = Crypt::decrypt($id);
 
-		$user = Visitors::find($id);
+		$user = Visitors::find($visitor_id);
 		$user->name		= $data['name'];
 		$user->surname	= $data['surname'];
 		$user->email	= $data['email'];

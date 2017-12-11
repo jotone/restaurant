@@ -293,7 +293,7 @@
 									class="input-text"
 									type="text"
 									placeholder="Координата Х&hellip;"
-									value="@if(isset($content)){{ $content->coordinates->x }}@endif"
+									value="@if(isset($content)){{ $content->coordinates['x'] }}@endif"
 									@if(isset($content) && !isset($content->id))disabled="disabled"@endif>
 							<span>Координата Х</span>
 						</label>
@@ -304,7 +304,7 @@
 									class="input-text"
 									type="text"
 									placeholder="Координата Y&hellip;"
-									value="@if(isset($content)){{ $content->coordinates->y }}@endif"
+									value="@if(isset($content)){{ $content->coordinates['y'] }}@endif"
 									@if(isset($content) && !isset($content->id))disabled="disabled"@endif>
 							<span>Координата Y</span>
 						</label>
@@ -339,7 +339,7 @@
 							<input	name="likes"
 									type="number"
 									min="0"
-									value="@if(isset($content)){{ $content->rating->p }}@endif"
+									value="@if(isset($content)){{ $content->rating['p'] }}@endif"
 									@if(isset($content) && !isset($content->id))disabled="disabled"@endif>
 							<span class="fa fa-thumbs-o-up"></span>
 						</label>
@@ -347,7 +347,7 @@
 							<input	name="dislikes"
 									type="number"
 									min="0"
-									value="@if(isset($content)){{ $content->rating->n }}@endif"
+									value="@if(isset($content)){{ $content->rating['n'] }}@endif"
 									@if(isset($content) && !isset($content->id))disabled="disabled"@endif>
 							<span class="fa fa-thumbs-o-down"></span>
 						</label>
