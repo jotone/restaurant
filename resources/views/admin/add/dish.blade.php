@@ -53,10 +53,10 @@
 												<option value="{{ $category->id }}" @if(isset($content) && ($content->category_id == $category->id))selected="selected"@endif>{{ $category->title }}</option>
 											@endforeach
 										</select>
-										<span>Категория ресторана</span>
+										<span>Категория блюда</span>
 									</label>
 								@else
-									<p>Отнести к категориям:</p>
+									<p>Отнести Блюдо к категориям:</p>
 									<div class="checkbox-group-wrap">
 										@foreach($categories as $category)
 											<div class="checkbox-group-item">

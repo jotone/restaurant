@@ -354,14 +354,15 @@ class MealMenuController extends AppController
 		$dish_list = [];
 		foreach($dishes as $dish){
 			//Get category
-			$category = $dish->category()->select('id','title')->first();
-
-			$dish_list[$dish->category_id]['caption'] = (!empty($category))? $category->title: 'Категория не указана';
-			$dish_list[$dish->category_id]['items'][] = [
-				'id'		=> $dish->id,
-				'title'		=> $dish->title,
-				'price'		=> number_format((float)$dish->price, 2, '.', ' ')
-			];
+			foreach($dish->category_id as $category_id){
+				$category = Category::select('id','title')->find($category_id);
+				$dish_list[$category_id]['caption'] = (!empty($category))? $category->title: 'Категория не указана';
+				$dish_list[$category_id]['items'][] = [
+					'id'		=> $dish->id,
+					'title'		=> $dish->title,
+					'price'		=> number_format((float)$dish->price, 2, '.', ' ')
+				];
+			}
 		}
 
 		return [

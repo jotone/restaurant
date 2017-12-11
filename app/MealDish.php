@@ -21,8 +21,8 @@ class MealDish extends Model
 		return json_decode($value);
 	}
 
-	public function category(){
-		return $this->belongsTo('App\Category');
+	public function getCategoryIdAttribute($value){
+		return json_decode($value);
 	}
 
 	public function createdBy(){
