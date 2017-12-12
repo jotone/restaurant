@@ -66,6 +66,7 @@ class SettingsController extends AppController
 		unset($data['_method']);
 		unset($data['id']);
 		unset($data['save']);
+		unset($data['_url']);
 		unset($data['ajax']);
 
 		//Get settings ids

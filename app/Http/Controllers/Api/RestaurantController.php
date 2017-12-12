@@ -3,11 +3,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Category;
 use App\MealDish;
-use App\MealMenu;
 use App\Restaurant;
 
 use \App\Http\Controllers\ApiController;
-
 
 class RestaurantController extends ApiController
 {
@@ -123,7 +121,6 @@ class RestaurantController extends ApiController
 			}
 		}
 
-		dd($restaurant);
 		return json_encode($restaurant);
 	}
 }

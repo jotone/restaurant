@@ -227,10 +227,10 @@ class CategoriesTypesController extends AppController
 			: $data['slug'];
 
 		$result = CategoryTypes::create([
-			'title'=> trim($data['title']),
-			'slug'=> str_slug(trim($data['slug'])),
-			'options'=> $data['options'],
-			'enabled'=> $data['enabled'],
+			'title'		=> trim($data['title']),
+			'slug'		=> str_slug(trim($data['slug'])),
+			'options'	=> $data['options'],
+			'enabled'	=> $data['enabled'],
 			'created_by'=> $user['id'],
 			'updated_by'=> $user['id']
 		]);
@@ -267,7 +267,7 @@ class CategoriesTypesController extends AppController
 			}
 
 			if(isset($data['options'])){
-				$result->options	= json_encode($data['options']);
+				$result->options	= $data['options'];
 			}
 
 			$result->enabled	= $data['enabled'];
@@ -319,7 +319,7 @@ class CategoriesTypesController extends AppController
 	 * @return \App\CategoryTypes $category_type
 	 */
 	public function getCategoryTypeData($category_type){
-		//Decode optons
+		//Get options array
 		$category_type->options = json_decode($category_type->options);
 		//Get creator
 		$category_type->created_by = $category_type->createdBy()->select('name','email')->first()->toArray();
