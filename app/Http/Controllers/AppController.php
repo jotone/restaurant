@@ -481,8 +481,8 @@ class AppController extends Controller implements CrudInterface
 						<div class="category-slug" title="link">'.$item->slug.'</div>
 						<div class="category-image">'.$img_url.'</div>
 						<div class="timestamps">
-							<p>Created at: '.$item->created_at.'</p>
-							<p>Updated at: '.$item->updated_at.'</p>
+							<p>Создан: '.$item->created_at.'</p>
+							<p>Изменен: '.$item->updated_at.'</p>
 						</div>';
 				if($build_controls){
 					$result .= '

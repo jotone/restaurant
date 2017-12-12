@@ -43,7 +43,7 @@ $(document).ready(function(){
 				try{
 					data = JSON.parse(data);
 					if(data.message == 'success'){
-						statusBarAddMessage(true, 'Settings saved successfully');
+						statusBarAddMessage(true, 'Настройки успешно сохранены');
 						showStatus(true);
 					}
 				}catch(e){

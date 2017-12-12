@@ -40,12 +40,12 @@ $(document).ready(function(){
 					try{
 						data = JSON.parse(data);
 						if(data.message == 'success'){
-							statusBarAddMessage(true, 'User "' + name + '" was successfully saved.');
+							statusBarAddMessage(true, 'Администратор "' + name + '" успешно сохранен.');
 							showStatus(true);
 
 							var confirmMessage = (id.length > 0)
-								? 'Do you want to continue edit this user?'
-								: 'Do you want to add next user?';
+								? 'Продолжить редактирование данного администратора?'
+								: 'Приступить к созданию следующего администратора?';
 							showConfirm(confirmMessage);
 
 							$(document).on('customEvent', function (e) {
@@ -76,7 +76,7 @@ $(document).ready(function(){
 	$('.items-list a.drop').click(function(e){
 		e.preventDefault();
 		var _this = $(this);
-		showConfirm('Do you really want to delete user "'+$(this).attr('data-title')+'"?');
+		showConfirm('Вы действительно хотите удалить администратора "'+$(this).attr('data-title')+'"?');
 		$(document).on('customEvent', function(e){
 			if(e.message === true){
 				var id = _this.attr('data-id');

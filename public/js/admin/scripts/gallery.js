@@ -2,8 +2,8 @@ $(document).ready(function(){
 	$('.items-controls-wrap .button-wrap form[name=galleryUpload]').hide();
 	$('.items-controls-wrap .button-wrap').append('' +
 		'<input name="upload" type="file" multiple="multiple" style="display: none;">' +
-		'<a class="button inline" href="#" data-type="add">Upload Files</a>'+
-		'<a class="button inline" href="#" data-type="drop-all">Drop all unused</a>');
+		'<a class="button inline" href="#" data-type="add">Загрузить файлы</a>'+
+		'<a class="button inline" href="#" data-type="drop-all">Удалить неиспользуемые</a>');
 
 	//click "Upload Files"
 	$('a[data-type=add]').click(function(e){
@@ -48,7 +48,7 @@ $(document).ready(function(){
 												'<span>'+data.image.name+'</span>'+
 											'</p>'+
 											'<p>Size: '+data.image.size+'</p>'+
-											'<p>Is not used anywhere</p>'+
+											'<p>Не используется</p>'+
 										'</div>'+
 									'</div>');
 								break;
@@ -71,7 +71,7 @@ $(document).ready(function(){
 	$('a[data-type=drop-all]').click(function(e){
 		e.preventDefault();
 		var _this = $(this);
-		showConfirm('Do you really want to delete all unused images?');
+		showConfirm('Вы действительно хотите удалить все неиспользуемые изображения?');
 		$(document).off('customEvent').on('customEvent', function(e){
 			if(e.message === true){
 				var files = [];
@@ -94,7 +94,7 @@ $(document).ready(function(){
 							data = JSON.parse(data);
 							if(data.message == 'success'){
 								$('.images-wrap .image-container .active').closest('.image-container').remove();
-								statusBarAddMessage(true, 'Unused images was successfully deleted');
+								statusBarAddMessage(true, 'Неиспользуемые изображения успешно удалены');
 								showStatus(false);
 							}
 						}catch(e){
@@ -109,7 +109,7 @@ $(document).ready(function(){
 	$('.images-wrap').on('click', '.drop-image', function(){
 		var _this = $(this);
 		var image = _this.closest('.image-container').find('p[data-type=name] span').text();
-		showConfirm('Do you really want to delete image '+image+'?');
+		showConfirm('Вы действительно хотите удалить изображение '+image+'?');
 		$(document).off('customEvent').on('customEvent', function(e){
 			if(e.message === true){
 				$.ajax({
@@ -124,7 +124,7 @@ $(document).ready(function(){
 							data = JSON.parse(data);
 							if(data.message == 'success'){
 								_this.closest('.image-container').remove();
-								statusBarAddMessage(true, 'Image '+image+' was successfully deleted');
+								statusBarAddMessage(true, 'Изображение '+image+' изображения успешно удалено');
 								showStatus(false);
 							}
 						}catch(e){

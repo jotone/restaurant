@@ -299,8 +299,8 @@ $(document).ready(function(){
 							showStatus(true);
 
 							var confirmMessage = (id.length > 0)
-								? 'Do you want to continue edit this page?'
-								: 'Do you want to add next page?';
+								? 'Продолжить редактирование данной страницы?'
+								: 'Приступить к наполнению следующей страницы?';
 							showConfirm(confirmMessage);
 
 							$(document).on('customEvent', function(e){
@@ -332,7 +332,7 @@ $(document).ready(function(){
 	$('.items-list a.drop').click(function(e){
 		e.preventDefault();
 		var _this = $(this);
-		showConfirm('Do you really want to delete page "'+$(this).attr('data-title')+'"?');
+		showConfirm('Вы действительно хотите удалить страницу "'+$(this).attr('data-title')+'"?');
 		$(document).on('customEvent', function(e){
 			if(e.message === true){
 				var id = _this.attr('data-id');

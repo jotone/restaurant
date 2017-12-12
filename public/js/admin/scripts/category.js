@@ -5,9 +5,9 @@ $(document).ready(function(){
 		$('.preview-image').append('' +
 		'<div class="preview-image-controls">'+
 			'<input name="image" style="display: none" type="file">'+
-			'<button name="fakeSingleImageLoad" class="button" type="button">Browse&hellip;</button>' +
-			'<button name="galleryOverview" class="button" type="button">Gallery&hellip;</button> ' +
-			'<button name="clear" class="button" type="button">Clear</button>'+
+			'<button name="fakeSingleImageLoad" class="button" type="button">Обзор&hellip;</button>' +
+			'<button name="galleryOverview" class="button" type="button">Галлерея&hellip;</button> ' +
+			'<button name="clear" class="button" type="button">Очистить</button>'+
 		'</div>');
 	}
 
@@ -82,12 +82,12 @@ $(document).ready(function(){
 					try{
 						data = JSON.parse(data);
 						if(data.message == 'success'){
-							statusBarAddMessage(true, 'Category "'+title+'" was successfully saved');
+							statusBarAddMessage(true, 'Категория "'+title+'" была успешно сохранена');
 							showStatus(true);
 
 							var confirmMessage = (id.length > 0)
-								? 'Do you want to continue edit this category?'
-								: 'Do you want to add next category?';
+								? 'Продолжить редактирование данной категории?'
+								: 'Приступить к наполнению следующей категории?';
 							showConfirm(confirmMessage);
 
 							$(document).on('customEvent', function(e){

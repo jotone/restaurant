@@ -100,9 +100,9 @@ $(document).ready(function(){
 			'</div>'+"\n"+
 			'<div class="preview-image-controls">'+"\n"+
 				'<input name="image" style="display: none" type="file">'+"\n"+
-				'<button name="fakeSingleImageLoad" class="button" type="button">Browse&hellip;</button>'+"\n"+
-				'<button name="galleryOverview" class="button" type="button">Gallery&hellip;</button>'+"\n"+
-				'<button name="clear" class="button" type="button">Clear</button>'+"\n"+
+				'<button name="fakeSingleImageLoad" class="button" type="button">Обзор&hellip;</button>'+"\n"+
+				'<button name="galleryOverview" class="button" type="button">Галлерея&hellip;</button>'+"\n"+
+				'<button name="clear" class="button" type="button">Очистить</button>'+"\n"+
 			'</div>'+"\n"+
 		'</div>'+"\n";
 		insetrAtCaret(tag);
@@ -119,8 +119,8 @@ $(document).ready(function(){
 				'</div>'+"\n"+
 				'<div class="slider-buttons">'+"\n"+
 					'<input name="upload" style="display: none" multiple="multiple" type="file">'+"\n"+
-					'<button name="uploadSliderImages" type="button" class="button">Browse…</button>'+"\n"+
-					'<button name="galleryOverview" type="button" class="button">Gallery…</button>'+"\n"+
+					'<button name="uploadSliderImages" type="button" class="button">Обзор&hellip;</button>'+"\n"+
+					'<button name="galleryOverview" type="button" class="button">Галлерея&hellip;</button>'+"\n"+
 				'</div>'+"\n"+
 			'</div>'+"\n"+
 			'<div class="slider-previews-wrap" style="display: block;">'+"\n"+
@@ -137,8 +137,8 @@ $(document).ready(function(){
 				'<div class="custom-slider-controls"><span class="fa fa-angle-left"></span></div>'+"\n"+
 				'<div class="custom-slider-body">'+"\n"+
 					'<div class="custom-slider-preview-controlls">'+"\n"+
-						'<div class="add-button" title="Add Slide"><span class="fa fa-plus-circle"></span></div>'+"\n"+
-						'<div class="view-button" title="View Slider"><span class="fa fa-eye"></span></div>'+"\n"+
+						'<div class="add-button" title="Добавить Слайд"><span class="fa fa-plus-circle"></span></div>'+"\n"+
+						'<div class="view-button" title="Просмотр Слайдера"><span class="fa fa-eye"></span></div>'+"\n"+
 					'</div>'+"\n"+
 					'<div class="custom-slider-content-wrap">'+"\n"+
 						'<div class="custom-slider-content active">'+"\n"+"\n"+'</div>'+"\n"+
@@ -177,12 +177,12 @@ $(document).ready(function(){
 					try{
 						data = JSON.parse(data);
 						if(data.message == 'success'){
-							statusBarAddMessage(true, 'Template "'+title+'" was successfully saved');
+							statusBarAddMessage(true, 'Шаблон "'+title+'" успешно сохранен');
 							showStatus(true);
 
 							var confirmMessage = (id.length > 0)
-								? 'Do you want to continue edit template?'
-								: 'Do you want to add next template?';
+								? 'Продолжить редактирование данного шаблона?'
+								: 'Приступить к наполнению нового шаблона?';
 							showConfirm(confirmMessage);
 
 							$(document).on('customEvent', function(e){
@@ -212,7 +212,7 @@ $(document).ready(function(){
 	$('.items-list a.drop').click(function(e){
 		e.preventDefault();
 		var _this = $(this);
-		showConfirm('Do you really want to delete template "'+$(this).attr('data-title')+'"?');
+		showConfirm('Вы действительно хотите удалить шаблон "'+$(this).attr('data-title')+'"?');
 		$(document).on('customEvent', function(e){
 			if(e.message === true){
 				var id = _this.attr('data-id');

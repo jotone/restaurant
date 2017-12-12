@@ -177,7 +177,7 @@ function buildSliderImage(image, type){
 			'<img src="'+image.src+'" alt="" data-type="'+type+'">'+
 		'</div>'+
 		'<div class="slide-alt-wrap">'+
-			'<input name="altText" type="text" class="input-text" placeholder="Alternative text&hellip;">'+
+			'<input name="altText" type="text" class="input-text" placeholder="Альтернативный текст&hellip;">'+
 			'<span class="drop-image-icon fa fa-times"></span>'+
 		'</div>'+
 	'</div>';
@@ -193,8 +193,8 @@ function buildSliderPreviewData(image){
 			'<img src="'+image.src+'" alt="">'+
 		'</div>'+
 		'<div class="preview-data">'+
-			'<p data-type="name">Filename: <span>'+image.name+'</span></p>'+
-			'<p data-type="size">Size: <span>'+image.size+'</span></p>'+
+			'<p data-type="name">Файл: <span>'+image.name+'</span></p>'+
+			'<p data-type="size">Размер: <span>'+image.size+'</span></p>'+
 			'<p data-type="alt">Alt: <span></span></p>'+
 		'</div>' +
 		'<div class="drop-preview-icon fa fa-times"></div>'+
@@ -431,8 +431,8 @@ $(document).ready(function(){
 							$('.overview-popup .popup-images').append('<div class="image-wrap">'+
 								'<img src="/'+data.images[i]['src']+'" alt="">' +
 								'<div class="details">' +
-									'<p data-type="name">Name: <span>'+data.images[i]['name']+'</span></p>' +
-									'<p data-type="size">Size: <span>'+data.images[i]['size']+'</span></p>' +
+									'<p data-type="name">Файл: <span>'+data.images[i]['name']+'</span></p>' +
+									'<p data-type="size">Размер: <span>'+data.images[i]['size']+'</span></p>' +
 								'</div>' +
 							'</div>');
 						}
@@ -626,11 +626,11 @@ $(document).ready(function(){
 	$(document).on('click', 'button[name=addCharacteristicsRow]', function(){
 		$(this).closest('fieldset').find('.items-list tbody').append('<tr>'+
 			'<td><a class="delete fa fa-times" href="#"></a></td>'+
-			'<td><input name="rowCaption[]" type="text" class="input-text col_1" placeholder="Caption&hellip;"></td>'+
-			'<td><input name="rowValue[]" type="text" class="input-text col_1" placeholder="Value&hellip;"></td>'+
+			'<td><input name="rowCaption[]" type="text" class="input-text col_1" placeholder="Название&hellip;"></td>'+
+			'<td><input name="rowValue[]" type="text" class="input-text col_1" placeholder="Значение&hellip;"></td>'+
 		'</tr>');
 	});
-	$('.characteristic-table').closest('.row-wrap').find('.row-wrap').append('<button name="addCharacteristicsRow" type="button" class="button">Add Row</button>');
+	$('.characteristic-table').closest('.row-wrap').find('.row-wrap').append('<button name="addCharacteristicsRow" type="button" class="button">Добавить Ряд</button>');
 
 // /Characteristics table
 

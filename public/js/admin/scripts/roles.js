@@ -91,12 +91,12 @@ $(document).ready(function(){
 					try{
 						data = JSON.parse(data);
 						if(data.message == 'success'){
-							statusBarAddMessage(true, 'Role "'+title+'" was successfully saved');
+							statusBarAddMessage(true, 'Роль "'+title+'" успешно сохранена');
 							showStatus(true);
 
 							var confirmMessage = (id.length > 0)
-								? 'Do you want to continue edit this role?'
-								: 'Do you want to add next role?';
+								? 'Продолжить редактирование данной роли?'
+								: 'Приступить к наполнению следующей роли?';
 								showConfirm(confirmMessage);
 
 							$(document).on('customEvent', function(e){
@@ -129,7 +129,7 @@ $(document).ready(function(){
 	$('.items-list a.drop').click(function(e){
 		e.preventDefault();
 		var _this = $(this);
-		showConfirm('Do you really want to delete role "'+$(this).attr('data-title')+'" and remove rules for users in this role?');
+		showConfirm('Вы действительно хотите удалить роль "'+$(this).attr('data-title')+'" и отменить права всех прикрепленных к ней пользователей?');
 		$(document).on('customEvent', function(e){
 			if(e.message === true){
 				var id = _this.attr('data-id');

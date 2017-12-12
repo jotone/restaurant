@@ -118,7 +118,7 @@ class UsersController extends AppController
 					'start'		=> $start,
 					'page'		=> $request->path(),
 					'breadcrumbs'=> $breadcrumbs,
-					'title'		=> 'Добавлеие пользователя',
+					'title'		=> 'Добавление администратора',
 					'roles'		=> $roles
 				]);
 			}
@@ -155,7 +155,7 @@ class UsersController extends AppController
 					'start'		=> $start,
 					'page'		=> $request->path(),
 					'breadcrumbs'=> $breadcrumbs,
-					'title'		=> 'Редактирование пользователя '.$user->email,
+					'title'		=> 'Редактирование администратора '.$user->email,
 					'content'	=> $user,
 					'roles'		=> $roles
 				]);
@@ -183,7 +183,7 @@ class UsersController extends AppController
 					'start'		=> $start,
 					'page'		=> $request->path(),
 					'breadcrumbs'=> $breadcrumbs,
-					'title'		=> 'Просмотр пользователя'.$user->email,
+					'title'		=> 'Просмотр администратора'.$user->email,
 					'content'	=> $user,
 					'roles'		=>$roles
 				]);
@@ -281,7 +281,7 @@ class UsersController extends AppController
 		}else{
 			return json_encode([
 				'message'=>'error',
-				'errors'=> ['Пользователь с таким e-mail\'ом уже существует ']
+				'errors'=> ['Администратор с таким e-mail\'ом уже существует ']
 			]);
 		}
 	}

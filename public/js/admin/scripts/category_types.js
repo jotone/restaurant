@@ -63,8 +63,8 @@ $(document).ready(function(){
 							showStatus(true);
 
 							var confirmMessage = (id.length > 0)
-								? 'Do you want to continue edit this category type?'
-								: 'Do you want to add next category type?';
+								? 'Продолжить редактирование данного типа категорий?'
+								: 'Приступить к наполнению следующего типа категорий?';
 							showConfirm(confirmMessage);
 
 							$(document).on('customEvent', function(e){
@@ -128,7 +128,7 @@ $(document).ready(function(){
 	$('.items-list a.drop').click(function(e) {
 		e.preventDefault();
 		var _this = $(this);
-		showConfirm('Do you really want to delete category type "'+$(this).attr('data-title')+'" and remove all the inner categories?');
+		showConfirm('Вы действительно хотите удалить тип категорий "'+$(this).attr('data-title')+'" вместе с вложеными категориями?');
 		$(document).on('customEvent', function(e){
 			if(e.message === true){
 				var id = _this.attr('data-id');
@@ -177,8 +177,8 @@ $(document).ready(function(){
 						}else{
 							_this.removeClass('fa-check').addClass('fa-ban');
 						}
-						_this.closest('.category-wrap').toggleClass('disabled')
-						statusBarAddMessage(true, 'Category "'+title+'" status changed successfully');
+						_this.closest('.category-wrap').toggleClass('disabled');
+						statusBarAddMessage(true, 'Статус категории "'+title+'" успешно изменен');
 						showStatus(true);
 					}
 				}catch(e){
@@ -192,7 +192,7 @@ $(document).ready(function(){
 		e.preventDefault();
 		var _this = $(this);
 		var title = $(this).closest('li').find('.title-wrap').text();
-		showConfirm('Do you really want to delete category "'+title+'"?');
+		showConfirm('Вы действительно хотите удалить категорию "'+title+'"?');
 		$(document).on('customEvent', function(e){
 			if(e.message === true){
 				var id = _this.closest('li').attr('data-id');
