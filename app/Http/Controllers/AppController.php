@@ -240,7 +240,7 @@ class AppController extends Controller implements CrudInterface
 			$image->save($destinationPath);
 			return $filename;
 		}else{
-			return 'Image is undefined';
+			return 'Изображение не определено';
 		}
 	}
 
@@ -347,7 +347,7 @@ class AppController extends Controller implements CrudInterface
 					case 'create':
 						$result[] = [
 							'is_link'	=> false,
-							'title'		=> 'create'
+							'title'		=> 'Добавление'
 						];
 					break;
 					case 'edit': break;
@@ -359,7 +359,6 @@ class AppController extends Controller implements CrudInterface
 							}
 						}
 						$link = AdminMenu::select('title')->where('slug', '=', $slug)->first();
-						if(empty($link)) dd($slug);
 						$result[] = ($i < (count($page) -1))
 							? ['is_link'=> true, 'link' => $slug, 'title' => $link->title]
 							: ['is_link'=> false, 'title' => $link->title];

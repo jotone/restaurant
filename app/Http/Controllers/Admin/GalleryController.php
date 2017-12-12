@@ -118,13 +118,13 @@ class GalleryController extends AppController
 				if(empty($result)){
 					return json_encode([
 						'message'	=> 'error',
-						'text'		=> 'Image is corrupted or has unacceptable mime-type'
+						'text'		=> 'Изображение повреждено или не соответствует mime-типу'
 					]);
 				}else{
 					$name = $this->getFileName($result);
 					return json_encode([
 						'message'	=> 'success',
-						'text'		=> 'Image '.$name.' was saved successfully',
+						'text'		=> 'Изображение '.$name.' успешно сохранено',
 						'image'		=> [
 							'src'		=> $result,
 							'name'		=> $name,
@@ -143,7 +143,7 @@ class GalleryController extends AppController
 						//Save image
 						$result = $this->createImg($file);
 						if(empty($result)){
-							$error .= '<p>Image '.$file->getClientOriginalName().' was not created</p>';
+							$error .= '<p>Изображение '.$file->getClientOriginalName().' не создано</p>';
 						}
 					}
 				}

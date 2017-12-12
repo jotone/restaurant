@@ -31,10 +31,10 @@ class CategoriesController extends AppController
 
 			//custom breadcrumbs
 			$breadcrumbs = [
-				['is_link' => true, 'link' => route('admin.home'), 'title' => 'Home'],
-				['is_link' => true, 'link' => route('admin.category_types.index'), 'title' => 'Types of Categories'],
+				['is_link' => true, 'link' => route('admin.home'), 'title' => 'Главная'],
+				['is_link' => true, 'link' => route('admin.category_types.index'), 'title' => 'Типы категорий'],
 				['is_link' => true, 'link' => route('admin.category_types.edit', $type_id), 'title' => $category_type->title,],
-				['is_link' => false, 'title' => 'Create category']
+				['is_link' => false, 'title' => 'Добавление Категории']
 			];
 
 			return view('admin.add.category', [
@@ -82,8 +82,8 @@ class CategoriesController extends AppController
 
 			//Custom breadcrumbs
 			$breadcrumbs = [
-				['is_link' => true, 'link' => route('admin.home'), 'title' => 'Home'],
-				['is_link' => true, 'link' => route('admin.category_types.index'), 'title' => 'Types of Categories'],
+				['is_link' => true, 'link' => route('admin.home'), 'title' => 'Главная'],
+				['is_link' => true, 'link' => route('admin.category_types.index'), 'title' => 'Типы категорий'],
 				['is_link' => true, 'link' => route('admin.category_types.edit', $current_category->category_type), 'title' => $category_type->title,],
 				['is_link' => false, 'title' => $current_category->title]
 			];
