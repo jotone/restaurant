@@ -81,7 +81,7 @@ class CategoriesTypesController extends AppController
 				'start'		=> $start,
 				'page'		=> $current_page,
 				'breadcrumbs'=> $breadcrumbs,
-				'title'		=> 'Types Of '.$page->title,
+				'title'		=> 'Типы Категорий',
 				'pagination'=> $pagination_options,
 				'content'	=> $content
 			]);
@@ -104,17 +104,17 @@ class CategoriesTypesController extends AppController
 
 			//List of data-fields that should be used for inner categories
 			$start_options = [
-				'image'	=> 'Use image for categories',
-				'text'	=> 'Use text',
-				'meta'	=> 'Use description, keywords and title tags',
-				'seo'	=> 'Use seo data'
+				'image'	=> 'Использовать изображения для категорий',
+				'text'	=> 'Использовать текст',
+				'meta'	=> 'Использовать мета теги description, keywords, title',
+				'seo'	=> 'Использовать seo данные'
 			];
 
 			return view('admin.add.category_types', [
 				'start'			=> $start,
 				'page'			=> $request->path(),
 				'breadcrumbs'	=> $breadcrumbs,
-				'title'			=> 'Add Type Of '.$page->title,
+				'title'			=> 'Додавление типа категориий',
 				'options'		=> $start_options
 			]);
 		}
@@ -148,17 +148,17 @@ class CategoriesTypesController extends AppController
 
 			//List of data-fields that should be used for inner categories
 			$start_options = [
-				'image'	=> 'Use image for categories',
-				'text'	=> 'Use text',
-				'meta'	=> 'Use description, keywords and title tags',
-				'seo'	=> 'Use seo data'
+				'image'	=> 'Использовать изображения для категорий',
+				'text'	=> 'Использовать текст',
+				'meta'	=> 'Использовать мета теги description, keywords, title',
+				'seo'	=> 'Использовать seo данные'
 			];
 
 			return view('admin.add.category_types', [
 				'start'			=> $start,
 				'page'			=> $request->path(),
 				'breadcrumbs'	=> $breadcrumbs,
-				'title'			=> 'Edit category type '.$page->title,
+				'title'			=> 'Редактирование типов категорий',
 				'content'		=> $category_type,
 				'categories'	=> $categories,
 				'options'		=> $start_options,
@@ -193,17 +193,17 @@ class CategoriesTypesController extends AppController
 
 			//List of data-fields that should be used for inner categories
 			$start_options = [
-				'image'	=> 'Use image for categories',
-				'text'	=> 'Use text',
-				'meta'	=> 'Use description, keywords and title tags',
-				'seo'	=> 'Use seo data'
+				'image'	=> 'Использовать изображения для категорий',
+				'text'	=> 'Использовать текст',
+				'meta'	=> 'Использовать мета теги description, keywords, title',
+				'seo'	=> 'Использовать seo данные'
 			];
 
 			return view('admin.add.category_types', [
 				'start'			=> $start,
 				'page'			=> $request->path(),
 				'breadcrumbs'	=> $breadcrumbs,
-				'title'			=> 'View Type Of '.$page->title,
+				'title'			=> 'Обзор типов категорий',
 				'content'		=> $category_type,
 				'categories'	=> $categories,
 				'options'		=> $start_options,
@@ -294,7 +294,7 @@ class CategoriesTypesController extends AppController
 		}else{
 			return json_encode([
 				'message'=> 'error',
-				'errors' => ['There is no category type with ID #'.$id]
+				'errors' => ['Тип категории с ID #'.$id.' отсутствует']
 			]);
 		}
 	}

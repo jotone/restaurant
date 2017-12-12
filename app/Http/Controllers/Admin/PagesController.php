@@ -117,7 +117,7 @@ class PagesController extends AppController
 				'start'			=> $start,
 				'page'			=> $request->path(),
 				'breadcrumbs'	=> $breadcrumbs,
-				'title'			=> 'Add '.$page->title,
+				'title'			=> 'Добавление '.$page->title,
 				'templates'		=> $templates,
 				'current_template'=> $current_template
 			]);
@@ -154,7 +154,7 @@ class PagesController extends AppController
 				'start'			=> $start,
 				'page'			=> $request->path(),
 				'breadcrumbs'	=> $breadcrumbs,
-				'title'			=> 'Edit Page "'.$current_page->title.'"',
+				'title'			=> 'Редактирование страницы "'.$current_page->title.'"',
 				'content'		=> $current_page,
 				'current_template'=> $current_template,
 				'type'			=> 1
@@ -192,7 +192,7 @@ class PagesController extends AppController
 				'start'			=> $start,
 				'page'			=> $request->path(),
 				'breadcrumbs'	=> $breadcrumbs,
-				'title'			=> 'View Page "'.$current_page->title.'"',
+				'title'			=> 'Просмотр страницы "'.$current_page->title.'"',
 				'content'		=> $current_page,
 				'current_template'=> $current_template,
 				'type'			=> 0
@@ -310,7 +310,7 @@ class PagesController extends AppController
 		}else{
 			return json_encode([
 				'message'=> 'error',
-				'errors' => ['There is no page with ID #'.$id]
+				'errors' => ['Страница с ID #'.$id.' отсутствует']
 			]);
 		}
 	}

@@ -158,7 +158,7 @@ class RolesController extends AppController
 				'start'			=> $start,
 				'page'			=> $request->path(),
 				'breadcrumbs'	=> $breadcrumbs,
-				'title'			=> 'Add '.$page->title,
+				'title'			=> 'Добавление '.$page->title,
 				'access_pages'	=> $access_pages_list,
 				'forbidden_pages' => $forbidden_pages
 			]);
@@ -225,7 +225,7 @@ class RolesController extends AppController
 				'start'			=> $start,
 				'page'			=> $request->path(),
 				'breadcrumbs'	=> $breadcrumbs,
-				'title'			=> 'Edit Role "'.$editable_role->title.'"',
+				'title'			=> 'Редактирование роли "'.$editable_role->title.'"',
 				'forbidden_pages'=> $forbidden_pages,
 				'access_pages'	=> $access_pages_list,
 				'content'		=> $editable_role
@@ -300,7 +300,7 @@ class RolesController extends AppController
 		}else{
 			return json_encode([
 				'message'=> 'error',
-				'errors' => ['There is no role with ID #'.$id]
+				'errors' => ['Роль с ID #'.$id.' отсутствует']
 			]);
 		}
 	}

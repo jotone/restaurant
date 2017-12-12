@@ -94,15 +94,13 @@ class TemplatesController extends AppController
 		$start = $this->getMicrotime();
 		$allow_access = $this->checkAccessToPage($request->path());
 		if($allow_access === true){
-			$current_page = $this->getNaturalPath($request->path());
-			$page = AdminMenu::select('title')->where('slug', '=', $current_page)->first();
 			$breadcrumbs = $this->breadcrumbs($request->path(), 'templates');
 
 			return view('admin.add.templates', [
 				'start'			=> $start,
 				'page'			=> $request->path(),
 				'breadcrumbs'	=> $breadcrumbs,
-				'title'			=> 'Add '.$page->title,
+				'title'			=> 'Добавление Шаблона',
 			]);
 		}
 	}
@@ -118,8 +116,6 @@ class TemplatesController extends AppController
 		$start = $this->getMicrotime();
 		$allow_access = $this->checkAccessToPage($request->path());
 		if($allow_access === true){
-			$current_page = $this->getNaturalPath($request->path());
-			$page = AdminMenu::select('title')->where('slug', '=', $current_page)->first();
 			$breadcrumbs = $this->breadcrumbs($request->path(), 'templates');
 
 			$content = Template::select('id','title','html_content','enabled','created_by','created_at','updated_by','updated_at')->find($id);
@@ -132,7 +128,7 @@ class TemplatesController extends AppController
 				'start'			=> $start,
 				'page'			=> $request->path(),
 				'breadcrumbs'	=> $breadcrumbs,
-				'title'			=> 'Edit '.$page->title,
+				'title'			=> 'Редактирование шаблона "'.$content->title.'"',
 				'content'		=> $content
 			]);
 		}
@@ -149,8 +145,6 @@ class TemplatesController extends AppController
 		$start = $this->getMicrotime();
 		$allow_access = $this->checkAccessToPage($request->path());
 		if($allow_access === true){
-			$current_page = $this->getNaturalPath($request->path());
-			$page = AdminMenu::select('title')->where('slug', '=', $current_page)->first();
 			$breadcrumbs = $this->breadcrumbs($request->path(), 'templates');
 
 			$content = Template::select('title','html_content','enabled','created_by','created_at','updated_by','updated_at')->find($id);
@@ -163,7 +157,7 @@ class TemplatesController extends AppController
 				'start'			=> $start,
 				'page'			=> $request->path(),
 				'breadcrumbs'	=> $breadcrumbs,
-				'title'			=> 'Edit '.$page->title,
+				'title'			=> 'Просмотр шаблона "'.$content->title.'"',
 				'content'		=> $content
 			]);
 		}
@@ -231,7 +225,7 @@ class TemplatesController extends AppController
 		}else{
 			return json_encode([
 				'message' => 'error',
-				'errors' => ['There is no template with ID #' . $id]
+				'errors' => ['Шаблон с ID #'.$id.' отсутствует']
 			]);
 		}
 	}

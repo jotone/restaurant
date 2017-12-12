@@ -41,7 +41,7 @@ class CategoriesController extends AppController
 				'start'			=> $start,
 				'page'			=> $request->path(),
 				'breadcrumbs'	=> $breadcrumbs,
-				'title'			=> 'Add Category',
+				'title'			=> 'Добавление Категории',
 				'category_type'	=> $type_id,
 				'categories'	=> $categories,
 				'options'		=> $options
@@ -91,7 +91,7 @@ class CategoriesController extends AppController
 				'start'			=> $start,
 				'page'			=> $request->path(),
 				'breadcrumbs'	=> $breadcrumbs,
-				'title'			=> 'Add Category',
+				'title'			=> 'Редактирование Категории',
 				'category_type'	=> $current_category->category_type,
 				'categories'	=> $categories,
 				'content'		=> $current_category,
@@ -240,7 +240,7 @@ class CategoriesController extends AppController
 		}else{
 			return json_encode([
 				'message'=> 'error',
-				'errors' => ['There is no category with ID #'.$id]
+				'errors' => ['Категория с ID #'.$id.' отсутствует']
 			]);
 		}
 	}

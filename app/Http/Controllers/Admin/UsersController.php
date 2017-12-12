@@ -110,15 +110,15 @@ class UsersController extends AppController
 				//Get available roles
 				$roles = Roles::select('id','title','slug');
 				if($user->role != 'ADM_ROOT'){
-					$roles = $roles->where('slug','=',$user['role'])->orWhere('created_by','=',$user['id'])->get();
+					$roles = $roles->where('slug','=',$user['role'])->orWhere('created_by','=',$user['id']);
 				}
-				$roles = $roles->orderBy('editable','asc')->orderBy('title')->get();
+				$roles = $roles->orderBy('editable','asc')->orderBy('title','asc')->get();
 
 				return view('admin.add.users', [
 					'start'		=> $start,
 					'page'		=> $request->path(),
 					'breadcrumbs'=> $breadcrumbs,
-					'title'		=> 'Create User',
+					'title'		=> 'Добавлеие пользователя',
 					'roles'		=> $roles
 				]);
 			}
@@ -155,7 +155,7 @@ class UsersController extends AppController
 					'start'		=> $start,
 					'page'		=> $request->path(),
 					'breadcrumbs'=> $breadcrumbs,
-					'title'		=> 'Edit User '.$user->email,
+					'title'		=> 'Редактирование пользователя '.$user->email,
 					'content'	=> $user,
 					'roles'		=> $roles
 				]);
@@ -183,7 +183,7 @@ class UsersController extends AppController
 					'start'		=> $start,
 					'page'		=> $request->path(),
 					'breadcrumbs'=> $breadcrumbs,
-					'title'		=> 'View User '.$user->email,
+					'title'		=> 'Просмотр пользователя'.$user->email,
 					'content'	=> $user,
 					'roles'		=>$roles
 				]);
@@ -281,7 +281,7 @@ class UsersController extends AppController
 		}else{
 			return json_encode([
 				'message'=>'error',
-				'errors'=> ['There is user with such email']
+				'errors'=> ['Пользователь с таким e-mail\'ом уже существует ']
 			]);
 		}
 	}
