@@ -26,7 +26,7 @@
 				<input name="id" type="hidden" value="@if(isset($content->id)){{ $content->id }}@endif">
 
 				<fieldset>
-					<legend>Main Data</legend>
+					<legend>Основные данные</legend>
 					<div class="row-wrap">
 						<label>
 							@if(!isset($content) || isset($content->id))
@@ -34,11 +34,11 @@
 										class="input-text col_1_2"
 										type="text"
 										required="required"
-										placeholder="Name&hellip;"
+										placeholder="Имя&hellip;"
 										value="@if(isset($content)){{ $content->name }}@endif">
-								<span>Name</span>
+								<span>Имя</span>
 							@else
-								<span>Name: {{ $content->name }}</span>
+								<span>Имя: {{ $content->name }}</span>
 							@endif
 						</label>
 					</div>
@@ -64,9 +64,9 @@
 										class="input-text col_1_2"
 										type="password"
 										required="required"
-										placeholder="Password&hellip;"
+										placeholder="Пароль&hellip;"
 										pattern=".{6,}">
-								<span>Password</span>
+								<span>Пароль</span>
 							</label>
 						</div>
 						<div class="row-wrap">
@@ -75,40 +75,40 @@
 										class="input-text col_1_2"
 										type="password"
 										required="required"
-										placeholder="Confirm Password&hellip;"
+										placeholder="Подтверждение пароля&hellip;"
 										pattern=".{6,}">
-								<span>Confirm Password</span>
+								<span>Подтверждение пароля</span>
 							</label>
 						</div>
 					@endif
 				</fieldset>
 
 				<fieldset>
-					<legend>Role</legend>
+					<legend>Роль</legend>
 					<div class="row-wrap">
 						<label>
 							<select name="role" class="input-text" @if(isset($content) && !isset($content->id))disabled="disabled"@endif>
-								<option value="0">Without role</option>
+								<option value="0">Без роли</option>
 								@foreach($roles as $role)
 									<option value="{{ $role->id }}" @if(isset($content) && ($content->role == $role->slug))selected="selected"@endif>{{ $role->title }}</option>
 								@endforeach
 							</select>
-							<span>Role</span>
+							<span>Роль</span>
 						</label>
 					</div>
 				</fieldset>
 
 				@if(isset($content->id))
 					<fieldset>
-						<legend>Changing password</legend>
+						<legend>Изменить пароль</legend>
 						<div class="row-wrap">
 							<label>
 								<input	name="password"
 										class="input-text col_1_4"
 										type="password"
-										placeholder="New password&hellip;"
+										placeholder="Новый пароль&hellip;"
 										pattern=".{6,}">
-								<span>New password</span>
+								<span>Новый пароль</span>
 							</label>
 						</div>
 						<div class="row-wrap">
@@ -116,9 +116,9 @@
 								<input	name="password_confirmation"
 										class="input-text col_1_4"
 										type="password"
-										placeholder="Confirm new password&hellip;"
+										placeholder="Подтверждение пароля&hellip;"
 										pattern=".{6,}">
-								<span>Confirm new password</span>
+								<span>Подтверждение пароля</span>
 							</label>
 						</div>
 					</fieldset>
@@ -126,7 +126,7 @@
 
 				<div class="form-button-wrap">
 					@if(!isset($content) || isset($content->id))
-						<button name="save" class="button" type="submit">Save</button>
+						<button name="save" class="button" type="submit">Сохранить</button>
 					@endif
 				</div>
 			</form>

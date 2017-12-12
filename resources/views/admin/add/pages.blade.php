@@ -46,7 +46,7 @@
 				<input name="template_id" type="hidden" value="@if(!empty($current_template->id)){{ $current_template->id }}@else{{'0'}}@endif">
 
 				<fieldset>
-					<legend>Main data</legend>
+					<legend>Основные данные</legend>
 					<div class="row-wrap">
 						<label>
 							@if(!isset($content) || isset($content->id))
@@ -54,11 +54,11 @@
 										class="input-text col_1_2"
 										type="text"
 										required="required"
-										placeholder="Title&hellip;"
+										placeholder="Название&hellip;"
 										value="@if(isset($content)){{ $content->title }}@endif">
-								<span>Title</span>
+								<span>Название</span>
 							@else
-								<span>Title: {{ $content->title }}</span>
+								<span>Название: {{ $content->title }}</span>
 							@endif
 						</label>
 					</div>
@@ -68,18 +68,18 @@
 								<input	name="slug"
 										class="input-text col_1_2"
 										type="text"
-										placeholder="Link&hellip;"
+										placeholder="Ссылка&hellip;"
 										value="@if(isset($content)){{ $content->slug }}@endif">
-								<span>Link</span>
+								<span>Ссылка</span>
 							@else
-								<span>Link: {{ $content->slug }}</span>
+								<span>Ссылка: {{ $content->slug }}</span>
 							@endif
 						</label>
 					</div>
 					<div class="row-wrap">
 						<label>
 							<input name="enabled" class="chbox-input" type="checkbox" @if(isset($content) && ($content->enabled == 1)) checked="checked" @endif @if(isset($content) && !isset($content->id)) disabled="disabled" @endif>
-							<span>Enabled</span>
+							<span>Опубликовать</span>
 						</label>
 					</div>
 				</fieldset>
@@ -91,7 +91,7 @@
 				</div>
 
 				<fieldset>
-					<legend>Meta Data</legend>
+					<legend>Мета-данные</legend>
 					<div class="row-wrap">
 						<label>
 							<input	name="meta_title"
@@ -113,14 +113,14 @@
 				</fieldset>
 
 				<fieldset>
-					<legend>SEO data</legend>
+					<legend>SEO Данные</legend>
 					<div class="row-wrap">
 						<label>
 							<input	name="need_seo"
 									class="chbox-input"
 									type="checkbox"
 									@if(isset($content) && ($content->need_seo == 1)) checked="checked" @endif>
-							<span>Allow seo for this category</span>
+							<span>Разрешить SEO для данной страницы</span>
 						</label>
 					</div>
 					<div class="row-wrap">
@@ -128,27 +128,27 @@
 							<input	name="seo_title"
 									class="input-text col_1_2"
 									type="text"
-									placeholder="SEO Title&hellip;"
+									placeholder="SEO Заглавие&hellip;"
 									value="@if(isset($content)){{ $content->seo_title }}@endif">
-							<span>SEO Title</span>
+							<span>SEO Заглавие</span>
 						</label>
 					</div>
 					<div class="row-wrap">
-						<p>SEO text</p>
+						<p>SEO текст</p>
 						<textarea name="seo_text" class="text-area needCKE">@if(isset($content)){{ $content->seo_text }}@endif</textarea>
 					</div>
 				</fieldset>
 
 				@if(isset($content))
 					<div class="details">
-						<p>Created by:
+						<p>Создан:
 							@if(!empty($content->created_by) && !is_numeric($content->created_by))
 								<em>{{ $content->created_by['name'] }} (<ins>{{ $content->created_by['email'] }}</ins>) {{ $content->created_at }}</em>
 							@else
 								Unknown
 							@endif
 						</p>
-						<p>Updated by:
+						<p>Изменен:
 							@if(!empty($content->updated_by) && !is_numeric($content->updated_by))
 								<em>{{ $content->updated_by['name'] }} (<ins>{{ $content->updated_by['email'] }}</ins>) {{ $content->updated_at }}</em>
 							@else
@@ -160,7 +160,7 @@
 
 				<div class="form-button-wrap">
 					@if(!isset($content) || isset($content->id))
-						<button name="save" class="button" type="submit">Save</button>
+						<button name="save" class="button" type="submit">Сохранить</button>
 					@endif
 				</div>
 			</form>

@@ -25,7 +25,7 @@
 				@endif
 				<input name="id" type="hidden" value="@if(isset($content->id)){{ $content->id }}@endif">
 				<fieldset>
-					<legend>Main data</legend>
+					<legend>Основные данные</legend>
 					<div class="row-wrap">
 						<label>
 						@if(!isset($content) || isset($content->id))
@@ -33,11 +33,11 @@
 									class="input-text col_1_2"
 									type="text"
 									required="required"
-									placeholder="Title&hellip;"
+									placeholder="Название&hellip;"
 									value="@if(isset($content)){{ $content->title }}@endif">
-							<span>Title</span>
+							<span>Название</span>
 						@else
-							<span>Title: {{ $content->title }}</span>
+							<span>Название: {{ $content->title }}</span>
 						@endif
 						</label>
 					</div>
@@ -47,11 +47,11 @@
 							<input	name="slug"
 									class="input-text col_1_2"
 									type="text"
-									placeholder="Link&hellip;"
+									placeholder="Ссылка&hellip;"
 									value="@if(isset($content)){{ $content->slug }}@endif">
-							<span>Link</span>
+							<span>Ссылка</span>
 						@else
-							<span>Link: {{ $content->slug }}</span>
+							<span>Ссылка: {{ $content->slug }}</span>
 						@endif
 						</label>
 					</div>
@@ -62,13 +62,13 @@
 									type="checkbox"
 									@if(isset($content) && ($content->enabled == 1)) checked="checked" @endif
 									@if(isset($content) && !isset($content->id)) disabled="disabled" @endif>
-							<span>Enabled</span>
+							<span>Опубликовать</span>
 						</label>
 					</div>
 				</fieldset>
 
 				<fieldset>
-					<legend>Options</legend>
+					<legend>Настройки</legend>
 					@foreach($options as $caption => $option)
 						<div class="row-wrap">
 							<label>
@@ -84,25 +84,25 @@
 				</fieldset>
 
 				<fieldset>
-					<legend>Categories List</legend>
+					<legend>Список категорий</legend>
 					<div class="categories-list-wrap">@if(isset($categories)){!! $categories !!}@endif</div>
 					@if(isset($content->id))
 						<div class="button-wrap">
-							<a class="button" href="@if(isset($content->id)){{ route('admin.category.create', $content->id) }}@endif">Add Category</a>
+							<a class="button" href="@if(isset($content->id)){{ route('admin.category.create', $content->id) }}@endif">Добавить категорию</a>
 						</div>
 					@endif
 				</fieldset>
 
 				@if(isset($content))
 					<div class="details">
-						<p>Created by:
+						<p>Создан:
 							@if(!empty($content->created_by) && !is_numeric($content->created_by))
 								<em>{{ $content->created_by['name'] }} (<ins>{{ $content->created_by['email'] }}</ins>) {{ $content->created_at }}</em>
 							@else
 								Unknown
 							@endif
 						</p>
-						<p>Updated by:
+						<p>Изменен:
 							@if(!empty($content->updated_by) && !is_numeric($content->updated_by))
 								<em>{{ $content->updated_by['name'] }} (<ins>{{ $content->updated_by['email'] }}</ins>) {{ $content->updated_at }}</em>
 							@else
@@ -114,7 +114,7 @@
 
 				<div class="form-button-wrap">
 					@if(!isset($content) || isset($content->id))
-						<button name="save" class="button" type="submit">Save</button>
+						<button name="save" class="button" type="submit">Сохранить</button>
 					@endif
 				</div>
 			</form>

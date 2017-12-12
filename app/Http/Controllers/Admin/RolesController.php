@@ -69,9 +69,9 @@ class RolesController extends AppController
 					}
 					//If user has full access
 				}else if($role->access_pages == 'grant_access'){
-					$pages = 'Access granted to all pages';
+					$pages = 'Доступ разрешен ко всем страницам';
 				}else{
-					$pages = 'Access denied to all pages';
+					$pages = 'Доступ запрещен ко всем страницам';
 				}
 				//Get users with such role
 				$users_list = $role->users()->select('id','name','email')->get()->toArray();

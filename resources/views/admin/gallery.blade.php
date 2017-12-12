@@ -17,7 +17,7 @@
 			<form name="galleryUpload" action="{{ route('admin.gallery.create') }}" method="POST" target="_self" enctype="multipart/form-data">
 				{{ csrf_field() }}
 				<input name="upload[]" type="file" multiple="multiple">
-				<button name="send" class="button inline" type="submit">Save Images</button>
+				<button name="send" class="button inline" type="submit">Загрузить файлы</button>
 			</form>
 			</noscript>
 		</div>
@@ -36,24 +36,24 @@
 					<img src="{{ asset($item['src']) }}" alt="">
 				</div>
 				<div class="image-info">
-					<p data-type="name">Name:
+					<p data-type="name">Файл:
 						<?php
 						$name = explode('/',$item['src']);
 						$name = $name[count($name)-1];
 						?>
 						<span>{{ $name }}</span>
 					</p>
-					<p>Size: {{ \App\Http\Controllers\AppController::niceFilesize($item['src']) }}</p>
+					<p>Размер: {{ \App\Http\Controllers\AppController::niceFilesize($item['src']) }}</p>
 					@if(!empty($item['used_in']))
-						<p>Used in</p>
+						<p>Используется для:</p>
 						<ul class="link-list-wrap">
 						@foreach($item['used_in'] as $type => $used_in)
 							<li>
 								<?php
 								switch($type){
-									case 'category': echo 'Categories:'; break;
-									case 'restaurant': echo 'Restaurants'; break;
-									case 'dish': echo 'Meal Dishes'; break;
+									case 'category': echo 'Категории:'; break;
+									case 'restaurant': echo 'Ресторан'; break;
+									case 'dish': echo 'Блюда'; break;
 								}
 								?>
 								<ul>
@@ -65,7 +65,7 @@
 						@endforeach
 						</ul>
 					@else
-						<p>Is not used anywhere</p>
+						<p>Нигде не используется</p>
 					@endif
 				</div>
 			</div>

@@ -26,22 +26,22 @@
 				<input name="id" type="hidden" value="@if(isset($content)){{ $content->id }}@endif">
 
 				<fieldset>
-					<legend>Main data</legend>
+					<legend>Основные данные</legend>
 					<div class="row-wrap">
 						<label>
 							<input	name="title"
 									class="input-text col_1_2"
 									type="text"
 									required="required"
-									placeholder="Title&hellip;"
+									placeholder="Название&hellip;"
 									value="@if(isset($content)){{ $content->title }}@endif">
-							<span>Title</span>
+							<span>Название</span>
 						</label>
 					</div>
 				</fieldset>
 
 				<fieldset>
-					<legend>Forbidden pages</legend>
+					<legend>Запретить доступ к страницам</legend>
 					<div class="row-wrap">
 						<div class="chbox-selector-wrap">
 							@foreach($access_pages as $page_id => $access_page)
@@ -76,7 +76,7 @@
 									</div>
 									<div class="item-row">
 										<div class="checkbox-wrap"></div>
-										<div class="crud-wrap">Deny actions:</div>
+										<div class="crud-wrap">Запретить действия:</div>
 									</div>
 									<div class="item-row">
 										<div class="checkbox-wrap"></div>
@@ -93,7 +93,7 @@
 												)? 'checked="checked"' : '';
 												?>
 												<input name="read[]" class="crud-input" type="checkbox" value="{{ $page_id }}" {{ $checked }}>
-												<span>read</span>
+												<span>Чтение</span>
 											</label>
 											@endif
 
@@ -109,7 +109,7 @@
 												)? 'checked="checked"' : '';
 												?>
 												<input name="create[]" class="crud-input" type="checkbox"value="{{ $page_id }}" {{ $checked }}>
-												<span>create</span>
+												<span>Создание</span>
 											</label>
 											@endif
 
@@ -125,7 +125,7 @@
 												)? 'checked="checked"' : '';
 												?>
 												<input name="update[]" class="crud-input" type="checkbox"value="{{ $page_id }}" {{ $checked }}>
-												<span>update</span>
+												<span>Изменение</span>
 											</label>
 											@endif
 
@@ -141,7 +141,7 @@
 												)? 'checked="checked"' : '';
 												?>
 												<input name="delete[]" class="crud-input" type="checkbox"value="{{ $page_id }}" {{ $checked }}>
-												<span>delete</span>
+												<span>Удаление</span>
 											</label>
 											@endif
 										</div>
@@ -155,14 +155,14 @@
 
 				@if(isset($content))
 					<div class="details">
-						<p>Created by:
+						<p>Создан:
 							@if(!empty($content->created_by) && !is_numeric($content->created_by))
 								<em>{{ $content->created_by['name'] }} (<ins>{{ $content->created_by['email'] }}</ins>) {{ $content->created_at }}</em>
 							@else
 								Unknown
 							@endif
 						</p>
-						<p>Updated by:
+						<p>Изменен:
 							@if(!empty($content->updated_by) && !is_numeric($content->updated_by))
 								<em>{{ $content->updated_by['name'] }} (<ins>{{ $content->updated_by['email'] }}</ins>) {{ $content->updated_at }}</em>
 							@else
@@ -173,7 +173,7 @@
 				@endif
 
 				<div class="form-button-wrap">
-					<button name="save" class="button" type="submit">Save</button>
+					<button name="save" class="button" type="submit">Сохранить</button>
 				</div>
 			</form>
 		</div>

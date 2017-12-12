@@ -26,7 +26,7 @@
 				<input name="id" type="hidden" value="@if(isset($content->id)){{ $content->id }}@endif">
 
 				<fieldset>
-					<legend>Main Data</legend>
+					<legend>Основные данные</legend>
 					<div class="row-wrap">
 						<label>
 							@if(!isset($content) || isset($content->id))
@@ -34,24 +34,24 @@
 										class="input-text col_1_2"
 										type="text"
 										required="required"
-										placeholder="Title&hellip;"
+										placeholder="Название&hellip;"
 										value="@if(isset($content)){{ $content->title }}@endif">
-								<span>Title</span>
+								<span>Название</span>
 							@else
-								<span>Title: {{ $content->title }}</span>
+								<span>Название: {{ $content->title }}</span>
 							@endif
 						</label>
 					</div>
 					<div class="row-wrap">
 						<label>
 							<input name="enabled" class="chbox-input" type="checkbox" @if(isset($content) && ($content->enabled == 1)) checked="checked" @endif @if(isset($content) && !isset($content->id)) disabled="disabled" @endif>
-							<span>Enabled</span>
+							<span>Опубликовать</span>
 						</label>
 					</div>
 				</fieldset>
 
 				<fieldset>
-					<legend>Template Body</legend>
+					<legend>Тело Шаблона</legend>
 					@if(!isset($content) || isset($content->id))
 					<div class="row-wrap">
 						<ul class="buttons-wrapper">
@@ -77,14 +77,14 @@
 
 				@if(isset($content))
 					<div class="details">
-						<p>Created by:
+						<p>Создан:
 							@if(!empty($content->created_by) && !is_numeric($content->created_by))
 								<em>{{ $content->created_by['name'] }} (<ins>{{ $content->created_by['email'] }}</ins>) {{ $content->created_at }}</em>
 							@else
 								Unknown
 							@endif
 						</p>
-						<p>Updated by:
+						<p>Изменен:
 							@if(!empty($content->updated_by) && !is_numeric($content->updated_by))
 								<em>{{ $content->updated_by['name'] }} (<ins>{{ $content->updated_by['email'] }}</ins>) {{ $content->updated_at }}</em>
 							@else
@@ -96,7 +96,7 @@
 
 				<div class="form-button-wrap">
 					@if(!isset($content) || isset($content->id))
-						<button name="save" class="button" type="submit">Save</button>
+						<button name="save" class="button" type="submit">Сохранить</button>
 					@endif
 				</div>
 			</form>

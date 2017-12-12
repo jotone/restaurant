@@ -28,14 +28,14 @@
 
 								<label>
 									<select name="{{ json_encode(['name'=>$key,'id'=>$item['id']]) }}" class="input-text">
-										<option value="0">Do not accept categories</option>
+										<option value="0">Не использовать категории</option>
 										@if(!empty($categories))
 											@foreach($categories as $category)
 												<option value="{{ $category['id'] }}" @if($category['id'] == $value) selected="selected" @endif>{{ $category['title'] }}</option>
 											@endforeach
 										@endif
 									</select>
-									<span>Category type</span>
+									<span>Тип Категорий</span>
 								</label>
 							@elseif($key == 'default_characteristics')
 								<label>
@@ -65,7 +65,7 @@
 					</fieldset>
 				@endforeach
 				<div class="form-button-wrap">
-					<button name="save" class="button" type="submit">Save</button>
+					<button name="save" class="button" type="submit">Сохранить</button>
 				</div>
 			</form>
 		</div>

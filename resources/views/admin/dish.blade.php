@@ -13,7 +13,7 @@
 
 		<div class="items-controls-wrap">
 			<div class="button-wrap">
-				<a class="button" href="{{ route('admin.dish.create') }}">Создать</a>
+				<a class="button" href="{{ route('admin.dish.create') }}">Добавить</a>
 			</div>
 			<div class="pagination-wrap">
 				@if(1 < $pagination['last_page'])

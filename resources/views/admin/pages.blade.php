@@ -13,7 +13,7 @@
 
 	<div class="items-controls-wrap">
 		<div class="button-wrap">
-			<a class="button" href="{{ route('admin.pages.create') }}">ADD</a>
+			<a class="button" href="{{ route('admin.pages.create') }}">Добавить</a>
 		</div>
 		<div class="pagination-wrap">
 			@if(1 < $pagination['last_page'])
@@ -34,32 +34,32 @@
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=id&dir=desc') }}" class="desc fa fa-caret-down"></a>
 					</div>
 				</th>
-				<th>Title
+				<th>Название
 					<div class="direction" id="title">
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=title&dir=asc') }}" class="asc fa fa-caret-up"></a>
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=title&dir=desc') }}" class="desc fa fa-caret-down"></a>
 					</div>
 				</th>
-				<th>Link
+				<th>Ссылка
 					<div class="direction" id="slug">
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=slug&dir=asc') }}" class="asc fa fa-caret-up"></a>
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=slug&dir=desc') }}" class="desc fa fa-caret-down"></a>
 					</div>
 				</th>
-				<th>Template
+				<th>Шаблон
 					<div class="direction" id="template_id">
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=template_id&dir=asc') }}" class="asc fa fa-caret-up"></a>
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=template_id&dir=desc') }}" class="desc fa fa-caret-down"></a>
 					</div>
 				</th>
-				<th>Content</th>
-				<th>Created at
+				<th>Содержиое</th>
+				<th>Создан
 					<div class="direction" id="created_at">
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=created_at&dir=asc') }}" class="asc fa fa-caret-up"></a>
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=created_at&dir=desc') }}" class="desc fa fa-caret-down"></a>
 					</div>
 				</th>
-				<th>Updated at
+				<th>Изменен
 					<div class="direction" id="updated_at">
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=updated_at&dir=asc') }}" class="asc fa fa-caret-up"></a>
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=updated_at&dir=desc') }}" class="desc fa fa-caret-down"></a>

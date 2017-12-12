@@ -44,7 +44,7 @@
 									</label>
 								</div>
 								<div class="row-wrap">
-									<button name="add" type="button" class="button">Add</button>
+									<button name="add" type="button" class="button">Добавить</button>
 								</div>
 
 							@elseif($item['slug'] == 'wysiwyg')
@@ -61,7 +61,7 @@
 									<textarea name="{{ json_encode(['name'=>$item['slug'], 'id'=>$item['id']]) }}[]" class="text-area-middle"></textarea>
 								</div>
 								<div class="row-wrap">
-									<button name="add" type="button" class="button" data-type="{{ $item['slug'] }}">Add</button>
+									<button name="add" type="button" class="button" data-type="{{ $item['slug'] }}">Добавить</button>
 								</div>
 
 							@elseif($item['slug'] == 'coordinates')
@@ -110,7 +110,7 @@
 											placeholder="Z&hellip;">
 								</div>
 								<div class="row-wrap">
-									<button name="add" type="button" class="button">Add</button>
+									<button name="add" type="button" class="button">Добавить</button>
 								</div>
 							@endif
 						</fieldset>

@@ -13,7 +13,7 @@
 
 	<div class="items-controls-wrap">
 		<div class="button-wrap">
-			<a class="button" href="{{ route('admin.users.create') }}">ADD</a>
+			<a class="button" href="{{ route('admin.users.create') }}">Добавить</a>
 		</div>
 		<div class="pagination-wrap">
 			@if(1 < $pagination['last_page'])
@@ -40,25 +40,25 @@
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=email&dir=desc') }}" class="desc fa fa-caret-down"></a>
 					</div>
 				</th>
-				<th>Name
+				<th>Имя
 					<div class="direction" id="name">
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=name&dir=asc') }}" class="asc fa fa-caret-up"></a>
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=name&dir=desc') }}" class="desc fa fa-caret-down"></a>
 					</div>
 				</th>
-				<th>Role
+				<th>Роль
 					<div class="direction" id="role">
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=role&dir=asc') }}" class="asc fa fa-caret-up"></a>
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=role&dir=desc') }}" class="desc fa fa-caret-down"></a>
 					</div>
 				</th>
-				<th>Created at
+				<th>Создан
 					<div class="direction" id="created_at">
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=created_at&dir=asc') }}" class="asc fa fa-caret-up"></a>
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=created_at&dir=desc') }}" class="desc fa fa-caret-down"></a>
 					</div>
 				</th>
-				<th>Updated at
+				<th>Изменен
 					<div class="direction" id="updated_at">
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=updated_at&dir=asc') }}" class="asc fa fa-caret-up"></a>
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=updated_at&dir=desc') }}" class="desc fa fa-caret-down"></a>

@@ -18,13 +18,13 @@
 		<form action="{{ route('admin.login') }}" method="POST" target="_self">
 			{{ csrf_field() }}
 			<div>
-				<input name="email" class="form-field" type="email" required="required" placeholder="Login&hellip;">
+				<input name="email" class="form-field" type="email" required="required" placeholder="Логин&hellip;">
 			</div>
 			<div>
-				<input name="password" class="form-field" type="password" required="required" placeholder="Password&hellip;">
+				<input name="password" class="form-field" type="password" required="required" placeholder="Пароль&hellip;">
 			</div>
 			<div>
-				<button name="submit" class="action-button" style="margin: 0 auto" type="submit">Enter</button>
+				<button name="submit" class="action-button" style="margin: 0 auto" type="submit">Вход</button>
 			</div>
 		</form>
 	</div>

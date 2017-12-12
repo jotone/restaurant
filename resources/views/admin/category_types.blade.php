@@ -13,7 +13,7 @@
 
 	<div class="items-controls-wrap">
 		<div class="button-wrap">
-			<a class="button" href="{{ route('admin.category_types.create') }}">ADD</a>
+			<a class="button" href="{{ route('admin.category_types.create') }}">Добавить</a>
 		</div>
 		<div class="pagination-wrap">
 			@if(1 < $pagination['last_page'])
@@ -34,32 +34,32 @@
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=id&dir=desc') }}" class="desc fa fa-caret-down"></a>
 					</div>
 				</th>
-				<th>Title
+				<th>Название
 					<div class="direction" id="title">
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=title&dir=asc') }}" class="asc fa fa-caret-up"></a>
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=title&dir=desc') }}" class="desc fa fa-caret-down"></a>
 					</div>
 				</th>
-				<th>Link
+				<th>Ссылка
 					<div class="direction" id="slug">
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=slug&dir=asc') }}" class="asc fa fa-caret-up"></a>
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=slug&dir=desc') }}" class="desc fa fa-caret-down"></a>
 					</div>
 				</th>
-				<th>Categories</th>
+				<th>Категории</th>
 				<th class="col_1_10">Status
 					<div class="direction" id="enabled">
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=enabled&dir=asc') }}" class="asc fa fa-caret-up"></a>
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=enabled&dir=desc') }}" class="desc fa fa-caret-down"></a>
 					</div>
 				</th>
-				<th>Created at
+				<th>Создан
 					<div class="direction" id="created_at">
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=created_at&dir=asc') }}" class="asc fa fa-caret-up"></a>
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=created_at&dir=desc') }}" class="desc fa fa-caret-down"></a>
 					</div>
 				</th>
-				<th>Updated at
+				<th>Изменен
 					<div class="direction" id="updated_at">
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=updated_at&dir=asc') }}" class="asc fa fa-caret-up"></a>
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=updated_at&dir=desc') }}" class="desc fa fa-caret-down"></a>
@@ -88,7 +88,7 @@
 				<td>
 					<label>
 						<input name="enabled" type="checkbox" @if($item['enabled'] == 1) checked="checked" @endif>
-						<span>enabled</span>
+						<span>Включен</span>
 					</label>
 				</td>
 				<td>
