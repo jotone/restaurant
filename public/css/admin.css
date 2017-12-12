@@ -231,6 +231,7 @@ footer .status-messages-wrap .close-status-bar{
 .nav-icon-menu:active{background-color: #c83939}
 
 .top-menu .user-menu{
+	width: 30%;
 	position: absolute;
 	top: 10px;
 	right: 0;
