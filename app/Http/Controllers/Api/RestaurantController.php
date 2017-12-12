@@ -5,17 +5,23 @@ use App\Category;
 use App\MealDish;
 use App\Restaurant;
 
-use \App\Http\Controllers\ApiController;
+use App\Http\Controllers\ApiController;
 
 class RestaurantController extends ApiController
 {
+	/**
+	 * GET|HEAD /api/get_restaurants
+	 * Get all the restaurants
+	 * @return string
+	 */
 	public function getAll(){
 		$restaurants = Restaurant::select(
 			'id','title','logo_img','square_img','large_img','address','coordinates','rating'
-		)->where('enabled','=',1)
-			->get();
+		)->where('enabled','=',1)->get();
+
 		$content = [];
 		foreach($restaurants as $restaurant){
+
 			$restaurant->logo_img = ($this->isJson($restaurant->logo_img))
 				? json_decode($restaurant->logo_img)
 				: null;
@@ -57,6 +63,12 @@ class RestaurantController extends ApiController
 		return json_encode($content);
 	}
 
+	/**
+	 * GET|HEAD /api/get_restaurant/{id}
+	 * Get restaurant by ID
+	 * @param $id
+	 * @return \Illuminate\Contracts\Routing\ResponseFactory|string|\Symfony\Component\HttpFoundation\Response
+	 */
 	public function getOne($id){
 		$restaurant = Restaurant::select(
 			'id','title','text','logo_img','large_img','address','work_time','has_delivery','has_wifi','coordinates',
