@@ -99,7 +99,6 @@ $total_time = round(($time[1] + $time[0] - $start),4);
 		<div class="nav-icon-menu fa-bars"></div>
 		{!! \App\Http\Controllers\AppController::topMenu($page) !!}
 		<div class="user-menu">
-			<div>{{ $hello }}</div>
 			<div><a href="{{ route('logout') }}"><span class="fa fa-sign-out"></span>&nbsp;Выйти</a></div>
 		</div>
 	</nav>
@@ -107,7 +106,8 @@ $total_time = round(($time[1] + $time[0] - $start),4);
 @yield('content')
 <footer>
 	<div class="footer-wrap">
-		<div>Page created in {{ $total_time }} seconds</div>
+		<div>{{ $hello }}</div>
+		<div>Страница создана за {{ $total_time }} секунд</div>
 
 		<div class="status-bar" @if(!empty($errors->all())) style="display: block;" @endif>
 			<div class="status-messages-wrap">
