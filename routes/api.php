@@ -12,7 +12,7 @@ Route::group(['middleware'=>'api', 'namespace'=> 'Api'], function(){
 	Route::get('/get_restaurants',		'RestaurantController@getAll');
 	Route::get('/get_restaurant/{id}',	'RestaurantController@getOne');
 	//Kitchen
-	Route::get('/get_kitchen/{res_id}/kitchen/{id}', 'KitchenController@getConcrete');
-	Route::get('/get_kitchen/{res_id}',	'KitchenController@getByRestaurant');
+	Route::get('/get_kitchen/{rest_id}/kitchen/{kitch_id}', 'KitchenController@getConcrete');
+	Route::get('/get_kitchen/{rest_id}',	'KitchenController@getByRestaurant');
 	Route::get('/get_kitchen',			'KitchenController@getAll');
 });
