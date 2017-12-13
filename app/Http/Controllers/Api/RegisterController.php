@@ -10,11 +10,12 @@ use Illuminate\Support\Facades\Crypt;
 
 class RegisterController extends ApiController
 {
-	protected function sendSMStoUser(){
+	protected function sendSMStoUser($phone, $code){
 		/*
 		 * SEND SMS TO USER
 		 */
 	}
+
 
 	/**
 	 * POST /api/create_account
@@ -41,7 +42,7 @@ class RegisterController extends ApiController
 						'sms_code'=>$code
 					]);
 
-					$this->sendSMStoUser();
+					$this->sendSMStoUser($phone, $code);
 
 					return response(json_encode([
 						'step'	=> 1,
@@ -71,13 +72,14 @@ class RegisterController extends ApiController
 			'sms_code'	=> $code
 		]);
 
-		$this->sendSMStoUser();
+		$this->sendSMStoUser($phone, $code);
 
 		return response(json_encode([
 			'step'	=> 1,
 			'id'	=> Crypt::encrypt($user->id)
 		]), 201);
 	}
+
 
 	/**
 	 * PUT /api/submit_profile/{id}
@@ -108,6 +110,35 @@ class RegisterController extends ApiController
 			]), 400);
 		}
 	}
+
+
+	/**
+	 * PUT /api/generate_sms/{id}
+	 * @param $id user ID
+	 * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+	 */
+	public function generateSMS($id){
+		$code = mt_rand(0,9).mt_rand(0,9).mt_rand(0,9).mt_rand(0,9);
+
+		$visitor_id = Crypt::decrypt($id);
+		$user = Visitors::find($visitor_id);
+		if(empty($user)){
+			return response(json_encode([
+				'message' => 'Такого пользователя не существует'
+			]), 400);
+		}
+
+		$user->sms_code = $code;
+		$user->save();
+
+		$this->sendSMStoUser($user->phone, $code);
+
+		return response(json_encode([
+			'step'	=> 1,
+			'id'	=> $id
+		]), 201);
+	}
+
 
 	/**
 	 * PUT /api/submit_profile/{id}
