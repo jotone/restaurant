@@ -22,7 +22,7 @@ class RestaurantController extends ApiController
 		$content = [];
 		foreach($restaurants as $restaurant){
 
-			$restaurant->logo_img = ($this->isJson($restaurant->logo_img))
+			$logo = ($this->isJson($restaurant->logo_img))
 				? json_decode($restaurant->logo_img)
 				: null;
 			$restaurant->square_img = ($this->isJson($restaurant->square_img))
@@ -40,10 +40,10 @@ class RestaurantController extends ApiController
 					'coords'	=> $restaurant->coordinates
 				],
 				'images'	=> [
-					'logo'		=> (!empty($restaurant->logo_img))
-						?	['src'		=> asset($restaurant->logo_img->src),
-							'width'		=> $restaurant->logo_img->width,
-							'height'	=> $restaurant->logo_img->height]
+					'logo'		=> (!empty($logo))
+						?	['src'		=> asset($logo->src),
+							'width'		=> $logo->width,
+							'height'	=> $logo->height]
 						: null,
 					'square'	=> (!empty($restaurant->square_img))
 						?	['src'		=> asset($restaurant->square_img->src),
@@ -71,7 +71,7 @@ class RestaurantController extends ApiController
 	 */
 	public function getOne($id){
 		$restaurant = Restaurant::select(
-			'id','title','text','logo_img','large_img','address','work_time','has_delivery','has_wifi','coordinates',
+			'id','title','text','logo_img','large_img','square_img','address','work_time','has_delivery','has_wifi','coordinates',
 			'rating'
 		)->find($id);
 
@@ -84,9 +84,19 @@ class RestaurantController extends ApiController
 		//Convert work time
 		$restaurant->work_time = json_decode($restaurant->work_time, true);
 
+
 		//Convert images objects to arrays
-		$restaurant->logo_img = json_decode($restaurant->logo_img, true);
-		$restaurant->large_img = json_decode($restaurant->large_img, true);
+		$logo = json_decode($restaurant->logo_img, true);
+		$logo['src'] = (!empty($logo['src']))? asset($logo['src']): '';
+		$restaurant->logo_img = $logo;
+
+		$large = json_decode($restaurant->large_img, true);
+		$large['src'] = (!empty($large['src']))? asset($large['src']): '';
+		$restaurant->large_img = $large;
+
+		$square = json_decode($restaurant->square_img, true);
+		$square['src'] = (!empty($square->src))? asset($square['src']): '';
+		$restaurant->square_img = $square;
 
 		//Get restaurant menus
 		$menus = $restaurant->mealMenus()->select('dishes')->get();

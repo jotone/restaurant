@@ -20,7 +20,17 @@ class KitchenController extends ApiController
 			foreach($dish->category_id as $category_id){
 				//Get category data
 				$category = Category::select('id','title')->find($category_id);
+
 				if(!empty($category)){
+					$large = $dish->large_img;
+					$large['src'] = (!empty($large['src']))
+						? asset($large['src'])
+						: '';
+
+					$square = $dish->square_img;
+					$square['src'] = (!empty($square['src']))
+						? asset($square['src'])
+						: '';
 
 					if(!isset($categories_list[$category->id])){
 						//If there is no such category in result array
@@ -28,22 +38,22 @@ class KitchenController extends ApiController
 							'title' => $category->title,
 							'items' => [
 								$dish->id => [
-									'id' => $dish->id,
-									'title' => $dish->title,
-									'price' => (float)$dish->price,
-									'square_img' => $dish->square_img,
-									'large_img' => $dish->large_img,
+									'id'		=> $dish->id,
+									'title'		=> $dish->title,
+									'price'		=> (float)$dish->price,
+									'square_img'=> $square,
+									'large_img'	=> $large,
 								]
 							]
 						];
 					}else{
 						//If there is such category -> add dish to it's items
 						$categories_list[$category->id]['items'][$dish->id] = [
-							'id' => $dish->id,
-							'title' => $dish->title,
-							'price' => (float)$dish->price,
-							'square_img' => $dish->square_img,
-							'large_img' => $dish->large_img,
+							'id'		=> $dish->id,
+							'title'		=> $dish->title,
+							'price'		=> (float)$dish->price,
+							'square_img'=> $square,
+							'large_img'	=> $large,
 						];
 					}
 

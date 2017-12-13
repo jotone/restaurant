@@ -200,7 +200,8 @@ class RegisterController extends ApiController
 
 		return response(json_encode([
 			'step'	=> 3,
-			'id'	=> $id
+			'id'	=> $id,
+			'img'	=> asset($img)
 		]), 201);
 	}
 }
