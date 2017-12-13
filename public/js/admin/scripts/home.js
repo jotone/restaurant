@@ -40,9 +40,9 @@ $(document).ready(function(){
 	});
 
 	$('button[name=save]').click(function () {
-		var id = $('input[name=id]').val();
+		var id = 'eyJpdiI6ImdHNzBaMjhVQm9MWm14Mmk4MEdkTVE9PSIsInZhbHVlIjoicXJuQkpya2dpRFAwcndKUWQ1ZlBFdz09IiwibWFjIjoiYzFkYmFkZWFlMDJmYWE2NTllZjRlMzgyMmJkMzE4YTAwOGUzMWEwM2IzZWZlNTg0ODA0NjhjZDJiNzU1NTExZSJ9';//$('input[name=id]').val();
 		$.ajax({
-			url:	'/api/submit_profile/'+id,
+			url:	'https://armdelivery.site/api/submit_profile/'+id,
 			type:	'PUT',
 			data:	{
 				email:		$('input[name=email]').val(),

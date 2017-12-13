@@ -17,8 +17,9 @@ class RegisterController extends ApiController
 	}
 
 	/**
+	 * POST /api/create_account
 	 * Create user Account with phone number
-	 * @param Request $request
+	 * @param \Illuminate\Http\Request $request
 	 * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
 	 */
 	public function createAccount(Request $request){
@@ -79,9 +80,10 @@ class RegisterController extends ApiController
 	}
 
 	/**
+	 * PUT /api/submit_profile/{id}
 	 * SMS Code acknowledge
-	 * @param $id
-	 * @param Request $request
+	 * @param $id user ID
+	 * @param \Illuminate\Http\Request $request
 	 * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
 	 */
 	public function submitSmsCode($id, Request $request){
@@ -107,6 +109,12 @@ class RegisterController extends ApiController
 		}
 	}
 
+	/**
+	 * PUT /api/submit_profile/{id}
+	 * @param $id user ID
+	 * @param \Illuminate\Http\Request $request
+	 * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+	 */
 	public function submitProfile($id, Request $request){
 		$data = $request->all();
 
@@ -141,10 +149,21 @@ class RegisterController extends ApiController
 		$visitor_id = Crypt::decrypt($id);
 
 		$user = Visitors::find($visitor_id);
+		if(empty($user)){
+			return response(json_encode([
+				'message' => 'Такого пользователя не существует'
+			]), 400);
+		}
+
+		$img = (!empty($data['img']))
+			? $this->createImgBase64($data['img'], true)
+			: null;
+
 		$user->name		= $data['name'];
 		$user->surname	= $data['surname'];
 		$user->email	= $data['email'];
 		$user->password	= md5($data['pass']);
+		$user->img_url	= $img;
 		$user->status	= 2;
 		$user->save();
 
