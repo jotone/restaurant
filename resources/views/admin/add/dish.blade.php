@@ -50,7 +50,7 @@
 										<select name="category" class="input-text" @if(isset($content) && !isset($content->id)) disabled="disabled" @endif>
 											<option value="0">Не относится</option>
 											@foreach($categories as $category)
-												<option value="{{ $category->id }}" @if(isset($content) && ($content->category_id == $category->id))selected="selected"@endif>{{ $category->title }}</option>
+												<option value="{{ $category->id }}" @if(isset($content) && ($content->category_id[0] == $category->id))selected="selected"@endif>{{ $category->title }}</option>
 											@endforeach
 										</select>
 										<span>Категория блюда</span>

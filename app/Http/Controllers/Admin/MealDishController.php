@@ -90,7 +90,6 @@ class MealDishController extends AppController
 					'img_url'		=> $dish->square_img,
 					'categories'	=> $categories,
 					'price'			=> $dish->price,
-					'text'			=> str_limit($dish->text, 63),
 					'menus'			=> $menus_list,
 					'is_recommended'=> $dish->is_recommended,
 					'enabled'		=> $dish->enabled,

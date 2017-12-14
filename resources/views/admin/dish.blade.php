@@ -41,14 +41,18 @@
 					</div>
 				</th>
 				<th>Изображение</th>
-				<th>Категория</th>
+				<th>Категория
+					<div class="direction" id="category_id">
+						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=category_id&dir=asc') }}" class="asc fa fa-caret-up"></a>
+						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=category_id&dir=desc') }}" class="desc fa fa-caret-down"></a>
+					</div>
+				</th>
 				<th>Цена
 					<div class="direction" id="price">
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=price&dir=asc') }}" class="asc fa fa-caret-up"></a>
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=price&dir=desc') }}" class="desc fa fa-caret-down"></a>
 					</div>
 				</th>
-				<th>Текст</th>
 				<th>Входит в меню</th>
 				<th>Рекомендовано
 					<div class="direction" id="is_recommended">
@@ -119,7 +123,6 @@
 							0
 						@endif
 					</td>
-					<td>{{ $item['text'] }}</td>
 					<td>
 						@foreach($item['menus'] as $menu)
 							<p>
