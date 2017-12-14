@@ -247,6 +247,7 @@ footer .status-messages-wrap .close-status-bar{
 	min-width: 320px;
 	width: 90%;
 	margin: 0 auto;
+	padding-bottom: 60px;
 }
 .page-info{
 	display: flex;
