@@ -456,7 +456,7 @@ $(document).ready(function(){
 							});
 
 							//Apply button click
-							$('.overview-popup button[name=addImageFromSaved]').click(function(){
+							$('.overview-popup').off().on('click', 'button[name=addImageFromSaved]',function(){
 								var image = $('.overview-popup .popup-images .hover-active').closest('.image-wrap').find('img').attr('src');
 								_this.closest('.preview-image').find('.preview-image-wrap').empty().append('<img src="'+image+'" alt="" data-type="file">');
 								$(this).closest('.overview-popup').hide(200);
@@ -502,7 +502,7 @@ $(document).ready(function(){
 		});
 	});
 	//Close gallery popup
-	$('.overview-popup').on('click', '.close-popup', function(){
+	$('.overview-popup .close-popup').click(function(){
 		$(this).closest('.overview-popup').hide(200);
 	});
 // /Gallery image load
