@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use Intervention\Image\ImageManagerStatic as Image;
 
 class ApiController extends Controller
 {
