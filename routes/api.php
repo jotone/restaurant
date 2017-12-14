@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 Route::group(['middleware'=>'api', 'namespace'=> 'Api'], function(){
 
 	//Auth
-	Route::post('/log_in', 'AuthController@login');
+	Route::post('/log_in',				'AuthController@login');
 
 	//Registration
 	Route::post('/create_account',		'RegisterController@createAccount');

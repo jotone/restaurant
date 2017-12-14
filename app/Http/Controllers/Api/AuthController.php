@@ -14,9 +14,9 @@ class AuthController extends ApiController
 
 		$data['pass'] = md5($data['pass']);
 
-		$user = Visitors::select('id','name','surname','email')
-			->where('email','=',$data['email'])
-			->where('password','=',$data['pass'])
+		$user = Visitors::select('id','name','surname','email','img_url')
+			->where('email','=',trim($data['email']))
+			->where('password','=',trim($data['pass']))
 			->where('status','=',2)
 			->first();
 		if(empty($user)){
