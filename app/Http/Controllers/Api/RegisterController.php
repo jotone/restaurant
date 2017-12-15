@@ -98,7 +98,7 @@ class RegisterController extends ApiController
 		}else{
 			return response(json_encode([
 				'input_error'	=> 1,
-				'type'			=> 'sms_code',
+				'type'			=> 'sms',
 				'message'		=> 'Код СМС не подтвержден.'
 			]), 400);
 		}
@@ -111,8 +111,8 @@ class RegisterController extends ApiController
 	 * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
 	 */
 	public function generateSMS($id){
-		$code = mt_rand(0,9).mt_rand(0,9).mt_rand(0,9).mt_rand(0,9);
-
+		//$code = mt_rand(0,9).mt_rand(0,9).mt_rand(0,9).mt_rand(0,9);
+		$code = 2222;
 		$visitor_id = Crypt::decrypt($id);
 		$user = Visitors::find($visitor_id);
 		if(empty($user)){
