@@ -13,4 +13,8 @@ class Visitors extends Model
 	protected $hidden = [
 		'password'
 	];
+
+	public function orders(){
+		return $this->hasMany('App\VisitorOrder','visitor_id','id');
+	}
 }

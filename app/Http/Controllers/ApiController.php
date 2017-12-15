@@ -51,4 +51,10 @@ class ApiController extends Controller
 			return 'Изображение не определено';
 		}
 	}
+
+	protected function sendSMStoUser($phone, $code){
+		/*
+		 * SEND SMS TO USER
+		 */
+	}
 }

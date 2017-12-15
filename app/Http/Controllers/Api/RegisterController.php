@@ -10,13 +10,6 @@ use Illuminate\Support\Facades\Crypt;
 
 class RegisterController extends ApiController
 {
-	protected function sendSMStoUser($phone, $code){
-		/*
-		 * SEND SMS TO USER
-		 */
-	}
-
-
 	/**
 	 * POST /api/create_account
 	 * Create user Account with phone number
