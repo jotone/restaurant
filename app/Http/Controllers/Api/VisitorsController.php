@@ -24,8 +24,8 @@ class VisitorsController extends ApiController
 
 		//Decrypt ID -> get user-data by ID
 		$data['user_id'] = Crypt::decrypt($data['user_id']);
-		$user = Visitors::find($data['user_id']);
-		if(empty($user)){
+
+		if(Visitors::where('id','=',$data['user_id'])->count() == 0){
 			return response(json_encode([
 				'Такого пользователя не существует'
 			]), 400);
