@@ -71,6 +71,7 @@ class KitchenController extends ApiController
 		return $categories_list;
 	}
 
+
 	/**
 	 * GET|HEAD /api/get_kitchen
 	 * Get all categories
@@ -86,6 +87,7 @@ class KitchenController extends ApiController
 
 		return json_encode($categories_list);
 	}
+
 
 	/**
 	 * GET|HEAD /api/get_kitchen/{rest_id}
@@ -115,6 +117,7 @@ class KitchenController extends ApiController
 
 		return json_encode($categories_list);
 	}
+
 
 	/**
 	 * GET|HEAD /get_kitchen/{rest_id}/kitchen/{kitch_id}

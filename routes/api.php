@@ -18,6 +18,15 @@ Route::group(['middleware'=>'api', 'namespace'=> 'Api'], function(){
 
 	//Kitchen
 	Route::get('/get_kitchen/{rest_id}/kitchen/{kitch_id}', 'KitchenController@getConcrete');
-	Route::get('/get_kitchen/{rest_id}',	'KitchenController@getByRestaurant');
-	Route::get('/get_kitchen',				'KitchenController@getAll');
+	Route::get('/get_kitchen/{rest_id}','KitchenController@getByRestaurant');
+	Route::get('/get_kitchen',			'KitchenController@getAll');
+
+	//Dishes
+	Route::get('/get_dishes/{rest_id}/kitchen/{kitch_id}', 'DishesController@getByKitchen');
+	Route::get('/get_dishes/{rest_id}',	'DishesController@getByRestaurant');
+	Route::get('/get_dishes',			'DishesController@getAll');
+	Route::get('/get_dish/{id}',		'DishesController@getByID');
+
+	//Create Order
+	Route::post('/create_order',		'VisitorsController@createOrder');
 });
