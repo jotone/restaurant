@@ -8,7 +8,7 @@ class Restaurant extends Model
 {
 	protected $table = 'restaurants';
 	public $fillable = [
-		'title','slug','logo_img','square_img','large_img','img_url','text','address','work_time',
+		'title','slug','phone','logo_img','square_img','large_img','img_url','text','address','work_time',
 		'has_delivery','has_wifi','coordinates','etc_data',
 		'rating','views','enabled','category_id',
 		'created_by','updated_by'

@@ -17,6 +17,7 @@ class CreateRestaurantsTable extends Migration
 			$table->increments('id');
 			$table->string('title');
 			$table->string('slug');
+			$table->string('phone',32)->nullable();
 			$table->text('logo_img')->nullable();
 			$table->text('square_img')->nullable();
 			$table->text('large_img')->nullable();

@@ -46,6 +46,21 @@
 					<div class="row-wrap">
 						<label>
 							@if(!isset($content) || isset($content->id))
+								<input	name="phone"
+										class="input-text col_1_2"
+										type="text"
+										required="required"
+										placeholder="Телефон&hellip;"
+										value="@if(isset($content)){{ $content->phone }}@endif">
+								<span>Телефон</span>
+							@else
+								<span>Телефон: {{ $content->phone }}</span>
+							@endif
+						</label>
+					</div>
+					<div class="row-wrap">
+						<label>
+							@if(!isset($content) || isset($content->id))
 								<input	name="time_begin"
 										autocomplete="off"
 										class="input-text col_1_5"

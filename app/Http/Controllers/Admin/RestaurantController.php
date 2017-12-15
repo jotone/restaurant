@@ -243,6 +243,7 @@ class RestaurantController extends AppController
 		$result = Restaurant::create([
 			'title'			=> $data['title'],
 			'slug'			=> $data['slug'],
+			'phone'			=> preg_replace('/\D+/', '', $data['phone']),
 			'logo_img'		=> $logo,
 			'square_img'	=> $square,
 			'large_img'		=> $large,
@@ -304,6 +305,7 @@ class RestaurantController extends AppController
 		$result = Restaurant::find($id);
 		$result->title			= $data['title'];
 		$result->slug			= $data['slug'];
+		$result->phone			= preg_replace('/\D+/', '', $data['phone']);
 		$result->logo_img		= $logo;
 		$result->square_img		= $square;
 		$result->large_img		= $large;
