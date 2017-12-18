@@ -530,7 +530,7 @@ class RestaurantController extends AppController
 
 			$img = ($data['large_img']->type == 'upload')
 				? $this->makeRectangleImage($this->createImgBase64($data['large_img']->src))
-				: $this->makeRectangleImage($data['large_img']->src);
+				: $data['large_img']->src;
 
 			$size = (!empty($data['large_img']->src))
 				? getimagesize(base_path().'/public'.$img)

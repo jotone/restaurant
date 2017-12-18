@@ -39,6 +39,7 @@ $(document).ready(function(){
 
 				var data = {
 					title:			title,
+					phone:			$('input[name=phone]').val(),
 					time_begin:		$('input[name=time_begin]').val(),
 					time_finish:	$('input[name=time_finish]').val(),
 					address:		CKEDITOR.instances.address.getData(),
