@@ -12,6 +12,9 @@ Route::group(['middleware'=>'api', 'namespace'=> 'Api'], function(){
 	Route::put('/submit_profile/{id}',	'RegisterController@submitProfile');
 	Route::put('/generate_sms/{id}',	'RegisterController@generateSMS');
 
+	Route::get('/restore_password/{code}',	'RegisterController@restorePasswordGet');
+	Route::post('/restore_password',		'RegisterController@restorePasswordSend');
+
 	//Restaurants
 	Route::get('/get_restaurants',		'RestaurantController@getAll');
 	Route::get('/get_restaurant/{id}',	'RestaurantController@getOne');

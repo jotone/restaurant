@@ -1,6 +1,8 @@
 <?php
 namespace App\Http\Controllers\Api;
 
+use App\RestorePassword;
+use App\Settings;
 use App\Visitors;
 
 use Illuminate\Http\Request;
@@ -196,5 +198,112 @@ class RegisterController extends ApiController
 			'id'	=> $id,
 			'img'	=> asset($img)
 		]), 201);
+	}
+
+
+	/**
+	 * POST /api/restore_password
+	 * @param \Illuminate\Http\Request $request
+	 * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+	 */
+	public function restorePasswordSend(Request $request){
+		$data = $request->all();
+		if(!isset($data['email']) || (Visitors::where('email','=',$data['email'])->count() == 0)){
+			return response(json_encode([
+				'message' => 'Такого пользователя не существует'
+			]), 400);
+		}
+
+		$user = Visitors::select('id','name')->where('email','=',$data['email'])->first();
+
+		$restore = RestorePassword::create([
+			'user_id' => $user->id,
+			'type' => 'visitor'
+		]);
+
+		$hash = Crypt::encrypt($restore->id);
+
+		$settings = Settings::select('options')
+			->where('type','=','main_info')
+			->where('title','=','E-mail')
+			->first();
+
+		$settings = json_decode($settings->options);
+
+		$headers  = "Content-type: text/html; charset=utf-8 \r\n";
+		$headers .= 'From: <'.$settings[0].">\r\n";
+		//to user
+		$message ='
+		<html>
+			<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+			<head><title>Arm Delivery - Сброс пароля</title></head>
+			<body>
+				<table>
+					<tr>
+						<td>Дорогой '.$user['name'].', для того, чтобы изменить пароль необходимо перейти по ссылке ниже.</td>
+						<td><a href="https://armdelivery.site/api/restore_password/'.$hash.'">'.$hash.'</a></td>
+						<td>Ну, а если не хотите его менять &mdash; тогда не переходите</td>
+					</tr>
+				</table>
+			</body>
+		</html>';
+		mail(trim($data['email']), 'Arm Delivery - Сброс пароля', $message, $headers);
+
+		return response(json_encode([
+			'message' => 'success'
+		]), 201);
+	}
+
+
+	/**
+	 * GET|HEAD /api/restore_password/{code}
+	 * @param $code
+	 * @return string
+	 */
+	public function restorePasswordGet($code){
+		$code = Crypt::decrypt($code);
+
+		$restore = RestorePassword::select('user_id','created_at')
+			->where('type','=','visitor')
+			->where('id','=',$code)
+			->first();
+
+		if((time() - strtotime($restore->created_at)) < 604800){
+			$new_pass = str_random(10);
+
+			$user = Visitors::find($restore->user_id);
+			$user->password = md5($new_pass);
+			$user->save();
+
+			$settings = Settings::select('options')
+				->where('type','=','main_info')
+				->where('title','=','E-mail')
+				->first();
+
+			$settings = json_decode($settings->options);
+
+			$headers  = "Content-type: text/html; charset=utf-8 \r\n";
+			$headers .= 'From: <'.$settings[0].">\r\n";
+			//to user
+			$message ='
+			<html>
+				<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+				<head><title>Arm Delivery - Смена пароля</title></head>
+				<body>
+					<table>
+						<tr>
+							<td>Ваш пароль был успешно изменен.</td>
+							<td>Теперь он такой: '.$new_pass.'</td>
+						</tr>
+					</table>
+				</body>
+			</html>';
+			mail(trim($user->email), 'Arm Delivery - Смена пароля', $message, $headers);
+			echo 'Пароль успешно изменен';
+			sleep(10);
+			return redirect()->back();
+		}else{
+			return 'Время действия ссылки истекло';
+		}
 	}
 }
