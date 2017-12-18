@@ -12,6 +12,11 @@ use Illuminate\Support\Facades\Crypt;
 
 class VisitorsController extends ApiController
 {
+	/**
+	 * POST /api/create_order
+	 * @param \Illuminate\Http\Request $request
+	 * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+	 */
 	public function createOrder(Request $request){
 		$data = $request->all();
 
@@ -76,5 +81,77 @@ class VisitorsController extends ApiController
 				'message' => 'Отплавлять нечего'
 			]), 400);
 		}
+	}
+
+
+	/**
+	 * PUT /api/change_data/{id}
+	 * @param $id \App\Visitors ID
+	 * @param \Illuminate\Http\Request $request
+	 * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+	 */
+	public function changeData($id, Request $request){
+		if(empty($id)){
+			return response(json_encode([
+				'Такого пользователя не существует'
+			]), 400);
+		}
+
+		$visitor_id = Crypt::decrypt($id);
+
+		$user = Visitors::find($visitor_id);
+		if(empty($user)){
+			return response(json_encode([
+				'Такого пользователя не существует'
+			]), 400);
+		}
+
+		$data = $request->all();
+
+		if(!empty($data['pass'])){
+			if(strlen($data['pass']) < 6){
+				return response(json_encode([
+					'input_error'	=> 1,
+					'type'			=> 'pass',
+					'message'		=> 'Пароль должен содержать как минимум 6 символов'
+				]), 400);
+			}
+
+			if($data['pass'] != $data['confirm']){
+				return response(json_encode([
+					'input_error'	=> 1,
+					'type'			=> 'confirm',
+					'message'		=> 'Пароль не подтвержден'
+				]), 400);
+			}
+		}
+
+		if(Visitors::where('id','!=',$visitor_id)->where('email','=',$data['email'])->count() > 0){
+			return response(json_encode([
+				'input_error'	=> 1,
+				'type'			=> 'email',
+				'message'		=> 'Пользователь с данной почтой уже существует'
+			]), 400);
+		}
+
+		$img = (!empty($data['img']))
+			? $this->createImgBase64($data['img'], true)
+			: null;
+
+		$user->name		= $data['name'];
+		$user->surname	= $data['surname'];
+		$user->email	= $data['email'];
+		if(!empty($img)){
+			$user->img_url	= $img;
+		}
+		if(!empty($data['pass'])) {
+			$user->password = md5($data['pass']);
+		}
+		$user->save();
+
+		return response(json_encode([
+			'id'	=> $id,
+			'img'	=> (!empty($img))? asset($img): asset($user->img_url)
+		]), 201);
 	}
 }

@@ -32,4 +32,6 @@ Route::group(['middleware'=>'api', 'namespace'=> 'Api'], function(){
 
 	//Create Order
 	Route::post('/create_order',		'VisitorsController@createOrder');
+	//Change User's Data
+	Route::put('/change_data/{id}',		'VisitorsController@changeData');
 });
