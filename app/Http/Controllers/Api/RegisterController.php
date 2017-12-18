@@ -230,8 +230,8 @@ class RegisterController extends ApiController
 
 		$settings = json_decode($settings->options);
 
-		$headers  = "Content-type: text/html; charset=utf-8 \r\n";
-		$headers .= 'From: <'.$settings[0].">\r\n";
+		$headers  = 'Content-type: text/html; charset=utf-8'."\r\n";
+		$headers .= 'From: '.$settings[0]."\r\n";
 		//to user
 		$message ='
 		<html>
@@ -247,7 +247,7 @@ class RegisterController extends ApiController
 				</table>
 			</body>
 		</html>';
-		mail(trim($data['email']), 'Arm Delivery - Сброс пароля', $message, $headers);
+		mail(trim($data['email']), 'Armdelivery', $message, $headers);
 
 		return response(json_encode([
 			'message' => 'success'
@@ -282,8 +282,8 @@ class RegisterController extends ApiController
 
 			$settings = json_decode($settings->options);
 
-			$headers  = "Content-type: text/html; charset=utf-8 \r\n";
-			$headers .= 'From: <'.$settings[0].">\r\n";
+			$headers  = 'Content-type: text/html; charset=utf-8'."\r\n";
+			$headers .= 'From: '.$settings[0]."\r\n";
 			//to user
 			$message ='
 			<html>
@@ -298,10 +298,8 @@ class RegisterController extends ApiController
 					</table>
 				</body>
 			</html>';
-			mail(trim($user->email), 'Arm Delivery - Смена пароля', $message, $headers);
-			echo 'Пароль успешно изменен';
-			sleep(10);
-			return redirect()->back();
+			mail(trim($user->email), 'Armdelivery', $message, $headers);
+			return redirect($user->email);
 		}else{
 			return 'Время действия ссылки истекло';
 		}

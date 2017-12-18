@@ -50,7 +50,7 @@ class MainInfoController extends AppController
 	/**
 	 * PUT /admin/settings/main_info
 	 * @param null $id
-	 * @param \Illuminate\Http\RequestRequest $request
+	 * @param \Illuminate\Http\Request $request
 	 * @return \Illuminate\Http\RedirectResponse|string
 	 */
 	public function update($id = null, Request $request){
@@ -62,6 +62,7 @@ class MainInfoController extends AppController
 		unset($data['_method']);
 		unset($data['save']);
 		unset($data['ajax']);
+		unset($data['_url']);
 
 		$result_array = [];
 		foreach($data as $key => $val){
