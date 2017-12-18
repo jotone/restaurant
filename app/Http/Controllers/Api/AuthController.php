@@ -22,7 +22,7 @@ class AuthController extends ApiController
 		if(empty($user)){
 			return response(json_encode([
 				'input_error'	=> 1,
-				'type'			=> 'login',
+				'type'			=> 'pass',
 				'message'		=> 'Логин или пароль введен неверно.'
 			]), 400);
 		}

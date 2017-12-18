@@ -299,7 +299,7 @@ class RegisterController extends ApiController
 				</body>
 			</html>';
 			mail(trim($user->email), 'Armdelivery', $message, $headers);
-			return redirect($user->email);
+			return 'Пароль успешно изменен и выслан на e-mail';
 		}else{
 			return 'Время действия ссылки истекло';
 		}
