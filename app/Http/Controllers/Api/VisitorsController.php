@@ -58,7 +58,7 @@ class VisitorsController extends ApiController
 					->where('enabled','=',1)
 					->where('id','=',$restaurant_id)
 					->first();
-				//Send SMS
+				//Send SMS to restaurant admin
 				if(!empty($restaurant)){
 					$result = VisitorOrder::create([
 						'visitor_id'	=> $data['user_id'],
@@ -141,6 +141,7 @@ class VisitorsController extends ApiController
 		$user->name		= $data['name'];
 		$user->surname	= $data['surname'];
 		$user->email	= $data['email'];
+		$user->phone	= $data['phone'];
 		if(!empty($img)){
 			$user->img_url	= $img;
 		}

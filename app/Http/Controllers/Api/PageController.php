@@ -34,6 +34,12 @@ class PageController extends ApiController
 					//If value is a slider
 					foreach($temp as $i => $items){
 						foreach($items as $j => $item){
+							if($this->isJson($item->val)){
+								$item->val = json_decode($item->val);
+								if(isset($item->val->src)){
+									$item->val = asset($item->val->src);
+								}
+							}
 							$data[$j] = $item->val;
 						}
 						$content_list[$page_value->meta_key][$i] = $data;
