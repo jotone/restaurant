@@ -22,6 +22,7 @@ Route::group(['middleware'=>'api', 'namespace'=> 'Api'], function(){
 	Route::get('/get_kitchen/{rest_id}/kitchen/{kitch_id}', 'KitchenController@getConcrete');
 	Route::get('/get_kitchen/{rest_id}',	'KitchenController@getByRestaurant');
 	Route::get('/get_kitchen',				'KitchenController@getAll');
+	Route::get('/get_filter_kitchens',		'KitchenController@getFilterKitchens');
 
 	//Dishes
 	Route::get('/get_dishes/{rest_id}/kitchen/{kitch_id}', 'DishesController@getByKitchen');

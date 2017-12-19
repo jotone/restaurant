@@ -96,9 +96,9 @@ class VisitorsController extends ApiController
 				'Такого пользователя не существует'
 			]), 400);
 		}
-
+		//Decrypt ID
 		$visitor_id = Crypt::decrypt($id);
-
+		//Get user's data
 		$user = Visitors::find($visitor_id);
 		if(empty($user)){
 			return response(json_encode([
@@ -107,8 +107,9 @@ class VisitorsController extends ApiController
 		}
 
 		$data = $request->all();
-
+		//If password field is empty -> ignore changes
 		if(!empty($data['pass'])){
+			//Password must have greater than 6 chars
 			if(strlen($data['pass']) < 6){
 				return response(json_encode([
 					'input_error'	=> 1,
@@ -116,7 +117,7 @@ class VisitorsController extends ApiController
 					'message'		=> 'Пароль должен содержать как минимум 6 символов'
 				]), 400);
 			}
-
+			//Password must be equal to its confirmation
 			if($data['pass'] != $data['confirm']){
 				return response(json_encode([
 					'input_error'	=> 1,
@@ -126,6 +127,7 @@ class VisitorsController extends ApiController
 			}
 		}
 
+		//If there is user with such email
 		if(Visitors::where('id','!=',$visitor_id)->where('email','=',$data['email'])->count() > 0){
 			return response(json_encode([
 				'input_error'	=> 1,
@@ -136,12 +138,14 @@ class VisitorsController extends ApiController
 
 		$img = null;
 
+		//If image was really updated
 		if(!empty($data['img'])){
 			if(!filter_var($data['img'], FILTER_VALIDATE_URL)) {
 				$img = $this->createImgBase64($data['img'], true);
 			}
 		}
 
+		//Save user's data
 		$user->name		= $data['name'];
 		$user->surname	= $data['surname'];
 		$user->email	= $data['email'];
@@ -153,7 +157,7 @@ class VisitorsController extends ApiController
 			$user->password = md5($data['pass']);
 		}
 		$user->save();
-
+		//Get updated user's data
 		$user = Visitors::select('id','name','surname','email','phone','img_url')->find($visitor_id)->toArray();
 
 		$user['id'] = $id;

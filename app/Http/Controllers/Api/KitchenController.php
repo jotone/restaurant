@@ -6,6 +6,7 @@ use App\MealDish;
 use App\MealMenu;
 
 use App\Http\Controllers\ApiController;
+use App\Settings;
 
 class KitchenController extends ApiController
 {
@@ -148,5 +149,33 @@ class KitchenController extends ApiController
 		$categories_list = $this->createCategoriesList($dishes);
 
 		return json_encode($categories_list);
+	}
+
+
+	/**
+	 * GET|HEAD /api/get_filter_kitchens
+	 * @return string
+	 */
+	public function getFilterKitchens(){
+		$settings = Settings::select('options')->where('slug','=','dish')->first();
+		$settings = json_decode($settings->options);
+
+		$categories = Category::select('id','title','img_url')
+			->where('category_type','=',$settings->category_type)
+			->where('enabled','=',1)
+			->orderBy('position','asc')
+			->get();
+
+		$content = [];
+		foreach($categories as $category){
+			$img = ($this->isJson($category->img_url))? json_decode($category->img_url): null;
+			$content[] = [
+				'id' => $category->id,
+				'title' => $category->title,
+				'img_url' => (isset($img->src) && !empty($img->src))? asset($img->src): ''
+			];
+		}
+
+		return json_encode($content);
 	}
 }
