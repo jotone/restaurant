@@ -134,9 +134,13 @@ class VisitorsController extends ApiController
 			]), 400);
 		}
 
-		$img = (!empty($data['img']))
-			? $this->createImgBase64($data['img'], true)
-			: null;
+		$img = null;
+
+		if(!empty($data['img'])){
+			if(!filter_var($data['img'], FILTER_VALIDATE_URL)) {
+				$img = $this->createImgBase64($data['img'], true);
+			}
+		}
 
 		$user->name		= $data['name'];
 		$user->surname	= $data['surname'];
@@ -150,9 +154,11 @@ class VisitorsController extends ApiController
 		}
 		$user->save();
 
-		return response(json_encode([
-			'id'	=> $id,
-			'img'	=> (!empty($img))? asset($img): asset($user->img_url)
-		]), 201);
+		$user = Visitors::select('id','name','surname','email','phone','img_url')->find($visitor_id)->toArray();
+
+		$user['id'] = $id;
+		$user['img_url'] = (!empty($img))? asset($img): asset($user['img_url']);
+
+		return response(json_encode($user), 201);
 	}
 }
