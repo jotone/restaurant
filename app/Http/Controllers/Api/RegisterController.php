@@ -183,7 +183,7 @@ class RegisterController extends ApiController
 
 		$img = (!empty($data['img']))
 			? $this->createImgBase64($data['img'], true)
-			: null;
+			: '/user_img/placeholder.png';
 
 		$user->name		= $data['name'];
 		$user->surname	= $data['surname'];
