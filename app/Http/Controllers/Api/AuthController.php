@@ -28,7 +28,7 @@ class AuthController extends ApiController
 		}
 		$user = $user->toArray();
 		$user['id'] = Crypt::encrypt($user['id']);
-		$user['img_url'] = (!empty($user['img_url']))? asset($user['img_url']): '';
+		$user['img_url'] = (!empty($user['img_url']))? asset($user['img_url']): asset('/user_img/placeholder.png');
 
 		return json_encode($user);
 	}
