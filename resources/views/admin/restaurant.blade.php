@@ -66,12 +66,6 @@
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=enabled&dir=desc') }}" class="desc fa fa-caret-down"></a>
 					</div>
 				</th>
-				<th>Просмотры
-					<div class="direction" id="views">
-						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=views&dir=asc') }}" class="asc fa fa-caret-up"></a>
-						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=views&dir=desc') }}" class="desc fa fa-caret-down"></a>
-					</div>
-				</th>
 				<th>Создан
 					<div class="direction" id="created_at">
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=created_at&dir=asc') }}" class="asc fa fa-caret-up"></a>
@@ -127,7 +121,6 @@
 							Выключено
 						@endif
 					</td>
-					<td>{{ $item['views'] }}</td>
 					<td>
 						<p>{{ $item['created'] }}</p>
 						@if(!empty($item['created_by']))

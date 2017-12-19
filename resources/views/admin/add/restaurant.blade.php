@@ -1,27 +1,38 @@
 @extends('admin.layouts.default')
 @section('scripts')
 	<script async defer>
-		function initMap(){
-			var coordinates = {
-				lat: 55.744054,
-				lng: 37.684244
-			}
-			if(($('input[name=coordinateX]').val() == '') && ($('input[name=coordinateY]').val() == '')){
-				$('input[name=coordinateX]').val(coordinates.lat);
-				$('input[name=coordinateY]').val(coordinates.lng);
-			}else{
-				coordinates.lat = $('input[name=coordinateX]').val();
-				coordinates.lng = $('input[name=coordinateY]').val();
-			}
+		var coordinates = {
+			lat: 55.744054,
+			lng: 37.684244,
+			zoom: 12
+		};
 
+		if(($('input[name=coordinateX]').val() == '') && ($('input[name=coordinateY]').val() == '')){
+			$('input[name=coordinateX]').val(coordinates.lat);
+			$('input[name=coordinateY]').val(coordinates.lng);
+		}else{
+			coordinates.lat = parseFloat($('input[name=coordinateX]').val());
+			coordinates.lng = parseFloat($('input[name=coordinateY]').val());
+		}
+
+		function initMap(){
 			var map = new google.maps.Map(document.getElementById('map-wrap'), {
-				zoom: 12,
+				zoom: coordinates.zoom,
 				center: coordinates
 			});
 
 			var marker = new google.maps.Marker({
 				position: coordinates,
 				map: map
+			});
+
+			map.addListener('click', function(e){
+				coordinates.lat = e.latLng.lat();
+				coordinates.lng = e.latLng.lng();
+				coordinates.zoom = map.getZoom();
+				$('input[name=coordinateX]').val(coordinates.lat);
+				$('input[name=coordinateY]').val(coordinates.lng);
+				initMap();
 			});
 		}
 	</script>
