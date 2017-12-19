@@ -107,8 +107,9 @@ class VisitorsController extends ApiController
 		}
 
 		$data = $request->all();
+		$data['pass'] = isset($data['pass'])? trim($data['pass']): null;
 		//If password field is empty -> ignore changes
-		if(!empty($data['pass'])){
+		if(isset($data['pass']) && !empty($data['pass'])){
 			//Password must have greater than 6 chars
 			if(strlen($data['pass']) < 6){
 				return response(json_encode([
