@@ -283,13 +283,20 @@ class VisitorsController extends ApiController
 					$square_img = (!empty($dish->square_img['src']))? asset($dish->square_img['src']): '';
 
 					$dish = $dish->toArray();
+					$dish['price'] = (float)$dish['price'];
 					$dish['dish_weight'] *= 1000;
 					$dish['square_img'] = $square_img;
 					$items[] = $dish;
 				}
 			}
 		}
+		usort($items, function($a, $b){
+			return $a['price'] > $b['price'];
+		});
+
 		$content['items'] = $items;
+
+		dd($content);
 
 		return json_encode($content);
 	}

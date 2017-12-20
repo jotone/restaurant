@@ -40,7 +40,7 @@ class DishesController extends ApiController
 		}
 
 		usort($dish_list, function($a, $b){
-			return $a['price'] < $b['price'];
+			return $a['price'] > $b['price'];
 		});
 
 		if(!empty($quant)){
