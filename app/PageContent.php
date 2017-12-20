@@ -12,6 +12,6 @@ class PageContent extends Model
 	];
 
 	public function page(){
-		return $this->balongsTo('App\Pages','page_id','id');
+		return $this->belongsTo('App\Pages','page_id','id');
 	}
 }

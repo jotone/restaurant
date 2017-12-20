@@ -52,8 +52,9 @@
 								<?php
 								switch($type){
 									case 'category': echo 'Категории:'; break;
-									case 'restaurant': echo 'Ресторан'; break;
-									case 'dish': echo 'Блюда'; break;
+									case 'restaurant': echo 'Ресторан:'; break;
+									case 'dish': echo 'Блюда:'; break;
+									case 'pages': echo 'Страницы:'; break;
 								}
 								?>
 								<ul>

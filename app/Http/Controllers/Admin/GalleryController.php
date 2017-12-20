@@ -6,6 +6,8 @@ use App\Category;
 
 use App\Http\Controllers\AppController;
 use App\MealDish;
+use App\PageContent;
+use App\Pages;
 use App\Restaurant;
 use Illuminate\Http\Request;
 
@@ -61,6 +63,14 @@ class GalleryController extends AppController
 				//Create array of image usage
 				foreach($dishes as $dish){
 					$used_id['dish'][$dish->id] = $dish->title;
+				}
+
+				$page_content = PageContent::select('id','page_id','meta_val')
+					->where('meta_val','LIKE','%'.$temp.'%')
+					->get();
+				foreach($page_content as $item){
+					$page = $item->page()->select('title')->first();
+					$used_id['pages'][$item->page_id] = $page->title;
 				}
 
 				$images_usage[] = [
