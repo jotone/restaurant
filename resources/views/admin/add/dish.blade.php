@@ -48,7 +48,6 @@
 								@if($settings->category_multiselect == 0)
 									<label>
 										<select name="category" class="input-text" @if(isset($content) && !isset($content->id)) disabled="disabled" @endif>
-											<option value="0">Не относится</option>
 											@foreach($categories as $category)
 												<option value="{{ $category->id }}" @if(isset($content) && ($content->category_id[0] == $category->id))selected="selected"@endif>{{ $category->title }}</option>
 											@endforeach
