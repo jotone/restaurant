@@ -286,6 +286,7 @@ class VisitorsController extends ApiController
 					$dish['price'] = (float)$dish['price'];
 					$dish['dish_weight'] *= 1000;
 					$dish['square_img'] = $square_img;
+					$dish['quantity'] = $quantity;
 					$items[] = $dish;
 				}
 			}
@@ -295,8 +296,6 @@ class VisitorsController extends ApiController
 		});
 
 		$content['items'] = $items;
-
-		dd($content);
 
 		return json_encode($content);
 	}
