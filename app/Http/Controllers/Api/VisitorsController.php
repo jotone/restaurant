@@ -166,4 +166,131 @@ class VisitorsController extends ApiController
 
 		return response(json_encode($user), 201);
 	}
+
+
+	/**
+	 * GET|HEAD /api/get_visits/{user_id}
+	 * @param $user_id \App\User ID
+	 * @return \Illuminate\Contracts\Routing\ResponseFactory|string|\Symfony\Component\HttpFoundation\Response
+	 */
+	public function getAll($user_id){
+		if(empty($user_id)){
+			return response(json_encode([
+				'Такого пользователя не существует'
+			]), 400);
+		}
+
+		$visitor_id = Crypt::decrypt($user_id);
+
+		if(Visitors::where('id','=',$visitor_id)->count() == 0){
+			return response(json_encode([
+				'Такого пользователя не существует'
+			]), 400);
+		}
+
+		//Get visits by date
+		$visits = VisitorOrder::select('restaurant_id','items','created_at')
+			->where('visitor_id','=',$visitor_id)
+			->orderBy('created_at','desc')
+			->get();
+
+		//Create result array
+		$content = [];
+		foreach($visits as $visit){
+			//Get restaurant data
+			$restaurant = $visit->restaurant()->select('id','title','square_img')->first();
+
+			if(!empty($restaurant)){
+				$restaurant = $restaurant->toArray();
+
+				//Create visit default values
+				$restaurant['price'] = 0;
+				$restaurant['calories'] = 0;
+				$restaurant['date'] = date('d.m.Y', strtotime($visit->created_at));
+
+				//Calculate price and calories values
+				foreach($visit->items as $dish_id => $quantity){
+					$dish = MealDish::select('price','calories')->find($dish_id);
+					$restaurant['price'] += $dish->price * $quantity;
+					$restaurant['calories'] += $dish->calories * $quantity;
+				}
+
+				//Get square image
+				$restaurant['square_img'] = json_decode($restaurant['square_img'], true);
+				$restaurant['square_img'] = (!empty($restaurant['square_img']['src']))? asset($restaurant['square_img']['src']): '';
+
+				$content[] = $restaurant;
+			}
+		}
+
+		return json_encode($content);
+	}
+
+
+	public function getByDate($date, $rest_id, $user_id){
+		if(empty($user_id) || empty($date)){
+			return response(json_encode([
+				'Такого пользователя не существует'
+			]), 400);
+		}
+
+		$visitor_id = Crypt::decrypt($user_id);
+
+		if(Visitors::where('id','=',$visitor_id)->count() == 0){
+			return response(json_encode([
+				'Такого пользователя не существует'
+			]), 400);
+		}
+
+		$date = date('Y-m-d', strtotime($date));
+
+		//Get visits by date
+		$visits = VisitorOrder::select('restaurant_id','items','created_at')
+			->where('visitor_id','=',$visitor_id)
+			->where('restaurant_id','=',$rest_id)
+			->where('created_at','LIKE','%'.$date.'%')
+			->get();
+
+		$content = [];
+		$items = [];
+		foreach($visits as $visit){
+			$restaurant = $visit->restaurant()->select('id','title','logo_img','large_img')->first();
+
+			if(!empty($restaurant) && !isset($content['title'])){
+				//Create visit default values
+				$content['title'] = $restaurant->title;
+				$content['price'] = 0;
+				$content['calories'] = 0;
+				$content['date'] = date('d.m.Y', strtotime($visit->created_at));
+
+				//Get logo image
+				$content['logo_img'] = json_decode($restaurant->logo_img);
+				$content['logo_img'] = (!empty($restaurant->logo_img->src))? asset($restaurant->logo_img->src): '';
+
+				//Get logo image
+				$content['large_img'] = json_decode($restaurant->large_img, true);
+				$content['large_img'] = (!empty($restaurant->large_img->src))? asset($restaurant->large_img->src): '';
+			}
+
+			if(!empty($restaurant)){
+				//Calculate price and calories values
+				foreach($visit->items as $dish_id => $quantity){
+					$dish = MealDish::select('title','price','calories','dish_weight','model_3d','square_img')->find($dish_id);
+					$content['price'] += $dish->price * $quantity;
+					$content['calories'] += $dish->calories * $quantity;
+
+					//Get logo image
+					$square_img = (!empty($dish->square_img['src']))? asset($dish->square_img['src']): '';
+
+					$dish = $dish->toArray();
+					$dish['dish_weight'] *= 1000;
+					$dish['square_img'] = $square_img;
+					$items[] = $dish;
+				}
+			}
+		}
+		$content['items'] = $items;
+
+		return json_encode($content);
+	}
 }

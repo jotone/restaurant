@@ -205,7 +205,7 @@ class RestaurantController extends ApiController
 		$restaurant->large_img = $large;
 
 		$square = json_decode($restaurant->square_img, true);
-		$square['src'] = (!empty($square->src))? asset($square['src']): '';
+		$square['src'] = (!empty($square['src']))? asset($square['src']): '';
 		$restaurant->square_img = $square;
 
 		//Get restaurant menus

@@ -11,7 +11,7 @@ class DishesController extends ApiController
 	 * @param $dishes
 	 * @return array
 	 */
-	protected function createDishesList($dishes){
+	protected function createDishesList($dishes, $quant = null){
 		$dish_list = [];
 		foreach($dishes as $dish){
 			//Asset square image
@@ -29,7 +29,7 @@ class DishesController extends ApiController
 				'square_img'	=> $square_img,
 				'large_img'		=> $large_img,
 				'model_3d'		=> $dish->model_3d,
-				'price'			=> $dish->price,
+				'price'			=> (float)$dish->price,
 				'dish_weight'	=> $dish->dish_weight,
 				'calories'		=> $dish->calories,
 				'text'			=> $dish->text,
@@ -38,6 +38,16 @@ class DishesController extends ApiController
 				'views'			=> $dish->views
 			];
 		}
+
+		usort($dish_list, function($a, $b){
+			return $a['price'] < $b['price'];
+		});
+
+		if(!empty($quant)){
+			$dish_list['length'] = count($dish_list);
+			$dish_list = array_slice($dish_list, 0, $quant);
+		}
+
 		return $dish_list;
 	}
 
@@ -103,7 +113,7 @@ class DishesController extends ApiController
 	 * @param $rest_id \App\Restaurant ID
 	 * @return string
 	 */
-	public function getByRestaurant($rest_id){
+	public function getByRestaurant($rest_id, $quant = null){
 		//Get menus for current restaurant
 		$menus = MealMenu::select('dishes')
 			->where('restaurant_id','=',$rest_id)
@@ -124,7 +134,7 @@ class DishesController extends ApiController
 			->whereIn('id',$dishes_list)
 			->get();
 
-		$dish_list = $this->createDishesList($dishes);
+		$dish_list = $this->createDishesList($dishes, $quant);
 
 		return json_encode($dish_list);
 	}
@@ -137,7 +147,7 @@ class DishesController extends ApiController
 	 * @param $kitch_id \App\Category ID
 	 * @return json string
 	 */
-	public function getByKitchen($rest_id, $kitch_id){
+	public function getByKitchen($rest_id, $kitch_id, $quant = null){
 		//Get menus for current restaurant
 		$menus = MealMenu::select('dishes')
 			->where('restaurant_id','=',$rest_id)
@@ -159,7 +169,7 @@ class DishesController extends ApiController
 			->where('category_id','LIKE','%"'.$kitch_id.'"%')
 			->get();
 
-		$dish_list = $this->createDishesList($dishes);
+		$dish_list = $this->createDishesList($dishes, $quant);
 
 		return json_encode($dish_list);
 	}

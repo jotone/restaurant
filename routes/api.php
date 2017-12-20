@@ -10,8 +10,7 @@ Route::group(['middleware'=>'api', 'namespace'=> 'Api'], function(){
 	Route::put('/submit_sms_code/{id}',		'RegisterController@submitSmsCode');
 	Route::put('/submit_profile/{id}',		'RegisterController@submitProfile');
 	Route::put('/generate_sms/{id}',		'RegisterController@generateSMS');
-
-	Route::put('/restore_password/{id}',		'RegisterController@restorePasswordSend');
+	Route::put('/restore_password/{id}',	'RegisterController@restorePasswordSend');
 
 	//Restaurants
 	Route::get('/get_restaurants',			'RestaurantController@getAll');
@@ -19,14 +18,14 @@ Route::group(['middleware'=>'api', 'namespace'=> 'Api'], function(){
 	Route::get('/get_restaurant/{id}',		'RestaurantController@getOne');
 
 	//Kitchen
-	Route::get('/get_kitchen/{rest_id}/kitchen/{kitch_id}', 'KitchenController@getConcrete');
+	Route::get('/get_kitchen/{rest_id}/kitchen/{kitch_id}',	'KitchenController@getConcrete');
 	Route::get('/get_kitchen/{rest_id}',	'KitchenController@getByRestaurant');
 	Route::get('/get_kitchen',				'KitchenController@getAll');
 	Route::get('/get_filter_kitchens',		'KitchenController@getFilterKitchens');
 
 	//Dishes
-	Route::get('/get_dishes/{rest_id}/kitchen/{kitch_id}', 'DishesController@getByKitchen');
-	Route::get('/get_dishes/{rest_id}',		'DishesController@getByRestaurant');
+	Route::get('/get_dishes/{rest_id}/kitchen/{kitch_id}/{quant?}',	'DishesController@getByKitchen');
+	Route::get('/get_dishes/{rest_id}/{quant?}',					'DishesController@getByRestaurant');
 	Route::get('/get_dishes',				'DishesController@getAll');
 	Route::get('/get_dish/{id}',			'DishesController@getByID');
 
@@ -34,6 +33,9 @@ Route::group(['middleware'=>'api', 'namespace'=> 'Api'], function(){
 	Route::post('/create_order',			'VisitorsController@createOrder');
 	//Change User's Data
 	Route::put('/change_data/{id}',			'VisitorsController@changeData');
+	//Get visit data
+	Route::get('/get_visits/{user_id}',		'VisitorsController@getAll');
+	Route::get('/get_visit/{date}/restaurant/{rest_id}/user/{user_id}',	'VisitorsController@getByDate');
 
 	//Get page data
 	Route::get('/get_page_data/{slug}',		'PageController@getPageData');
