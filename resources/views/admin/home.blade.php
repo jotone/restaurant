@@ -4,32 +4,42 @@
 @stop
 @section('content')
 	<div class="main-wrap">
-		<input name="id" type="hidden">
-		<div style="display: flex; align-items: flex-start; justify-content: flex-start;">
-			<div id="step_0" style="padding: 60px 20px;">
-				<p><input name="phone" type="text" class="input-text" placeholder="Phone"></p>
-				<p><button class="button" type="button" name="send_phone">Send Phone</button></p>
-			</div>
+		<?php
+		$users = \App\Visitors::select('id','name','surname')->get();
+		$restaurants = \App\Restaurant::select('id','title')->get();
+		?>
+		<div>
+			<select name="user">
+				@foreach($users as $user)
+				<option value="{{ \Illuminate\Support\Facades\Crypt::encrypt($user->id) }}">{{ $user->name }} {{ $user->surname }}</option>
+				@endforeach
+			</select>
 
-			<div id="step_1" style="padding: 60px 20px; display: none">
-				<p><input name="sms_code" type="text" class="input-text" placeholder="SMS Code"></p>
-				<p><button class="button" type="button" name="send_sms">Send SMS</button></p>
-			</div>
+			@foreach($restaurants as $restaurant)
+				<div class="rest" data-rest_id="{{ $restaurant->id }}">
+					<h2>{{ $restaurant->title }}</h2>
 
-			<div id="step_2" style="padding: 60px 20px; display: none">
-				<p><input name="email" type="email" class="input-text" placeholder="E-mail"></p>
-				<p><input name="name" type="text" class="input-text" placeholder="Name"></p>
-				<p><input name="surname" type="text" class="input-text" placeholder="Surname"></p>
-				<p><input name="password" type="password" class="input-text" placeholder="Password"></p>
-				<p><input name="confirm_password" type="password" class="input-text" placeholder="Password confirmation"></p>
-				<p><button class="button" type="button" name="save">Save</button></p>
-			</div>
-		</div>
+					<?php
+					$menus = \App\MealMenu::select('dishes')->where('restaurant_id','=',$restaurant->id)->get();
+					$dishes_list = [];
+					foreach($menus as $menu){
+						$dishes = json_decode($menu->dishes);
+						$dishes_list = array_merge($dishes_list, $dishes);
+					}
 
-		<div style="padding: 60px 0px;">
-			<p><input name="user_login" type="email" placeholder="Email"></p>
-			<p><input name="user_pass" type="password" placeholder="PASSWORD"></p>
-			<p><button class="button" type="button" name="login">YARRR</button></p>
+					$dishes_list = array_values(array_unique($dishes_list));
+
+					$dishes = \App\MealDish::select('id','title','price')->whereIn('id',$dishes_list)->get();
+					?>
+					@foreach($dishes as $dish)
+						<div>
+							<input name="dish" value="{{ $dish->id }}" type="checkbox">
+							<input name="quantity" type="number" value="0" min="0">&nbsp;{{ $dish->title }}&mdash;{{ $dish->price }}
+						</div>
+					@endforeach
+				</div>
+			@endforeach
+			<button name="apply" type="button" class="button">Apply</button>
 		</div>
 	</div>
 @stop

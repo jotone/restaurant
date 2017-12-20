@@ -58,6 +58,7 @@ class VisitorsController extends ApiController
 					->where('enabled','=',1)
 					->where('id','=',$restaurant_id)
 					->first();
+
 				//Send SMS to restaurant admin
 				if(!empty($restaurant)){
 					$result = VisitorOrder::create([
@@ -69,13 +70,12 @@ class VisitorsController extends ApiController
 
 					if($result != false){
 						$this->sendSMStoUser($restaurant->phone, $message);
-
-						return response(json_encode([
-							'message' => 'success'
-						]), 201);
 					}
 				}
 			}
+			return response(json_encode([
+				'message' => 'success'
+			]), 201);
 		}else{
 			return response(json_encode([
 				'message' => 'Отплавлять нечего'
