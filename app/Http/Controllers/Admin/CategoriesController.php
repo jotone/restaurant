@@ -191,6 +191,7 @@ class CategoriesController extends AppController
 		$user = Auth::user();
 		//Convert data to acceptable notion
 		$data = $this->processData($data);
+
 		//Make slug link unique
 		if(Category::where('id','!=',$id)->where('slug','=',$data['slug'])->count() > 0){
 			$data['slug'] = trim($data['slug']).'_'.uniqid();
@@ -295,6 +296,18 @@ class CategoriesController extends AppController
 			$data['slug'] = $this->str2url(trim($data['title']));
 		}
 
+		$data['text'] = (!empty($data['text']))? $data['text']: null;
+		$data['meta_title'] = (!empty($data['meta_title']))? $data['meta_title']: null;
+		$data['meta_keywords'] = (!empty($data['meta_keywords']))? $data['meta_keywords']: null;
+		$data['meta_description'] = (!empty($data['meta_description']))? $data['meta_description']: null;
+
+		if(isset($data['need_seo'])){
+			$data['seo_title'] = trim($data['seo_title']);
+			$data['seo_text'] = trim($data['seo_text']);
+		}else{
+			$data['seo_title'] = $data['seo_text'] = null;
+		}
+
 		//Change checkbox values to boolean
 		if(isset($data['ajax'])){
 			$data['enabled'] = (isset($data['enabled']))? $data['enabled']: 0;
@@ -302,13 +315,6 @@ class CategoriesController extends AppController
 		}else{
 			$data['enabled'] = (isset($data['enabled']) && ($data['enabled'] == 'on'))? 1: 0;
 			$data['need_seo'] = (isset($data['need_seo']) && ($data['need_seo'] == 'on'))? 1: 0;
-		}
-
-		if($data['need_seo']){
-			$data['seo_title'] = trim($data['seo_title']);
-			$data['seo_text'] = trim($data['seo_text']);
-		}else{
-			$data['seo_title'] = $data['seo_text'] = '';
 		}
 
 		return $data;

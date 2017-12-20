@@ -85,7 +85,6 @@ class KitchenController extends ApiController
 			->get();
 
 		$categories_list = $this->createCategoriesList($dishes);
-
 		return json_encode($categories_list);
 	}
 

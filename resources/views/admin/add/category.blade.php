@@ -62,7 +62,7 @@
 						<div class="row-wrap">
 							<label>
 								<select name="refer_to" class="input-text">
-									<option value="0">Не отностся</option>
+									<option value="0">Не относится</option>
 									@foreach($categories as $category)
 										<option	value="{{ $category->id }}"@if(isset($content) && ($category->id == $content->refer_to)) selected="selected" @endif>
 											{{ $category->title }}

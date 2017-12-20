@@ -202,27 +202,27 @@ class RegisterController extends ApiController
 
 
 	/**
-	 * POST /api/restore_password
-	 * @param \Illuminate\Http\Request $request
+	 * PUT /api/restore_password/{id}
+	 * @param $id \App\User ID
 	 * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
 	 */
-	public function restorePasswordSend(Request $request){
-		$data = $request->all();
-		if(!isset($data['email']) || (Visitors::where('email','=',$data['email'])->count() == 0)){
+	public function restorePasswordSend($id){
+		if(empty($id)){
 			return response(json_encode([
 				'message' => 'Такого пользователя не существует'
 			]), 400);
 		}
 
-		$user = Visitors::select('id','name')->where('email','=',$data['email'])->first();
+		$visitor_id = Crypt::decrypt($id);
 
-		$restore = RestorePassword::create([
-			'user_id' => $user->id,
-			'type' => 'visitor'
-		]);
+		$user = Visitors::find($visitor_id);
+		if(empty($user)){
+			return response(json_encode([
+				'message' => 'Такого пользователя не существует'
+			]), 400);
+		}
 
-		$hash = Crypt::encrypt($restore->id);
-
+		//Get admin e-mail
 		$settings = Settings::select('options')
 			->where('type','=','main_info')
 			->where('title','=','E-mail')
@@ -230,78 +230,50 @@ class RegisterController extends ApiController
 
 		$settings = json_decode($settings->options);
 
-		$headers  = 'Content-type: text/html; charset=utf-8'."\r\n";
-		$headers .= 'From: '.$settings[0]."\r\n";
-		//to user
-		$message ='
-		<html>
-			<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-			<head><title>Arm Delivery - Сброс пароля</title></head>
-			<body>
-				<table>
-					<tr>
-						<td>Дорогой '.$user['name'].', для того, чтобы изменить пароль необходимо перейти по ссылке ниже.</td>
-						<td><a href="https://armdelivery.site/api/restore_password/'.$hash.'">'.$hash.'</a></td>
-						<td>Ну, а если не хотите его менять &mdash; тогда не переходите</td>
-					</tr>
-				</table>
-			</body>
-		</html>';
-		mail(trim($data['email']), 'Armdelivery', $message, $headers);
-
-		return response(json_encode([
-			'message' => 'success'
-		]), 201);
-	}
-
-
-	/**
-	 * GET|HEAD /api/restore_password/{code}
-	 * @param $code
-	 * @return string
-	 */
-	public function restorePasswordGet($code){
-		$code = Crypt::decrypt($code);
-
-		$restore = RestorePassword::select('user_id','created_at')
-			->where('type','=','visitor')
-			->where('id','=',$code)
-			->first();
-
-		if((time() - strtotime($restore->created_at)) < 604800){
+		//If isset admin email
+		if(isset($settings[0])){
+			//Generate new password
 			$new_pass = str_random(10);
 
-			$user = Visitors::find($restore->user_id);
 			$user->password = md5($new_pass);
 			$user->save();
 
-			$settings = Settings::select('options')
-				->where('type','=','main_info')
-				->where('title','=','E-mail')
-				->first();
-
-			$settings = json_decode($settings->options);
-
+			//Send letter with password
 			$headers  = 'Content-type: text/html; charset=utf-8'."\r\n";
 			$headers .= 'From: '.$settings[0]."\r\n";
-			//to user
+
 			$message ='
 			<html>
 				<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-				<head><title>Arm Delivery - Смена пароля</title></head>
+				<head><title>Arm Delivery - Сброс пароля</title></head>
 				<body>
 					<table>
 						<tr>
-							<td>Ваш пароль был успешно изменен.</td>
-							<td>Теперь он такой: '.$new_pass.'</td>
+							<td colspan="2">
+								<p>Ваш пароль был изменен.</p>
+								<p>Теперь, для входа используйте следующие данные:</p>
+							</td>
+						</tr>
+						<tr>
+							<td><p>E-mail:</p></td>
+							<td><p>'.$user->email.'</p></td>
+						</tr>
+						<tr>
+							<td><p>Password:</p></td>
+							<td><p>'.$new_pass.'</p></td>
 						</tr>
 					</table>
 				</body>
 			</html>';
-			mail(trim($user->email), 'Armdelivery', $message, $headers);
-			return 'Пароль успешно изменен и выслан на e-mail';
+			mail(trim($user['email']), 'Armdelivery', $message, $headers);
+
+			return response(json_encode([
+				'message' => 'success'
+			]), 201);
 		}else{
-			return 'Время действия ссылки истекло';
+			return response(json_encode([
+				'message' => 'E-mail администратора не настроен'
+			]), 400);
 		}
 	}
 }

@@ -52,29 +52,32 @@ $(document).ready(function(){
 			}
 			var categoryType = $('input[name=category_type]').val();
 
+			var data = {
+				title:			title,
+				slug:			$('input[name=slug]').val().trim(),
+				refer_to:		$('select[name=refer_to]').val(),
+				enabled:		($('input[name=enabled]').prop('checked') == true)? 1: 0,
+				image:			JSON.stringify(image),
+				text:			(typeof CKEDITOR.instances.text != 'undefined')? CKEDITOR.instances.text.getData(): '',
+				need_seo:		seo.need,
+				seo_title:		seo.title,
+				seo_text:		seo.text,
+				meta_title:		meta.title,
+				meta_description:meta.descr,
+				meta_keywords:	meta.keywd,
+				category_type:	categoryType,
+				ajax:			1
+			}
+
 			var id = $('input[name=id]').val().trim();
 			var id = (id.length > 0)? '/'+id: '';
 			var type = (id.length > 0)? 'PUT': 'POST';
+
 			$.ajax({
 				url:	'/admin/category'+id,
 				type:	type,
 				headers:{'X-CSRF-TOKEN': $('meta[name=csrf-token]').attr('content')},
-				data:	{
-					title:			title,
-					slug:			$('input[name=slug]').val().trim(),
-					refer_to:		$('select[name=refer_to]').val(),
-					enabled:		($('input[name=enabled]').prop('checked') == true)? 1: 0,
-					image:			JSON.stringify(image),
-					text:			(typeof CKEDITOR.instances.text != 'undefined')? CKEDITOR.instances.text.getData(): '',
-					need_seo:		seo.need,
-					seo_title:		seo.title,
-					seo_text:		seo.text,
-					meta_title:		meta.title,
-					meta_description:meta.descr,
-					meta_keywords:	meta.keywd,
-					category_type:	categoryType,
-					ajax:			1
-				},
+				data:	data,
 				error:	function(jqXHR){
 					showError(jqXHR.responseText, type+'::/admin/category'+id);
 				},

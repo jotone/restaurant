@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Category;
 use App\MealDish;
+use App\MealMenu;
 use App\Restaurant;
 
 use App\Http\Controllers\ApiController;
@@ -120,6 +121,58 @@ class RestaurantController extends ApiController
 
 		return json_encode($content);
 	}
+
+
+	/**
+	 * GET|HEAD /api/get_restaurants_by_kitchen/{kitch_id}
+	 * @param $kitch_id \App\Category ID
+	 * @return string
+	 */
+	public function getByKitchen($kitch_id){
+		//Get dishes list by kitchen
+		$dishes = MealDish::select('id')
+			->where('enabled','=',1)
+			->where('category_id','LIKE','%"'.$kitch_id.'"%')
+			->get();
+
+		//Get restaurant ids
+		$restaurants_list = [];
+
+		foreach($dishes as $dish){
+			$meal_menu = MealMenu::select('restaurant_id')
+				->where('enabled','=',1)
+				->where('dishes','LIKE','%"'.$dish->id.'"%')
+				->get();
+
+			foreach($meal_menu as $item){
+				$restaurants_list[] = $item->restaurant_id;
+			}
+		}
+
+		$restaurants_list = array_values(array_unique($restaurants_list));
+
+		//Get restaurant data
+		$restaurants = Restaurant::select('id','title','logo_img','large_img','address','rating')
+			->where('enabled','=',1)
+			->whereIn('id',$restaurants_list)
+			->get();
+
+		foreach($restaurants as $i => $restaurant){
+			$logo = json_decode($restaurant->logo_img, true);
+			$logo['src'] = (!empty($logo['src']))? asset($logo['src']): '';
+			$restaurant->logo_img = $logo;
+
+			$large = json_decode($restaurant->large_img, true);
+			$large['src'] = (!empty($large['src']))? asset($large['src']): '';
+			$restaurant->large_img = $large;
+
+			$restaurants[$i] = $restaurant;
+		}
+		if(!empty($restaurants)){
+			return json_encode($restaurants->toArray());
+		}
+	}
+
 
 	/**
 	 * GET|HEAD /api/get_restaurant/{id}

@@ -11,11 +11,11 @@ Route::group(['middleware'=>'api', 'namespace'=> 'Api'], function(){
 	Route::put('/submit_profile/{id}',		'RegisterController@submitProfile');
 	Route::put('/generate_sms/{id}',		'RegisterController@generateSMS');
 
-	Route::get('/restore_password/{code}',	'RegisterController@restorePasswordGet');
-	Route::post('/restore_password',		'RegisterController@restorePasswordSend');
+	Route::put('/restore_password/{id}',		'RegisterController@restorePasswordSend');
 
 	//Restaurants
 	Route::get('/get_restaurants',			'RestaurantController@getAll');
+	Route::get('/get_restaurants_by_kitchen/{kitch_id}','RestaurantController@getByKitchen');
 	Route::get('/get_restaurant/{id}',		'RestaurantController@getOne');
 
 	//Kitchen
