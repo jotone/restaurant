@@ -2,11 +2,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Category;
-use App\MealDish;
-use App\MealMenu;
+use App\Settings;
 
 use App\Http\Controllers\ApiController;
-use App\Settings;
 
 class KitchenController extends ApiController
 {

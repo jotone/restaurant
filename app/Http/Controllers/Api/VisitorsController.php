@@ -227,6 +227,13 @@ class VisitorsController extends ApiController
 	}
 
 
+	/**
+	 * GET|HEAD /api/get_visit/{date}/restaurant/{rest_id}/user/{user_id}
+	 * @param $date
+	 * @param $rest_id \App\Restaurant ID
+	 * @param $user_id \App\Visitors ID
+	 * @return \Illuminate\Contracts\Routing\ResponseFactory|string|\Symfony\Component\HttpFoundation\Response
+	 */
 	public function getByDate($date, $rest_id, $user_id){
 		if(empty($user_id) || empty($date)){
 			return response(json_encode([
