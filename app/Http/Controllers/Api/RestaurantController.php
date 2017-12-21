@@ -159,8 +159,8 @@ class RestaurantController extends ApiController
 	 * @param integer $quant  - quantity of viewed dishes
 	 * @return json string
 	 */
-	public function getRestaurantsByFilter($request = '[]'){
-		$request = json_decode(base64_decode($request));
+	public function getRestaurantsByFilter($request = null){
+		$request = (!empty($request))? json_decode(base64_decode($request)): null;
 
 		//Get restaurants
 		$restaurants = \DB::table('restaurants')
