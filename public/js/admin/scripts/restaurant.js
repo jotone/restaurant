@@ -42,11 +42,12 @@ $(document).ready(function(){
 					phone:			$('input[name=phone]').val(),
 					time_begin:		$('input[name=time_begin]').val(),
 					time_finish:	$('input[name=time_finish]').val(),
-					address:		CKEDITOR.instances.address.getData(),
+					address:		$('textarea[name=address]').val(),
 					coordinateX:	$('input[name=coordinateX]').val(),
 					coordinateY:	$('input[name=coordinateY]').val(),
 					has_delivery:	($('input[name=has_delivery]').prop('checked') == true)? 1: 0,
 					has_wifi:		($('input[name=has_wifi]').prop('checked') == true)? 1: 0,
+					has_parking:	($('input[name=has_parking]').prop('checked') == true)? 1: 0,
 					likes:			$('input[name=likes]').val(),
 					dislikes:		$('input[name=dislikes]').val(),
 					enabled:		($('input[name=enabled]').prop('checked') == true)? 1: 0,
@@ -124,8 +125,8 @@ $(document).ready(function(){
 				});
 
 				//Text
-				if(typeof CKEDITOR.instances.text != 'undefined'){
-					data.text = CKEDITOR.instances.text.getData();
+				if($('textarea[name=text]').length > 0){
+					data.text = $('textarea[name=text]').val();
 				}
 				$.ajax({
 					url:	'/admin/restaurant'+id,

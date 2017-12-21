@@ -1,7 +1,6 @@
 <?php
 namespace App\Http\Controllers\Api;
 
-use App\Category;
 use App\MealDish;
 use App\MealMenu;
 use App\Restaurant;
@@ -11,210 +10,229 @@ use App\Http\Controllers\ApiController;
 class RestaurantController extends ApiController
 {
 	/**
-	 * @param \App\MealMenu $menus
+	 * Function returns dish list by restaurant ID
+	 * @param $restaurant_id \App\Restaurant ID
+	 * @param null|integer $quant - quantity of viewed dishes
 	 * @return array
 	 */
-	protected function getKitchens($menus){
-		//Create restaurant dishes array
-		$dishes = [];
+	protected function getDishes($restaurant_id, $quant = null, $more_data = false){
+		//Get menus by restaurant ID
+		$menus = MealMenu::select('dishes')
+			->where('restaurant_id','=',$restaurant_id)
+			->where('enabled','=',1)
+			->get();
+		//Create list of dishes IDs for current restaurant
+		$dishes_list = [];
 		foreach($menus as $menu){
-			$menu_dishes = ($this->isJson($menu->dishes))? json_decode($menu->dishes): [];
-			foreach($menu_dishes as $dish){
-				$dishes[] = $dish;
+			$dishes = json_decode($menu->dishes);
+			$dishes_list = array_merge($dishes_list, $dishes);
+		}
+		$dishes_list = array_values(array_unique($dishes_list));
+		//Get count of restaurant dishes
+		$dish_count = count($dishes_list);
+
+		//Get each dish data
+		//If no need etc data for dish
+		$dishes = ($more_data == false)
+			? MealDish::select('id','title','price')
+			: MealDish::select('id','title','price','calories','cooking_time','dish_weight');
+
+		$dishes = $dishes->where('enabled','=',1)->whereIn('id',$dishes_list);
+		//If there is limit for dishes output
+		if(!empty($quant)){
+			$dishes = $dishes->limit($quant);
+		}
+		$dishes = $dishes->get();
+
+		//Create dishes list
+		$dishes_list = [];
+		foreach($dishes as $i => $dish){
+			$dishes_list[$i] = [
+				'title'			=> $dish->title,
+				'price'			=> (float)$dish->price
+			];
+			if($more_data == true){
+				$dishes_list[$i]['calories'] = $dish->calories;
+				$dishes_list[$i]['cooking_time'] = $dish->cooking_time;
+				$dishes_list[$i]['dish_weight'] = $dish->dish_weight * 1000;
 			}
 		}
-		//Get unique dishes ids
-		$dishes = array_values(array_unique($dishes));
+		//Sort dishes by price
+		usort($dishes_list, function($a, $b){
+			return $a['price'] > $b['price'];
+		});
 
-		//Make kitchen types array
-		$kitchen_types = [];
-
-		foreach($dishes as $dish_id){
-			//Search for dish data
-			$dish = MealDish::select('category_id','price')
-				->where('enabled','=',1)
-				->find($dish_id);
-			foreach($dish->category_id as $category_id){
-				//Get current price for dish
-				$current_price = (!empty($dish->price))? $dish->price: 0;
-
-				if(!isset($kitchen_types[$category_id])){
-					//Create kitchen type
-					$category = Category::select('title')->find($category_id);
-					if(!empty($category)){
-						$kitchen_types[$category_id] = [
-							'title' => $category->title,
-							'min_price' => $current_price
-						];
-					}
-				}else{
-					//If isset kitchen -> get min price
-					if($kitchen_types[$category_id]['min_price'] > $current_price){
-						$kitchen_types[$category_id]['min_price'] = $current_price;
-					}
-				}
-			}
-		}
-
-		return $kitchen_types;
+		return [
+			'dish_count' => $dish_count,
+			'dishes_list' => $dishes_list
+		];
 	}
 
 
 	/**
-	 * GET|HEAD /api/get_restaurants
-	 * Get all the restaurants
-	 * @return string
+	 * GET|HEAD /api/get_restaurants/{quant?}
+	 * @param null|integer $quant - quantity of viewed dishes
+	 * @return json string
 	 */
-	public function getAll(){
-		$restaurants = Restaurant::select(
-			'id','title','logo_img','square_img','large_img','address','coordinates','rating'
-		)->where('enabled','=',1)->get();
+	public function getAllRestaurants($quant = null){
+		$restaurants = Restaurant::select('id','title','large_img','address','coordinates','rating')
+			->where('enabled','=',1)
+			->get();
 
 		$content = [];
 		foreach($restaurants as $restaurant){
+			$dishes = $this->getDishes($restaurant->id, $quant);
 
-			$logo = ($this->isJson($restaurant->logo_img))
-				? json_decode($restaurant->logo_img)
-				: null;
-			$square_img = ($this->isJson($restaurant->square_img))
-				? json_decode($restaurant->square_img)
-				: null;
-			$large_img = ($this->isJson($restaurant->large_img))
-				? json_decode($restaurant->large_img)
-				: null;
-
-			//Get menus
-			$menus = $restaurant->mealMenus()->select('dishes')->get();
-
-			$restaurant = $restaurant->toArray();
-
-			$restaurant['kitchen_type'] = $this->getKitchens($menus);
+			$large_img = json_decode($restaurant->large_img, true);
+			$large_img['src'] = (!empty($large_img['src']))? asset($large_img['src']): '';
 
 			$content[] = [
-				'id'		=> $restaurant['id'],
-				'title'		=> $restaurant['title'],
-				'location'	=> [
-					'text'		=> $restaurant['address'],
-					'coords'	=> $restaurant['coordinates']
-				],
-				'images'	=> [
-					'logo'		=> (!empty($logo))
-						?	['src'		=> asset($logo->src),
-							'width'		=> $logo->width,
-							'height'	=> $logo->height]
-						: null,
-					'square'	=> (!empty($square_img))
-						?	['src'		=> asset($square_img->src),
-							'width'		=> $square_img->width,
-							'height'	=> $square_img->height]
-						: null,
-					'large'		=> (!empty($large_img))
-						?	['src'		=> asset($large_img->src),
-							'width'		=> $large_img->width,
-							'height'	=> $large_img->height]
-						: null,
-				],
-				'like_bar'	=> $restaurant['rating'],
-				'kitchen_type' => $restaurant['kitchen_type']
+				'id'			=> $restaurant->id,
+				'title'			=> $restaurant->title,
+				'large_img'		=> $large_img,
+				'address'		=> $restaurant->address,
+				'coordinates'	=> $restaurant->coordinates,
+				'rating'		=> $restaurant->rating,
+				'rating_points'	=> $restaurant->rating['p'] - $restaurant->rating['n'],
+				'dishes_count'	=> $dishes['dish_count'],
+				'dishes'		=> $dishes['dishes_list'],
 			];
 		}
+
+		usort($content, function($a, $b){
+			return $a['rating_points'] < $b['rating_points'];
+		});
 
 		return json_encode($content);
 	}
 
 
 	/**
-	 * GET|HEAD /api/get_restaurants_by_kitchen/{kitch_id}
-	 * @param $kitch_id \App\Category ID
-	 * @return string
+	 * GET|HEAD /api/get_restaurant/{id}/{quant?}
+	 * @param $id \App\Restaurant ID
+	 * @param null|integer $quant  - quantity of viewed dishes
+	 * @return json string
 	 */
-	public function getByKitchen($kitch_id){
-		//Get dishes list by kitchen
-		$dishes = MealDish::select('id')
-			->where('enabled','=',1)
-			->where('category_id','LIKE','%"'.$kitch_id.'"%')
-			->get();
+	public function getRestaurant($id, $quant = null){
+		$restaurant = Restaurant::select(
+			'title','logo_img','square_img','text','address','work_time','coordinates','rating',
+			'has_delivery','has_wifi','has_parking'
+		)->where('enabled','=',1)->find($id);
 
-		//Get restaurant ids
-		$restaurants_list = [];
+		if(!empty($id) && !empty($restaurant)){
+			$dishes = $this->getDishes($id, $quant, true);
 
-		foreach($dishes as $dish){
-			$meal_menu = MealMenu::select('restaurant_id')
-				->where('enabled','=',1)
-				->where('dishes','LIKE','%"'.$dish->id.'"%')
-				->get();
+			$logo_img = json_decode($restaurant->logo_img, true);
+			$logo_img['src'] = (!empty($logo_img['src']))? asset($logo_img['src']): '';
 
-			foreach($meal_menu as $item){
-				$restaurants_list[] = $item->restaurant_id;
-			}
-		}
+			$square_img = json_decode($restaurant->square_img, true);
+			$square_img['src'] = (!empty($square_img['src']))? asset($square_img['src']): '';
 
-		$restaurants_list = array_values(array_unique($restaurants_list));
+			$content = [
+				'title'			=> $restaurant->title,
+				'large_img'		=> $logo_img,
+				'square_img'	=> $square_img,
+				'text'			=> $restaurant->text,
+				'address'		=> $restaurant->address,
+				'work_time'		=> json_decode($restaurant->work_time),
+				'coordinates'	=> $restaurant->coordinates,
+				'rating'		=> $restaurant->rating,
+				'has_delivery'	=> $restaurant->has_delivery,
+				'has_wifi'		=> $restaurant->has_wifi,
+				'has_parking'	=> $restaurant->has_parking,
+				'dishes_count'	=> $dishes['dish_count'],
+				'dishes'		=> $dishes['dishes_list'],
+			];
 
-		//Get restaurant data
-		$restaurants = Restaurant::select('id','title','logo_img','large_img','address','rating')
-			->where('enabled','=',1)
-			->whereIn('id',$restaurants_list)
-			->get();
-
-		foreach($restaurants as $i => $restaurant){
-			$logo = json_decode($restaurant->logo_img, true);
-			$logo['src'] = (!empty($logo['src']))? asset($logo['src']): '';
-			$restaurant->logo_img = $logo;
-
-			$large = json_decode($restaurant->large_img, true);
-			$large['src'] = (!empty($large['src']))? asset($large['src']): '';
-			$restaurant->large_img = $large;
-
-			$restaurants[$i] = $restaurant;
-		}
-		if(!empty($restaurants)){
-			return json_encode($restaurants->toArray());
+			return json_encode($content);
+		}else{
+			return '[]';
 		}
 	}
 
 
 	/**
-	 * GET|HEAD /api/get_restaurant/{id}
-	 * Get restaurant by ID
-	 * @param $id
-	 * @return \Illuminate\Contracts\Routing\ResponseFactory|string|\Symfony\Component\HttpFoundation\Response
+	 * GET|HEAD /api/get_restaurants_by_filter/kitchen/{kitchen_id}/price/{price}/title/{title}/quant/{quant}
+	 * @param integer $kitchen_id - \App\Category ID
+	 * @param integer $price - max dish price
+	 * @param string $title - possible title of restaurant
+	 * @param integer $quant  - quantity of viewed dishes
+	 * @return json string
 	 */
-	public function getOne($id){
-		$restaurant = Restaurant::select(
-			'id','title','text','logo_img','large_img','square_img','address','work_time','has_delivery','has_wifi','coordinates',
-			'rating'
-		)->find($id);
-
-		if(empty($restaurant)){
-			return response(json_encode([
-				'message' => 'Запрашиваемый ресторан отсутствует.'
-			]), 400);
+	public function getRestaurantsByFilter($kitchen_id, $price, $title, $quant){
+		//Get restaurants
+		$restaurants = \DB::table('restaurants')
+			->select('id','title','large_img','address','coordinates','rating')
+			->where('enabled','=',1);
+		//Check for title filter
+		if($title != '0'){
+			$restaurants = $restaurants->where('title','LIKE','%'.$title.'%');
 		}
 
-		//Convert work time
-		$restaurant->work_time = json_decode($restaurant->work_time, true);
+		$restaurants = $restaurants->get();
+		//Get content for restaurants
+		$content = [];
+		foreach($restaurants as $restaurant){
+			//Get restaurant menus
+			$menus = \DB::table('meal_menus')
+				->select('dishes')
+				->where('restaurant_id','=',$restaurant->id)
+				->where('enabled','=',1)
+				->get();
 
-		//Convert images objects to arrays
-		$logo = json_decode($restaurant->logo_img, true);
-		$logo['src'] = (!empty($logo['src']))? asset($logo['src']): '';
-		$restaurant->logo_img = $logo;
+			//Search for dishes IDs in menu
+			$dishes_list = [];
+			foreach($menus as $menu){
+				$dishes = json_decode($menu->dishes);
+				$dishes_list = array_merge($dishes_list, $dishes);
+			}
+			$dishes_list = array_values(array_unique($dishes_list));
+			//Get dishes total count for current restaurant
+			$dishes_count = count($dishes_list);
 
-		$large = json_decode($restaurant->large_img, true);
-		$large['src'] = (!empty($large['src']))? asset($large['src']): '';
-		$restaurant->large_img = $large;
+			//Get dishes data
+			$dishes = \DB::table('meal_dishes')
+				->select('id','title','price')
+				->where('enabled','=',1)
+				->whereIn('id',$dishes_list);
+			//Check for dish belongs to kitchen
+			if($kitchen_id > 0){
+				$dishes = $dishes->where('category_id','LIKE','%"'.$kitchen_id.'"%');
+			}
 
-		$square = json_decode($restaurant->square_img, true);
-		$square['src'] = (!empty($square['src']))? asset($square['src']): '';
-		$restaurant->square_img = $square;
+			//Check for price limit
+			if($price > 0){
+				$dishes = $dishes->where('price','<',$price);
+			}
 
-		//Get restaurant menus
-		$menus = $restaurant->mealMenus()->select('dishes')->get();
-		//Convert restaurant object to array
-		$restaurant = $restaurant->toArray();
+			//Get dishes limited quantity
+			if($quant > 0){
+				$dishes = $dishes->limit($quant);
+			}
+			$dishes = $dishes->get();
 
-		$restaurant['kitchen_type'] = $this->getKitchens($menus);
+			//If restaurant has dishes by filter request
+			if(!empty($dishes->all())){
+				$dishes = $dishes->toArray();
+				usort($dishes, function($a, $b){
+					return $a->price > $b->price;
+				});
 
-		return json_encode($restaurant);
+				$large_img = json_decode($restaurant->large_img, true);
+				$large_img['src'] = (!empty($large_img['src']))? asset($large_img['src']): '';
+
+				$content[] = [
+					'id'			=> $restaurant->id,
+					'title'			=> $restaurant->title,
+					'large_img'		=> $large_img,
+					'address'		=> $restaurant->address,
+					'coordinates'	=> json_decode($restaurant->coordinates),
+					'rating'		=> json_decode($restaurant->rating, true),
+					'dishes_count'	=> $dishes_count,
+					'dishes'		=> $dishes
+				];
+			}
+		}
+		return json_encode($content);
 	}
 }

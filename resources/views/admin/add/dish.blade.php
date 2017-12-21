@@ -274,7 +274,7 @@
 						<legend>Текст</legend>
 						<div class="row-wrap">
 							@if(!isset($content) || isset($content->id))
-								<textarea name="text" class="text-area needCKE">@if(isset($content)){{ $content->text }}@endif</textarea>
+								<textarea name="text" class="text-area">@if(isset($content)){{ $content->text }}@endif</textarea>
 							@else
 								@if(isset($content)){{ $content->text }}@endif
 							@endif

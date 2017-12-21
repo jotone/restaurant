@@ -97,7 +97,7 @@
 				<fieldset>
 					<legend>Текст</legend>
 					<div class="row-wrap">
-						<textarea name="text" class="text-area needCKE">@if(isset($content)){{ $content->text }}@endif</textarea>
+						<textarea name="text" class="text-area">@if(isset($content)){{ $content->text }}@endif</textarea>
 					</div>
 				</fieldset>
 				@endif
@@ -150,7 +150,7 @@
 					</div>
 					<div class="row-wrap">
 						<p>SEO Текст</p>
-						<textarea name="seo_text" class="text-area needCKE">@if(isset($content)){{ $content->seo_text }}@endif</textarea>
+						<textarea name="seo_text" class="text-area">@if(isset($content)){{ $content->seo_text }}@endif</textarea>
 					</div>
 				</fieldset>
 				@endif

@@ -27,6 +27,7 @@ class CreateRestaurantsTable extends Migration
 			$table->text('work_time')->nullable();
 			$table->boolean('has_delivery')->unsigned();
 			$table->boolean('has_wifi')->unsigned();
+			$table->boolean('has_parking')->unsigned();
 			$table->text('coordinates')->nullable();
 			$table->text('etc_data')->nullable();
 			$table->text('rating')->nullable();

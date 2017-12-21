@@ -47,7 +47,7 @@ $(document).ready(function(){
 				seo.need = ($('input[name=need_seo]').prop('checked') == true)? 1: 0;
 				if(seo.need){
 					seo.title = $('input[name=seo_title]').val().trim();
-					seo.text = CKEDITOR.instances.seo_text.getData();
+					seo.text = $('textarea[name=seo_text]').val();
 				}
 			}
 			var categoryType = $('input[name=category_type]').val();
@@ -58,7 +58,7 @@ $(document).ready(function(){
 				refer_to:		$('select[name=refer_to]').val(),
 				enabled:		($('input[name=enabled]').prop('checked') == true)? 1: 0,
 				image:			JSON.stringify(image),
-				text:			(typeof CKEDITOR.instances.text != 'undefined')? CKEDITOR.instances.text.getData(): '',
+				text:			($('textarea[name=text]').length > 0)? $('textarea[name=text]').val(): '',
 				need_seo:		seo.need,
 				seo_title:		seo.title,
 				seo_text:		seo.text,

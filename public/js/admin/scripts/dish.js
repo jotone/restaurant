@@ -66,8 +66,8 @@ function sendAjax() {
 		});
 	}
 	//Text
-	if(typeof CKEDITOR.instances.text != 'undefined'){
-		data.text = CKEDITOR.instances.text.getData();
+	if($('textarea[name=text]').length > 0){
+		data.text = $('textarea[name=text]').val();
 	}
 	$.ajax({
 		url:		'/admin/restaurant/menu/dish'+id,

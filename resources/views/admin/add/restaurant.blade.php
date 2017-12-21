@@ -175,7 +175,7 @@
 					<legend>Адресс</legend>
 					<div class="row-wrap">
 						@if(!isset($content) || isset($content->id))
-							<textarea class="text-area needCKE" name="address">@if(isset($content)){{ $content->address }}@endif</textarea>
+							<textarea class="text-area" name="address">@if(isset($content)){{ $content->address }}@endif</textarea>
 						@else
 							@if(isset($content)){{ $content->address }}@endif
 						@endif
@@ -330,7 +330,7 @@
 					<legend>Текст</legend>
 					<div class="row-wrap">
 						@if(!isset($content) || isset($content->id))
-							<textarea class="text-area needCKE" name="text">@if(isset($content)){{ $content->text }}@endif</textarea>
+							<textarea class="text-area" name="text">@if(isset($content)){{ $content->text }}@endif</textarea>
 						@else
 							@if(isset($content)){{ $content->text }}@endif
 						@endif
@@ -392,6 +392,16 @@
 									@if(isset($content) && ($content->has_wifi == 1)) checked="checked" @endif
 									@if(isset($content) && !isset($content->id)) disabled="disabled" @endif>
 							<span>Есть Wi-fi</span>
+						</label>
+					</div>
+					<div class="row-wrap">
+						<label>
+							<input	name="has_parking"
+									class="chbox-input"
+									type="checkbox"
+									@if(isset($content) && ($content->has_parking == 1)) checked="checked" @endif
+									@if(isset($content) && !isset($content->id)) disabled="disabled" @endif>
+							<span>Есть Парковка</span>
 						</label>
 					</div>
 					<div class="row-wrap">

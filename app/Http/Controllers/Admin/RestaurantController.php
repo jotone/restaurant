@@ -146,7 +146,8 @@ class RestaurantController extends AppController
 			$menus = MealMenu::select('id','title')->where('enabled','=',1)->get();
 
 			$content = Restaurant::select(
-				'id','title','logo_img','square_img','large_img','img_url','text','address','work_time','has_delivery','has_wifi',
+				'id','title','logo_img','square_img','large_img','img_url','text','address',
+				'work_time','has_delivery','has_wifi','has_parking',
 				'coordinates','etc_data','rating','enabled','category_id'
 			)->find($id);
 			if(empty($content)){
@@ -190,7 +191,8 @@ class RestaurantController extends AppController
 			$menus = MealMenu::select('id','title')->where('enabled','=',1)->get();
 
 			$content = Restaurant::select(
-				'id','title','logo_img','square_img','large_img','img_url','text','address','work_time','has_delivery','has_wifi',
+				'id','title','logo_img','square_img','large_img','img_url','text','address',
+				'work_time','has_delivery','has_wifi','has_parking',
 				'coordinates','etc_data','rating','enabled','category_id'
 			)->find($id);
 			if(empty($content)){
@@ -259,6 +261,7 @@ class RestaurantController extends AppController
 				'y' => (isset($data['coordinateY']))? $data['coordinateY']: 0
 			]),
 			'has_delivery'	=> $data['has_delivery'],
+			'has_parking'	=> $data['has_parking'],
 			'has_wifi'		=> $data['has_wifi'],
 			'rating'		=> json_encode([
 				'p'	=> $data['likes'],
@@ -322,6 +325,7 @@ class RestaurantController extends AppController
 		]);
 		$result->has_delivery	= $data['has_delivery'];
 		$result->has_wifi		= $data['has_wifi'];
+		$result->has_parking	= $data['has_parking'];
 		$result->rating			= json_encode([
 			'p'	=> $data['likes'],
 			'n'	=> $data['dislikes']
@@ -423,6 +427,8 @@ class RestaurantController extends AppController
 			$data['has_delivery'] = (isset($data['has_delivery']))? $data['has_delivery']: 0;
 			//Create wi-fi flag
 			$data['has_wifi'] = (isset($data['has_wifi']))? $data['has_wifi']: 0;
+			//Create parking flag
+			$data['has_parking'] = (isset($data['has_parking']))? $data['has_parking']: 0;
 		}else{
 			//Create enabled flag
 			$data['enabled'] = (isset($data['enabled']) && ($data['enabled'] == 'on'))? 1: 0;
@@ -430,6 +436,8 @@ class RestaurantController extends AppController
 			$data['has_delivery'] = (isset($data['has_delivery']) && ($data['has_delivery'] == 'on'))? 1: 0;
 			//Create wi-fi flag
 			$data['has_wifi'] = (isset($data['has_wifi']) && ($data['has_wifi'] == 'on'))? 1: 0;
+			//Create parking flag
+			$data['has_parking'] = (isset($data['has_parking']) && ($data['has_parking'] == 'on'))? 1: 0;
 		}
 
 		//Create Category
