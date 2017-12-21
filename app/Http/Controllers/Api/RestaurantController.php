@@ -167,7 +167,7 @@ class RestaurantController extends ApiController
 			->select('id','title','large_img','address','coordinates','rating')
 			->where('enabled','=',1);
 		//Check for title filter
-		if(isset($request->title)){
+		if(isset($request->title) && ($request->title != '0')){
 			$restaurants = $restaurants->where('title','LIKE','%'.$request->title.'%');
 		}
 
@@ -198,17 +198,17 @@ class RestaurantController extends ApiController
 				->where('enabled','=',1)
 				->whereIn('id',$dishes_list);
 			//Check for dish belongs to kitchen
-			if(isset($request->kitchen_id)){
+			if(isset($request->kitchen_id) && ($request->kitchen_id > 0)){
 				$dishes = $dishes->where('category_id','LIKE','%"'.$request->kitchen_id.'"%');
 			}
 
 			//Check for price limit
-			if(isset($request->price)){
+			if(isset($request->price) && ($request->price > 0)){
 				$dishes = $dishes->where('price','<',$request->price);
 			}
 
 			//Get dishes limited quantity
-			if(isset($request->quant)){
+			if(isset($request->quant) && ($request->quant > 0)){
 				$dishes = $dishes->limit($request->quant);
 			}
 			$dishes = $dishes->get();
