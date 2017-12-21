@@ -17,4 +17,8 @@ class Visitors extends Model
 	public function orders(){
 		return $this->hasMany('App\VisitorOrder','visitor_id','id');
 	}
+
+	public function likes(){
+		return $this->hasMany('App\VisitorsRates', 'visitor_id', 'id');
+	}
 }
