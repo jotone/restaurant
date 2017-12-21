@@ -23,7 +23,7 @@ Route::group(['middleware'=>'api', 'namespace'=> 'Api'], function(){
 				'RestaurantController@getAllRestaurants');
 	Route::get(	'/get_restaurant/{id}/{quant?}',
 				'RestaurantController@getRestaurant');
-	Route::get(	'/get_restaurants_by_filter/kitchen/{kitchen_id}/price/{price}/title/{title}/quant/{quant}',
+	Route::get(	'/get_restaurants_by_filter/{request?}',
 				'RestaurantController@getRestaurantsByFilter');
 
 	//Kitchen

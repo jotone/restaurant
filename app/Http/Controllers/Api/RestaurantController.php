@@ -159,14 +159,16 @@ class RestaurantController extends ApiController
 	 * @param integer $quant  - quantity of viewed dishes
 	 * @return json string
 	 */
-	public function getRestaurantsByFilter($kitchen_id, $price, $title, $quant){
+	public function getRestaurantsByFilter($request = '[]'){
+		$request = json_decode(base64_decode($request));
+
 		//Get restaurants
 		$restaurants = \DB::table('restaurants')
 			->select('id','title','large_img','address','coordinates','rating')
 			->where('enabled','=',1);
 		//Check for title filter
-		if($title != '0'){
-			$restaurants = $restaurants->where('title','LIKE','%'.$title.'%');
+		if(isset($request->title)){
+			$restaurants = $restaurants->where('title','LIKE','%'.$request->title.'%');
 		}
 
 		$restaurants = $restaurants->get();
@@ -196,18 +198,18 @@ class RestaurantController extends ApiController
 				->where('enabled','=',1)
 				->whereIn('id',$dishes_list);
 			//Check for dish belongs to kitchen
-			if($kitchen_id > 0){
-				$dishes = $dishes->where('category_id','LIKE','%"'.$kitchen_id.'"%');
+			if(isset($request->kitchen_id)){
+				$dishes = $dishes->where('category_id','LIKE','%"'.$request->kitchen_id.'"%');
 			}
 
 			//Check for price limit
-			if($price > 0){
-				$dishes = $dishes->where('price','<',$price);
+			if(isset($request->price)){
+				$dishes = $dishes->where('price','<',$request->price);
 			}
 
 			//Get dishes limited quantity
-			if($quant > 0){
-				$dishes = $dishes->limit($quant);
+			if(isset($request->quant)){
+				$dishes = $dishes->limit($request->quant);
 			}
 			$dishes = $dishes->get();
 
