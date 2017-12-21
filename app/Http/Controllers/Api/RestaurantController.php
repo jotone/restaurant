@@ -152,11 +152,14 @@ class RestaurantController extends ApiController
 
 
 	/**
-	 * GET|HEAD /api/get_restaurants_by_filter/kitchen/{kitchen_id}/price/{price}/title/{title}/quant/{quant}
-	 * @param integer $kitchen_id - \App\Category ID
-	 * @param integer $price - max dish price
-	 * @param string $title - possible title of restaurant
-	 * @param integer $quant  - quantity of viewed dishes
+	 * GET|HEAD /api/get_restaurants_by_filter/{request?}
+	 * @param null|base_64(json(obj)) $request
+	 * [
+	 * 		kitchen_id - \App\Category ID (0 - all),
+	 * 		price - max price of dish (0 - any price),
+	 * 		title - possible restaurant title ('0' - any title),
+	 * 		quant - max quantity of dishes (0 - all)
+	 * ]
 	 * @return json string
 	 */
 	public function getRestaurantsByFilter($request = null){
