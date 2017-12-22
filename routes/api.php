@@ -45,6 +45,9 @@ Route::group(['middleware'=>'api', 'namespace'=> 'Api'], function(){
 				'VisitorsController@getAll');
 	Route::get(	'/get_visit/{date}/restaurant/{rest_id}/user/{user_id}',
 				'VisitorsController@getByDate');
+	//Create comment
+	Route::post('/add_comment',
+				'VisitorsController@createComment');
 
 	//Get page data
 	Route::get(	'/get_page_data/{slug}',

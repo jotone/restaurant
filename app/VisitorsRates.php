@@ -16,8 +16,4 @@ class VisitorsRates extends Model
 	public function restaurant(){
 		return $this->belongsTo('App\Restaurant', 'restaurant_id', 'id');
 	}
-
-	public function getRatingAttribute($value){
-		return json_decode($value, true);
-	}
 }

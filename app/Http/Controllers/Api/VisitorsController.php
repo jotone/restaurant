@@ -1,12 +1,14 @@
 <?php
 namespace App\Http\Controllers\Api;
 
+use App\Comments;
 use App\MealDish;
 use App\Restaurant;
 use App\VisitorOrder;
 use App\Visitors;
 
 use App\Http\Controllers\ApiController;
+use App\VisitorsRates;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 
@@ -305,5 +307,68 @@ class VisitorsController extends ApiController
 		$content['items'] = $items;
 
 		return json_encode($content);
+	}
+
+
+	public function createComment(Request $request){
+		$data = $request->all();
+		if(!isset($data['id'])){
+			return response(json_encode([
+				'Такого пользователя не существует'
+			]), 400);
+		}
+		if(!isset($data['rest_id'])){
+			return response(json_encode([
+				'Данные не соответствуют параметрам ввода'
+			]), 400);
+		}
+
+		if(!isset($data['text'])){
+			return response(json_encode([
+				'Текст отзыва отсутствует'
+			]), 400);
+		}
+
+		$visitor_id = Crypt::decrypt($data['id']);
+
+		if(
+			(Visitors::where('id','=',$visitor_id)->count() == 0) ||
+			(Restaurant::where('id','=',$data['rest_id'])->count() == 0)
+		){
+			return response(json_encode([
+				'Данные не соответствуют параметрам ввода'
+			]), 400);
+		}
+
+		$mark = (isset($data['mark']))? $data['mark']: 0;
+
+		Comments::create([
+			'user_id'	=> $visitor_id,
+			'type'		=> $mark,
+			'post_id'	=> $data['rest_id'],
+			'refer_to_comment' => 0,
+			'text'		=> trim($data['text'])
+		]);
+
+		VisitorsRates::create([
+			'visitor_id'		=> $visitor_id,
+			'restaurant_id'	=> $data['rest_id'],
+			'rating'		=> $mark
+		]);
+
+		$restaurant = Restaurant::find($data['rest_id']);
+		$rating = $restaurant->rating;
+		if($mark > 0){
+			$rating->p += 1;
+		}
+		if($mark < 0){
+			$rating->n += 1;
+		}
+		$restaurant->rating = json_encode($rating);
+		$restaurant->save();
+
+		return response(json_encode([
+			'message' => 'success'
+		]), 201);
 	}
 }
