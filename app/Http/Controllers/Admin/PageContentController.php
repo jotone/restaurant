@@ -49,6 +49,9 @@ class PageContentController extends Controller
 				}
 				$value = json_encode($value);
 				break;
+			case 'categories-list':
+				$value = json_encode($data->val);
+				break;
 			default:
 				$value = $data->val;
 		}

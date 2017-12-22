@@ -108,6 +108,23 @@ function fillHTMLContent(container, ignoreClosest){
 			val:	temp
 		});
 	});
+	//Fill data from categories list
+	$(container).find('.categories-list-wrap').each(function(){
+		var temp = [];
+		$(this).find('li').each(function(){
+			if($(this).find('a.fa-check').length > 0){
+				temp.push({
+					id: $(this).attr('data-id'),
+					pos: $(this).index()
+				});
+			}
+		});
+		content.push({
+			type:	'categories-list',
+			key:	str2url($(this).closest('fieldset').children('legend').text()),
+			val:	temp
+		});
+	});
 	return content;
 }
 
@@ -118,6 +135,16 @@ function setHTMLContent(content, container, ignoreClosest){
 	}
 	for(var i in content){
 		switch(content[i].type){
+			case 'categories-list':
+				content[i].val = JSON.parse(content[i].val);
+				container.find('fieldset[data-link='+content[i].key+'] li').each(function(){
+					var j = $(this).index()
+					if(typeof content[i].val[j] == 'undefined'){
+						$(this).find('a.fa-check').removeClass('fa-check').addClass('fa-ban');
+					}
+				});
+			break;
+
 			case 'checkbox':
 				if(content[i].val == 1){
 					container.find('input[name='+content[i].key+']').prop('checked',true);
@@ -209,6 +236,15 @@ $(document).ready(function(){
 
 	buildFixedNavMenu();
 
+	$('.categories-list-wrap a.fa-check, .categories-list-wrap a.fa-ban').click(function(e){
+		e.preventDefault();
+		if($(this).hasClass('fa-check')){
+			$(this).removeClass('fa-check').addClass('fa-ban');
+		}else{
+			$(this).removeClass('fa-ban').addClass('fa-check');
+		}
+	});
+
 
 	if($('input[name=id]').length && ($('input[name=id]').val().length > 0)){
 		var id = $('input[name=id]').val();
@@ -241,16 +277,22 @@ $(document).ready(function(){
 		e.preventDefault();
 		var validation = validate('form[name=pages]');
 		if(validation){
-			var content = fillHTMLContent('#htmlContent', false);
+			var title = $('input[name=title]').val();
 
-			var meta = {
-				title:	'',
-				descr:	'',
-				keywd:	''
-			};
-			meta.title = ($('input[name=meta_title]').length > 0)? $('input[name=meta_title]').val().trim(): '';
-			meta.descr = ($('textarea[name=meta_description]').length > 0)? $('textarea[name=meta_description]').val().trim(): '';
-			meta.keywd = ($('textarea[name=meta_keywords]').length > 0)? $('textarea[name=meta_keywords]').val().trim(): '';
+			var data = {
+				template_id:	$('input[name=template_id]').val(),
+				title:			title,
+				slug:			$('input[name=slug]').val(),
+				enabled:		($('input[name=enabled]').prop('checked') == true)? 1: 0,
+				ajax:	1
+			}
+
+
+			data.content = JSON.stringify(fillHTMLContent('#htmlContent', false));
+
+			data.meta_title = ($('input[name=meta_title]').length > 0)? $('input[name=meta_title]').val().trim(): '';
+			data.meta_description = ($('textarea[name=meta_description]').length > 0)? $('textarea[name=meta_description]').val().trim(): '';
+			data.meta_keywords = ($('textarea[name=meta_keywords]').length > 0)? $('textarea[name=meta_keywords]').val().trim(): '';
 
 			var seo = {
 				need:	0,
@@ -258,36 +300,22 @@ $(document).ready(function(){
 				text:	''
 			};
 			if($('input[name=need_seo]').length > 0){
-				seo.need = ($('input[name=need_seo]').prop('checked') == true)? 1: 0;
-				if(seo.need){
-					seo.title = $('input[name=seo_title]').val().trim();
-					seo.text = CKEDITOR.instances.seo_text.getData();
-				}
+				data.need_seo = ($('input[name=need_seo]').prop('checked') == true)? 1: 0;
+				data.seo_title = $('input[name=seo_title]').val().trim();
+				data.seo_text = CKEDITOR.instances.seo_text.getData();
 			}
 
-			var title = $('input[name=title]').val();
+
 			var id = $('input[name=id]').val().trim();
 			var id = (id.length > 0)? '/'+id: '';
 			var type = (id.length > 0)? 'PUT': 'POST';
+			console.log(data);
 
 			$.ajax({
 				url:	'/admin/pages'+id,
 				type:	type,
 				headers:{'X-CSRF-TOKEN': $('meta[name=csrf-token]').attr('content')},
-				data:	{
-					template_id:	$('input[name=template_id]').val(),
-					title:			title,
-					slug:			$('input[name=slug]').val(),
-					enabled:		($('input[name=enabled]').prop('checked') == true)? 1: 0,
-					meta_title:			meta.title,
-					meta_description:	meta.descr,
-					meta_keywords:		meta.keywd,
-					need_seo:		seo.need,
-					seo_title:		seo.title,
-					seo_text:		seo.text,
-					content:		JSON.stringify(content),
-					ajax:	1
-				},
+				data:	data,
 				error:	function(jqXHR){
 					showError(jqXHR.responseText, type+'::/admin/pages'+id);
 				},

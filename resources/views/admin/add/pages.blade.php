@@ -87,6 +87,51 @@
 				<div id="htmlContent">
 				@if(!empty($current_template))
 					{!! $current_template->html_content !!}
+
+					@if($current_template->id == 3)
+						<?php
+						$restaurants = App\Restaurant::select('id','title','logo_img')->where('enabled','=',1)->orderBy('title','asc')->get();
+						?>
+						<fieldset>
+							<legend>Список "Сейчас рекомендуют"</legend>
+							<div class="categories-list-wrap">
+								<ul>
+									@foreach($restaurants as $restaurant)
+										<li data-id="{{ $restaurant->id }}">
+											<div class="category-wrap">
+												<div class="sort-controls"  style="width: 10%;">
+													<div class="urdl-wrap">
+														<div class="item fa fa-angle-up"></div>
+													</div>
+													<div class="urdl-wrap">
+														<div class="item"></div>
+													</div>
+													<div class="urdl-wrap">
+														<div class="item fa fa-angle-down"></div>
+													</div>
+												</div>
+
+												<div class="category-controls" style="width: 10%;">
+													<a class="fa fa-check" href="#" title="enabled"></a>
+												</div>
+
+												<div class="title-wrap" style="width: 60%;">
+													{{ $restaurant->title }}
+												</div>
+
+												<div class="category-image">
+													<?php $restaurant->logo_img = json_decode($restaurant->logo_img); ?>
+													@if(!empty($restaurant->logo_img->src))
+														<img src="{{ asset($restaurant->logo_img->src) }}" alt="">
+													@endif
+												</div>
+											</div>
+										</li>
+									@endforeach
+								</ul>
+							</div>
+						</fieldset>
+					@endif
 				@endif
 				</div>
 
