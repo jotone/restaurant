@@ -7,6 +7,16 @@ use App\MealMenu;
 
 class DishesController extends ApiController
 {
+	/**
+	 * GET|HEAD /api/get_dishes/{request?}
+	 * @param null|base_64(json(obj)) $request
+	 * [
+	 * 		restaurant_id - \App\Restaurant ID (0 - all)
+	 * 		kitchen_id - \App\Category ID (0 - all),
+	 * 		quant - max quantity of dishes (0 - all)
+	 * ]
+	 * @return json string
+	 */
 	public function getDishes($request = null){
 		$request = (!empty($request))? json_decode(base64_decode($request)): null;
 
