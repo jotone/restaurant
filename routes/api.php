@@ -49,6 +49,7 @@ Route::group(['middleware'=>'api', 'namespace'=> 'Api'], function(){
 	Route::post('/add_comment',
 				'VisitorsController@createComment');
 
+
 	//Get page data
 	Route::get(	'/get_page_data/{slug}',
 				'PageController@getPageData');

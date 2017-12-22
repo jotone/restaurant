@@ -310,6 +310,11 @@ class VisitorsController extends ApiController
 	}
 
 
+	/**
+	 * POST /api/add_comment
+	 * @param \Illuminate\Http\Request $request
+	 * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+	 */
 	public function createComment(Request $request){
 		$data = $request->all();
 		if(!isset($data['id'])){
