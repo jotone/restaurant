@@ -408,11 +408,9 @@ class MealDishController extends AppController
 			//if image was sent as base64encoded file content
 		}else if(isset($data['square_img']) && $this->isJson($data['square_img'])){
 			$data['square_img'] = json_decode($data['square_img']);
-
 			$img = ($data['square_img']->type == 'upload')
 				? $this->createImgBase64($data['square_img']->src)
 				: $data['square_img']->src;
-
 
 			$size = (!empty($data['square_img']->src))
 				? getimagesize(base_path().'/public'.$img)
@@ -443,7 +441,7 @@ class MealDishController extends AppController
 
 			$img = ($data['large_img']->type == 'upload')
 				? $this->makeRectangleImage($this->createImgBase64($data['large_img']->src))
-				: $this->makeRectangleImage($data['large_img']->src);
+				: $data['large_img']->src;
 
 			$size = (!empty($data['large_img']->src))
 				? getimagesize(base_path().'/public'.$img)
