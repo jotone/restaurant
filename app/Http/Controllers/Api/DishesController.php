@@ -56,7 +56,7 @@ class DishesController extends ApiController
 		$dishes_list = [];
 		foreach($dishes as $dish){
 			$large_img = $dish->large_img;
-			$large_img['src'] = (!empty($large_img['src']))? asset($large_img['src']): '';
+			$large_img = (!empty($large_img['src']))? asset($large_img['src']): '';
 			$dishes_list[] = [
 				'title'			=> $dish->title,
 				'kitchen'		=> $dish->category_id[0],

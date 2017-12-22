@@ -86,7 +86,7 @@ class RestaurantController extends ApiController
 			$dishes = $this->getDishes($restaurant->id, $quant);
 
 			$large_img = json_decode($restaurant->large_img, true);
-			$large_img['src'] = (!empty($large_img['src']))? asset($large_img['src']): '';
+			$large_img = (!empty($large_img['src']))? asset($large_img['src']): '';
 
 			$content[] = [
 				'id'			=> $restaurant->id,
@@ -165,10 +165,10 @@ class RestaurantController extends ApiController
 
 			//Asset logo img
 			$logo_img = json_decode($restaurant->logo_img, true);
-			$logo_img['src'] = (!empty($logo_img['src']))? asset($logo_img['src']): '';
+			$logo_img = (!empty($logo_img['src']))? asset($logo_img['src']): '';
 			//Asset square im
 			$large_img = json_decode($restaurant->large_img, true);
-			$large_img['src'] = (!empty($large_img['src']))? asset($large_img['src']): '';
+			$large_img = (!empty($large_img['src']))? asset($large_img['src']): '';
 
 			$rated_visitors = VisitorsRates::select('visitor_id')
 				->where('restaurant_id','=',$restaurant->id)
@@ -279,7 +279,7 @@ class RestaurantController extends ApiController
 				});
 
 				$large_img = json_decode($restaurant->large_img, true);
-				$large_img['src'] = (!empty($large_img['src']))? asset($large_img['src']): '';
+				$large_img = (!empty($large_img['src']))? asset($large_img['src']): '';
 
 				$content[] = [
 					'id'			=> $restaurant->id,
