@@ -30,6 +30,10 @@ Route::group(['middleware'=>'api', 'namespace'=> 'Api'], function(){
 	Route::get(	'/get_kitchens',
 				'KitchenController@getKitchens');
 
+	//Dishes
+	Route::get(	'/get_dishes/{request?}',
+				'DishesController@getDishes');
+
 	//Create Order
 	Route::post('/create_order',
 				'VisitorsController@createOrder');
