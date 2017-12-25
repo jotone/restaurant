@@ -168,10 +168,10 @@ class RestaurantController extends ApiController
 			usort($kitchen_list, function($a, $b){
 				return $a['position'] > $b['position'];
 			});
-			//Sorting dishes by price
+			//Sorting dishes by title
 			foreach($kitchen_list as $i => $item){
 				usort($item['items'], function($a, $b){
-					return $a['price'] > $b['price'];
+					return strcmp($a['title'], $b['title']);
 				});
 				$kitchen_list[$i]['items'] = $item['items'];
 			}
