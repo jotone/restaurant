@@ -151,17 +151,30 @@ class RestaurantController extends ApiController
 			$kitchen_list = [];
 			foreach($dishes as $i => $dish){
 				$category = Category::select('id','title','position')->find($dish->category_id[0]);
-
-				$kitchen_list[$category->id] = [
-					'id'		=> $category->id,
-					'title'		=> $category->title,
-					'position'	=> $category->position,
-				];
+				$dish = $dish->toArray();
+				unset($dish['category_id']);
+				if(!isset($kitchen_list[$category->id])){
+					$kitchen_list[$category->id] = [
+						'id'		=> $category->id,
+						'title'		=> $category->title,
+						'position'	=> $category->position,
+						'items' => [$dish]
+					];
+				}else{
+					$kitchen_list[$category->id]['items'][] = $dish;
+				}
 			}
 			//Sorting categories by position
 			usort($kitchen_list, function($a, $b){
 				return $a['position'] > $b['position'];
 			});
+			//Sorting dishes by price
+			foreach($kitchen_list as $i => $item){
+				usort($item['items'], function($a, $b){
+					return $a['price'] > $b['price'];
+				});
+				$kitchen_list[$i]['items'] = $item['items'];
+			}
 
 			//Asset logo img
 			$logo_img = json_decode($restaurant->logo_img, true);
@@ -198,7 +211,7 @@ class RestaurantController extends ApiController
 				'dishes_count'	=> $dish_count,
 				'kitchens'		=> $kitchen_list,
 			];
-
+			dd($content);
 			return json_encode($content);
 		}else{
 			return '[]';
@@ -207,7 +220,6 @@ class RestaurantController extends ApiController
 
 
 	/**
-	 * GET|HEAD /api/get_restaurants_by_filter/{request?}
 	 * @param null|base_64(json(obj)) $request
 	 * [
 	 * 		kitchen_id - \App\Category ID (0 - all),
@@ -217,7 +229,7 @@ class RestaurantController extends ApiController
 	 * ]
 	 * @return json string
 	 */
-	public function getRestaurantsByFilter($request = null){
+	public static function getRestaurantsByFilterStatic($request = null){
 		$request = (!empty($request))? json_decode(base64_decode($request)): null;
 
 		//Get restaurants
@@ -273,7 +285,6 @@ class RestaurantController extends ApiController
 
 			//If restaurant has dishes by filter request
 			if(!empty($dishes->all())){
-				$dishes = $dishes->toArray();
 				usort($dishes, function($a, $b){
 					return $a->price > $b->price;
 				});
@@ -294,5 +305,20 @@ class RestaurantController extends ApiController
 			}
 		}
 		return json_encode($content);
+	}
+
+	/**
+	 * GET|HEAD /api/get_restaurants_by_filter/{request?}
+	 * @param null|base_64(json(obj)) $request
+	 * [
+	 * 		kitchen_id - \App\Category ID (0 - all),
+	 * 		price - max price of dish (0 - any price),
+	 * 		title - possible restaurant title ('0' - any title),
+	 * 		quant - max quantity of dishes (0 - all)
+	 * ]
+	 * @return json string
+	 */
+	public function getRestaurantsByFilter($request = null){
+		return self::getRestaurantsByFilterStatic($request);
 	}
 }
