@@ -138,7 +138,7 @@ class RestaurantController extends ApiController
 
 			//Get each dish data
 			//If no need etc data for dish
-			$dishes = MealDish::select('id','title','category_id','price','calories','cooking_time','dish_weight');
+			$dishes = MealDish::select('id','title','category_id','square_img','price','calories','cooking_time','dish_weight');
 
 			$dishes = $dishes->where('enabled','=',1)->whereIn('id',$dishes_list)->orderBy('title','asc');
 			//If there is limit for dishes output
@@ -152,6 +152,7 @@ class RestaurantController extends ApiController
 			foreach($dishes as $i => $dish){
 				$category = Category::select('id','title','position')->find($dish->category_id[0]);
 				$dish = $dish->toArray();
+				$dish['square_img'] = (!empty($dish['square_img']['src']))? asset($dish['square_img']['src']): '';
 				unset($dish['category_id']);
 				if(!isset($kitchen_list[$category->id])){
 					$kitchen_list[$category->id] = [
