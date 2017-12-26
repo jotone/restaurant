@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Category;
+use App\Comments;
 use App\MealDish;
 use App\MealMenu;
 use App\Restaurant;
@@ -138,7 +139,7 @@ class RestaurantController extends ApiController
 
 			//Get each dish data
 			//If no need etc data for dish
-			$dishes = MealDish::select('id','title','category_id','square_img','price','calories','cooking_time','dish_weight');
+			$dishes = MealDish::select('id','title','category_id','square_img','price','calories','cooking_time','dish_weight','model_3d');
 
 			$dishes = $dishes->where('enabled','=',1)->whereIn('id',$dishes_list)->orderBy('title','asc');
 			//If there is limit for dishes output
@@ -159,7 +160,7 @@ class RestaurantController extends ApiController
 						'id'		=> $category->id,
 						'title'		=> $category->title,
 						'position'	=> $category->position,
-						'items' => [$dish]
+						'items'		=> [$dish]
 					];
 				}else{
 					$kitchen_list[$category->id]['items'][] = $dish;
@@ -212,7 +213,7 @@ class RestaurantController extends ApiController
 				'dishes_count'	=> $dish_count,
 				'kitchens'		=> $kitchen_list,
 			];
-			dd($content);
+
 			return json_encode($content);
 		}else{
 			return '[]';
@@ -321,5 +322,44 @@ class RestaurantController extends ApiController
 	 */
 	public function getRestaurantsByFilter($request = null){
 		return self::getRestaurantsByFilterStatic($request);
+	}
+
+
+	/**
+	 * GET|HEAD /api/get_restaurant_reviews/{id}
+	 * @param $id \App\Restaurant
+	 * @return string
+	 */
+	public function getRestaurantReviews($id){
+		$reviews = [];
+		$comments = Comments::select('user_id','text','created_at')
+			->where('post_id','=',$id)
+			->orderBy('created_at','desc')
+			->limit(50)
+			->get();
+
+		foreach($comments as $comment){
+			$user = $comment->user()->select('name','surname','img_url')->first();
+
+			$rating = VisitorsRates::select('rating')
+				->where('visitor_id','=',$comment->user_id)
+				->where('restaurant_id','=',$id)
+				->first();
+
+			$reviews[] = [
+				'user'		=> [
+					'name'		=> $user->name,
+					'surname'	=> $user->surname,
+					'img_url'	=> asset($user->img_url)
+				],
+				'comment'	=> [
+					'text'		=> $comment->text,
+					'date'		=> $comment->created_at,
+					'rating'	=> $rating->rating
+				]
+			];
+		}
+
+		return json_encode($reviews);
 	}
 }

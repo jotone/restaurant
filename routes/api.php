@@ -25,6 +25,8 @@ Route::group(['middleware'=>'api', 'namespace'=> 'Api'], function(){
 				'RestaurantController@getRestaurant');
 	Route::get(	'/get_restaurants_by_filter/{request?}',
 				'RestaurantController@getRestaurantsByFilter');
+	Route::get(	'/get_restaurant_reviews/{id}',
+				'RestaurantController@getRestaurantReviews');
 
 	//Kitchen
 	Route::get(	'/get_kitchens',
