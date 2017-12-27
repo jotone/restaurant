@@ -389,6 +389,7 @@ class AppController extends Controller implements CrudInterface
 		for($i = 0; $i < count($page); $i++){
 			if(is_numeric($page[$i])){
 				switch($type){
+					case 'visitors':
 					case 'users': $select = 'email'; break;
 					case 'comments': $select = 'id'; break;
 					default: $select = 'title';

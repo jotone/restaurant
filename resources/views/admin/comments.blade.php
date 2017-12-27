@@ -31,32 +31,26 @@
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=id&dir=desc') }}" class="desc fa fa-caret-down"></a>
 					</div>
 				</th>
-				<th>User
+				<th>Пользователь
 					<div class="direction" id="user_id">
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=user_id&dir=asc') }}" class="asc fa fa-caret-up"></a>
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=user_id&dir=desc') }}" class="desc fa fa-caret-down"></a>
 					</div>
 				</th>
-				<th>Text</th>
-				<th>Post Type
-					<div class="direction" id="type">
-						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=type&dir=asc') }}" class="asc fa fa-caret-up"></a>
-						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=type&dir=desc') }}" class="desc fa fa-caret-down"></a>
-					</div>
-				</th>
-				<th>Post
+				<th>Текст</th>
+				<th>Ресторан
 					<div class="direction" id="post_id">
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=post_id&dir=asc') }}" class="asc fa fa-caret-up"></a>
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=post_id&dir=desc') }}" class="desc fa fa-caret-down"></a>
 					</div>
 				</th>
-				<th>Created at
+				<th>Создан
 					<div class="direction" id="created_at">
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=created_at&dir=asc') }}" class="asc fa fa-caret-up"></a>
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=created_at&dir=desc') }}" class="desc fa fa-caret-down"></a>
 					</div>
 				</th>
-				<th>Updated at
+				<th>Изменен
 					<div class="direction" id="updated_at">
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=updated_at&dir=asc') }}" class="asc fa fa-caret-up"></a>
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=updated_at&dir=desc') }}" class="desc fa fa-caret-down"></a>
@@ -77,12 +71,15 @@
 					<a class="drop fa fa-times" data-id="{{ $item['id'] }}" href="#" ></a>
 				</td>
 				<td>{{ $item['id'] }}</td>
-				<td>{{ $item['user']['name'] }} ({{ $item['user']['email'] }})</td>
-				<td>{{ $item['text'] }}</td>
-				<td>{{ $item['post_type'] }}</td>
 				<td>
-					<a href="{{ route('admin.'.$item['post']['type'].'.edit', $item['post']['id']) }}">
-						{{ $item['post']['title'] }} ({{ $item['post']['created'] }})
+					<a href="{{ route('admin.users.edit', $item['user']['id']) }}">
+						{{ $item['user']['name'] }} ({{ $item['user']['email'] }})
+					</a>
+				</td>
+				<td>{{ $item['text'] }}</td>
+				<td>
+					<a href="{{ route('admin.restaurant.edit', $item['post']['id']) }}">
+						{{ $item['post']['title'] }}
 					</a>
 				</td>
 				<td>{{ $item['created'] }}</td>

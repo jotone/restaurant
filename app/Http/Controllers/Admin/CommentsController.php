@@ -8,6 +8,7 @@ use App\Product;
 use App\Promo;
 
 use App\Http\Controllers\AppController;
+use App\Restaurant;
 use Illuminate\Http\Request;
 
 class CommentsController extends AppController
@@ -51,40 +52,22 @@ class CommentsController extends AppController
 
 			$content = [];
 			foreach($comments as $comment){
+				$post = Restaurant::select('id','title')->find($comment->post_id);
 				//Get the user that left the comment
-				$user = $comment->user()->select('name','email')->first();
+				$user = $comment->user()->select('id','name','email')->first();
 				//Comment belongs to article type
-				switch($comment->type){
-					case 'news':
-						$type = 'News';
-						$post = News::select('id','title','created_at')->find($comment->post_id);
-					break;
-					case 'promo':
-						$type = 'Promotions';
-						$post = Promo::select('id','title','created_at')->find($comment->post_id);
-					break;
-					case 'products':
-						$type = 'Products';
-						$post = Product::select('id','title','created_at')->find($comment->post_id);
-					break;
-					default:
-						$type = 'Unknown';
-						$post = null;
-				}
 				$content[] = [
 					'id'		=> $comment->id,
 					'user'		=> [
+							'id'	=> $user->id,
 							'name'	=> $user->name,
 							'email'	=> $user->email
 					],
 					'post'		=> (!empty($post))
 							? [
 								'id'		=> $post->id,
-								'type'		=> $comment->type,
-								'title'		=> $post->title,
-								'created'	=> date('d/ M /Y H:i', strtotime($post->created_at))
+								'title'		=> $post->title
 							]: [],
-					'post_type'	=> $type,
 					'text'		=> str_limit($comment->text, 32, '...'),
 					'created'	=> date('d/ M /Y H:i', strtotime($comment->created_at)),
 					'updated'	=> date('d/ M /Y H:i', strtotime($comment->updated_at))

@@ -72,4 +72,6 @@ Route::group(['middleware' => 'admin', 'prefix'=>'/admin', 'as'=>'admin.', 'name
 	Route::resource('/users/roles', 'RolesController');
 	//Users
 	Route::resource('/users', 'UsersController');
+	//Visitors
+	Route::resource('/visitors', 'VisitorsController');
 });

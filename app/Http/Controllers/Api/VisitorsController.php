@@ -363,11 +363,12 @@ class VisitorsController extends ApiController
 
 		$restaurant = Restaurant::find($data['rest_id']);
 		$rating = $restaurant->rating;
+
 		if($mark > 0){
-			$rating->p += 1;
+			$rating['p'] += 1;
 		}
 		if($mark < 0){
-			$rating->n += 1;
+			$rating['n'] += 1;
 		}
 		$restaurant->rating = json_encode($rating);
 		$restaurant->save();
