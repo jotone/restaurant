@@ -287,6 +287,8 @@ class RestaurantController extends ApiController
 
 			//If restaurant has dishes by filter request
 			if(!empty($dishes->all())){
+				$dishes = $dishes->toArray();
+
 				usort($dishes, function($a, $b){
 					return $a->price > $b->price;
 				});

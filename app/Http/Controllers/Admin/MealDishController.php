@@ -395,9 +395,10 @@ class MealDishController extends AppController
 			$data['category'] = '["0"]';
 		}
 
+
 		//Square image
 		if(!empty($request->file())){
-			$img = $this->createImg($request->file('logo_img'));
+			$img = $this->makeSquareImage($this->createImg($request->file('logo_img')));
 			$size = getimagesize(base_path().'/public'.$img);
 
 			$square_img = json_encode([
@@ -409,7 +410,7 @@ class MealDishController extends AppController
 		}else if(isset($data['square_img']) && $this->isJson($data['square_img'])){
 			$data['square_img'] = json_decode($data['square_img']);
 			$img = ($data['square_img']->type == 'upload')
-				? $this->createImgBase64($data['square_img']->src)
+				? $this->makeSquareImage($this->createImgBase64($data['square_img']->src))
 				: $data['square_img']->src;
 
 			$size = (!empty($data['square_img']->src))
@@ -424,6 +425,7 @@ class MealDishController extends AppController
 		}else{
 			$square_img = '';
 		}
+
 
 		//large Image
 		if(!empty($request->file())){

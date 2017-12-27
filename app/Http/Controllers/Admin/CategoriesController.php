@@ -118,6 +118,8 @@ class CategoriesController extends AppController
 			$data['slug'] = trim($data['slug']).'_'.uniqid();
 		}
 
+		/*TODO: make image 300x300*/
+
 		//If image was sent as $_FILE value
 		if((!empty($request->file())) && ($request->file('image')->isValid())){
 			$img_url = json_encode([
@@ -136,6 +138,7 @@ class CategoriesController extends AppController
 		}else{
 			$img_url = '';
 		}
+
 
 		//Create category position
 		$position = 0;
@@ -196,10 +199,11 @@ class CategoriesController extends AppController
 		if(Category::where('id','!=',$id)->where('slug','=',$data['slug'])->count() > 0){
 			$data['slug'] = trim($data['slug']).'_'.uniqid();
 		}
+
 		//If image was sent as $_FILE value
 		if((!empty($request->file())) && ($request->file('image')->isValid())){
 			$img_url = json_encode([
-				'src' => $this->createImg($request->file('image')),
+				'src' => $this->makeSquareImage($this->createImg($request->file('image'))),
 				'alt' => ''
 			]);
 		//if image was sent as base64encoded file content
@@ -207,13 +211,14 @@ class CategoriesController extends AppController
 			$temp = json_decode($data['image']);
 			$img_url = json_encode([
 				'src' => ($temp->type == 'upload')
-					? $this->createImgBase64($temp->src)
+					? $this->makeSquareImage($this->createImgBase64($temp->src))
 					: $temp->src,
 				'alt' => ''
 			]);
 		}else{
 			$img_url = '';
 		}
+
 
 		//Update category data
 		$result = Category::find($id);

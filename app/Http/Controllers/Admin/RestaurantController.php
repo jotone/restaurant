@@ -462,7 +462,7 @@ class RestaurantController extends AppController
 		//Logo image
 		//If image was sent as $_FILE value
 		if(!empty($request->file())){
-			$img = $this->createImg($request->file('logo_img'));
+			$img = $this->makeSquareImage($this->createImg($request->file('logo_img')));
 			$size = getimagesize(base_path().'/public'.$img);
 
 			$logo_img = json_encode([
@@ -475,7 +475,7 @@ class RestaurantController extends AppController
 			$data['logo_img'] = json_decode($data['logo_img']);
 
 			$img = ($data['logo_img']->type == 'upload')
-				? $this->createImgBase64($data['logo_img']->src)
+				? $this->makeSquareImage($this->createImgBase64($data['logo_img']->src))
 				: $data['logo_img']->src;
 
 			$size = (!empty($data['logo_img']->src))
@@ -493,7 +493,7 @@ class RestaurantController extends AppController
 
 		//Square image
 		if(!empty($request->file())){
-			$img = $this->createImg($request->file('logo_img'));
+			$img = $this->makeSquareImage($this->createImg($request->file('logo_img')));
 			$size = getimagesize(base_path().'/public'.$img);
 
 			$square_img = json_encode([
@@ -506,7 +506,7 @@ class RestaurantController extends AppController
 			$data['square_img'] = json_decode($data['square_img']);
 
 			$img = ($data['square_img']->type == 'upload')
-				? $this->createImgBase64($data['square_img']->src)
+				? $this->makeSquareImage($this->createImgBase64($data['square_img']->src))
 				: $data['square_img']->src;
 
 			$size = (!empty($data['square_img']->src))
@@ -521,6 +521,7 @@ class RestaurantController extends AppController
 		}else{
 			$square_img = '';
 		}
+
 
 		//large Image
 		if(!empty($request->file())){

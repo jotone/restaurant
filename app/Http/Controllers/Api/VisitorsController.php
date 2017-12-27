@@ -356,7 +356,7 @@ class VisitorsController extends ApiController
 		]);
 
 		VisitorsRates::create([
-			'visitor_id'		=> $visitor_id,
+			'visitor_id'	=> $visitor_id,
 			'restaurant_id'	=> $data['rest_id'],
 			'rating'		=> $mark
 		]);

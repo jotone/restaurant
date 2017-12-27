@@ -2,9 +2,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\AppController;
+use App\Http\Controllers\Controller;
 use App\PageContent;
 
-use App\Http\Controllers\Controller;
 class PageContentController extends Controller
 {
 	/**
@@ -29,7 +29,7 @@ class PageContentController extends Controller
 			case 'single-image':
 				$value = json_encode([
 					'src' => ($data->move == 'upload')
-						? AppController::createImgBase64Static($data->val)
+						? AppController::makeSquareImageStatic(AppController::createImgBase64Static($data->val))
 						: $data->val,
 					'alt' => ''
 				]);

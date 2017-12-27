@@ -242,42 +242,78 @@ class AppController extends Controller implements CrudInterface
 			}catch(\Exception $e){
 				return dump($e);
 			}
-
-			$img_resolution = getimagesize($destinationPath);
-			$img_resolution = [
-				'original' => [
-					'width' => $img_resolution[0],
-					'height'=> $img_resolution[1]
-				],
-				'modified' => [
-					'width' => $img_resolution[0] * 2,
-					'height'=> $img_resolution[1] * 2
-				]
-			];
-
-			$image = Image::make($destinationPath);
-			$image->resize($img_resolution['modified']['width'], $img_resolution['modified']['height']);
-			$image->save($destinationPath);
 			return $filename;
 		}else{
 			return 'Изображение не определено';
 		}
 	}
 
+	protected static function crop($file, $cutL, $cutT){
+		$img_resolution = getimagesize($file);
+		$image = Image::make($file);
+		$image->crop($img_resolution[0]-$cutL, $img_resolution[1]-$cutT);
+		$image->rotate(180);
+		$image->save($file);
+		return $image;
+	}
+
+
+	/**
+	 * @param string $filename
+	 * @return string $filename
+	 */
+	public static function makeSquareImageStatic($filename){
+		if(!empty($filename)){
+			$file = base_path().'/public'.$filename;
+			$img_resolution = getimagesize($file);
+
+			//If width > height ->Cut left & right part
+			if($img_resolution[0] > $img_resolution[1]){
+				$cut_diff = $img_resolution[0] - $img_resolution[1];
+				$cut = (int)(($cut_diff) / 2);
+				//Cut left part
+				self::crop($file, $cut, 0);
+				//Cut right part
+				self::crop($file, $cut-($cut_diff % 2), 0);
+			//if width < height -> Cut top & bottom part
+			}else if($img_resolution[0] < $img_resolution[1]){
+				$cut_diff = $img_resolution[1] - $img_resolution[0];
+				$cut = (int)(($cut_diff) / 2);
+				//Cut top part
+				self::crop($file, 0, $cut);
+				//Cut bottom part
+				self::crop($file, 0, $cut-($cut_diff % 2));
+			}
+			//Resize image to 300x300
+			$image = Image::make($file);
+			$image->resize(300, 300);
+			$image->save($file);
+
+			return $filename;
+		}
+	}
+
+	public function makeSquareImage($filename){
+		return self::makeSquareImageStatic($filename);
+	}
+
 	public function makeRectangleImage($filename){
 		if(!empty($filename)){
-			$img_resolution = getimagesize(base_path().'/public'.$filename);
+			$file = base_path().'/public'.$filename;
+			$img_resolution = getimagesize($file);
 
-			$n = $img_resolution[0] / $img_resolution[1];
-			if($n <= 3){
-				//Cut
-				$cut_height = $img_resolution[1] - round($img_resolution[0] / 3);
-				$image = Image::make(base_path().'/public'.$filename);
-				$image->rotate(180);
-				$image->crop($img_resolution[0], $cut_height,0, $img_resolution[1]-$cut_height);
-				$image->rotate(180);
-				$image->save(base_path().'/public'.$filename);
-			}
+			//Decrease height
+			$height = (int)round($img_resolution[0] / 2.7);
+			$cut_diff = $img_resolution[1] - $height;
+			$cut = (int)(($cut_diff) / 2);
+			//Cut top part
+			self::crop($file, 0, $cut);
+			//Cut bottom part
+			self::crop($file, 0, $cut-($cut_diff % 2));
+
+			$image = Image::make($file);
+			$image->resize(1458, 540);
+			$image->save($file);
 		}
 		return $filename;
 	}
