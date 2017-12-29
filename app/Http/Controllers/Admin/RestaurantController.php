@@ -146,7 +146,7 @@ class RestaurantController extends AppController
 			$menus = MealMenu::select('id','title')->where('enabled','=',1)->get();
 
 			$content = Restaurant::select(
-				'id','title','logo_img','square_img','large_img','img_url','text','address',
+				'id','title','logo_img','square_img','large_img','img_url','text','address','phone',
 				'work_time','has_delivery','has_wifi','has_parking',
 				'coordinates','etc_data','rating','enabled','category_id'
 			)->find($id);
@@ -191,7 +191,7 @@ class RestaurantController extends AppController
 			$menus = MealMenu::select('id','title')->where('enabled','=',1)->get();
 
 			$content = Restaurant::select(
-				'id','title','logo_img','square_img','large_img','img_url','text','address',
+				'id','title','logo_img','square_img','large_img','img_url','text','address','phone',
 				'work_time','has_delivery','has_wifi','has_parking',
 				'coordinates','etc_data','rating','enabled','category_id'
 			)->find($id);

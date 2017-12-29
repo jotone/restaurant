@@ -880,6 +880,8 @@ fieldset legend{
 	justify-content: space-around;
 	align-items: stretch;
 	flex-wrap: wrap;
+	overflow-y: scroll;
+	height: 75vh;
 }
 .overview-popup .popup-images .image-wrap{
 	width: 150px;

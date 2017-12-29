@@ -251,7 +251,7 @@ class AppController extends Controller implements CrudInterface
 	protected static function crop($file, $cutL, $cutT){
 		$img_resolution = getimagesize($file);
 		$image = Image::make($file);
-		$image->crop($img_resolution[0]-$cutL, $img_resolution[1]-$cutT);
+		$image->crop($img_resolution[0]+$cutL, $img_resolution[1]-$cutT);
 		$image->rotate(180);
 		$image->save($file);
 		return $image;
@@ -307,9 +307,9 @@ class AppController extends Controller implements CrudInterface
 			$cut_diff = $img_resolution[1] - $height;
 			$cut = (int)(($cut_diff) / 2);
 			//Cut top part
-			self::crop($file, 0, $cut);
+			self::crop($file, $cut, 0);
 			//Cut bottom part
-			self::crop($file, 0, $cut-($cut_diff % 2));
+			self::crop($file, $cut-($cut_diff % 2), 0);
 
 			$image = Image::make($file);
 			$image->resize(1458, 540);
