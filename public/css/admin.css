@@ -464,7 +464,11 @@ fieldset legend{
 	align-items: stretch;
 }
 .group-lists ul{box-sizing: border-box; text-align: left;}
-.group-lists>ul{margin: 10px; position: relative;}
+.group-lists>ul{
+	margin: 10px;
+	min-width: 475px;
+	position: relative;
+}
 .group-lists ul strong{font-size: 20px; margin-left: 17px;}
 .group-lists ul li{padding: 2px 0;}
 .group-lists ul li .fa{

@@ -24,7 +24,7 @@ $(document).ready(function(){
 //Save meal menu
 	$('button[name=save]').click(function(e){
 		e.preventDefault();
-		var validation = validate('form[name=mealDish]');
+		var validation = validate('form[name=mealMenu]');
 		if(validation){
 			var title = $('input[name=title]').val();
 			var id = $('input[name=id]').val().trim();

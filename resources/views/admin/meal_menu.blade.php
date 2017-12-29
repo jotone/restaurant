@@ -46,7 +46,6 @@
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=restaurant_id&dir=desc') }}" class="desc fa fa-caret-down"></a>
 					</div>
 				</th>
-				<th>Блюда</th>
 				<th>Статус
 					<div class="direction" id="enabled">
 						<a href="{{ asset($page.'/?page='.$pagination['current_page'].'&sort_by=enabled&dir=asc') }}" class="asc fa fa-caret-up"></a>
@@ -87,11 +86,6 @@
 								<p>Ресторан: <a href="{{ route('admin.restaurant.show', $id) }}">{{ $title }}</a></p>
 							@endforeach
 						@endif
-					</td>
-					<td>
-						@foreach($item['dishes'] as $id => $title)
-							<p><a href="{{ route('admin.dish.show', $id) }}">{{ $title }}</a></p>
-						@endforeach
 					</td>
 					<td>
 						@if($item['enabled'] == 1)
