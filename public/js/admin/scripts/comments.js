@@ -15,7 +15,7 @@ $(document).ready(function(){
 //Save comment
 	$('button[name=save]').click(function(e){
 		e.preventDefault();
-		var validation = validate('form[name=news]');
+		var validation = validate('form[name=comments]');
 		if(validation){
 			var id = $('input[name=id]').val();
 			$.ajax({

@@ -29,7 +29,7 @@ $(document).ready(function(){
 //Save restaurant
 	$('button[name=save]').click(function(e){
 		e.preventDefault();
-		var validation = validate('form[name=mealDish]');
+		var validation = validate('form[name=restaurant]');
 		if(validation){
 			saveImages(function(){
 				var title = $('input[name=title]').val();
