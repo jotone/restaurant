@@ -80,14 +80,14 @@ $(document).ready(function(){
 					files.push(temp[0]);
 				});
 				$.ajax({
-					url:'/admin/settings/gallery/drop_unused',
+					url:'/admin/settings/gallery_drop_unused',
 					type:	'DELETE',
 					headers:{'X-CSRF-TOKEN': $('meta[name=csrf-token]').attr('content')},
 					data:{
 						files: files
 					},
 					error:	function(jqXHR){
-						showError(jqXHR.responseText, 'DELETE::/admin/settings/gallery/drop_unused');
+						showError(jqXHR.responseText, 'DELETE::/admin/settings/gallery_drop_unused');
 					},
 					success:function(data){
 						try{
@@ -98,7 +98,7 @@ $(document).ready(function(){
 								showStatus(false);
 							}
 						}catch(e){
-							showError(e + data, 'DELETE::/admin/settings/gallery/drop_unused');
+							showError(e + data, 'DELETE::/admin/settings/gallery_drop_unused');
 						}
 					}
 				});

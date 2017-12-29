@@ -274,11 +274,11 @@ class VisitorsController extends ApiController
 
 				//Get logo image
 				$content['logo_img'] = json_decode($restaurant->logo_img);
-				$content['logo_img'] = (!empty($restaurant->logo_img->src))? asset($restaurant->logo_img->src): '';
+				$content['logo_img'] = (!empty($content['logo_img']->src))? asset($content['logo_img']->src): '';
 
 				//Get logo image
-				$content['large_img'] = json_decode($restaurant->large_img, true);
-				$content['large_img'] = (!empty($restaurant->large_img->src))? asset($restaurant->large_img->src): '';
+				$content['large_img'] = json_decode($restaurant->large_img);
+				$content['large_img'] = (!empty($content['large_img']->src))? asset($content['large_img']->src): '';
 			}
 
 			if(!empty($restaurant)){

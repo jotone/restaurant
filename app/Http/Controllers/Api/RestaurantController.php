@@ -356,7 +356,7 @@ class RestaurantController extends ApiController
 				],
 				'comment'	=> [
 					'text'		=> $comment->text,
-					'date'		=> $comment->created_at,
+					'date'		=> date('d.m.Y', strtotime($comment->created_at)),
 					'rating'	=> $rating->rating
 				]
 			];

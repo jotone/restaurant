@@ -20,7 +20,7 @@ Route::group(['middleware' => 'admin', 'prefix'=>'/admin', 'as'=>'admin.', 'name
 	Route::get('/settings/gallery', 'GalleryController@index')->name('gallery.index');
 		Route::get('/settings/gallery/all', 'GalleryController@all')->name('gallery.all');
 		Route::post('/settings/gallery/create', 'GalleryController@create')->name('gallery.create');
-		Route::delete('/settings/gallery/drop_unused', 'GalleryController@dropUnused')->name('gallery.dropUnused');
+		Route::delete('/settings/gallery_drop_unused', 'GalleryController@dropUnused')->name('gallery.dropUnused');
 		Route::delete('/settings/gallery/{image}', 'GalleryController@destroy')->name('gallery.destroy');
 
 
