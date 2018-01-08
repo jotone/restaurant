@@ -104,6 +104,7 @@ function showConfirm(message){
 			message: confirmResult
 		});
 		$(this).closest('.confirm-popup').hide();
+		$('.overlay-popup').hide();
 	});
 }
 // /Show confirm popup

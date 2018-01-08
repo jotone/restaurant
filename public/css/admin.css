@@ -965,6 +965,15 @@ fieldset legend{
 	object-fit: contain;
 }
 
+.overlay-popup{
+	position: absolute;
+	width: 100%;
+	left: 0;
+	top:0;
+	height: 100%;
+	display: none;
+	background-color: rgba(0,0,0,0.8);
+}
 
 .confirm-popup{
 	width: 310px;

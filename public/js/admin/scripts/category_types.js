@@ -16,6 +16,7 @@ $(document).ready(function(){
 		e.preventDefault();
 		var validation = validate('form[name=category_type]');
 		if(validation){
+			$('.overlay-popup').show();
 			var positions = [];
 			$('.categories-list-wrap ul li').each(function(){
 				var temp = {

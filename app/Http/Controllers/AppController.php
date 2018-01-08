@@ -345,7 +345,7 @@ class AppController extends Controller implements CrudInterface
 	 */
 	public static function topMenu($current_page, $refer_to = 0){
 		$result = '';
-		$menu = AdminMenu::select('id','title','slug','img')
+		$menu = AdminMenu::select('id','title','slug','img','enabled')
 			->where('refer_to','=',$refer_to)
 			->orderBy('position','asc')
 			->get();
@@ -356,7 +356,13 @@ class AppController extends Controller implements CrudInterface
 				//if current page is equal to menu link -> add class 'active'
 				$link_active = ($current_page == $item->slug)? 'class="active"': '';
 
-				$result .= '<li><a '.$link_active.' href="'.asset($item->slug).'">';
+				$result .= '<li>';
+				if($item->enabled == 1){
+					$result .= '<a '.$link_active.' href="'.asset($item->slug).'">';
+				}else{
+					$result .= '<a '.$link_active.' href="#">';
+				}
+
 				//if menu item has image
 				$result .= (!empty($item->img))
 					? '<span class="menu-img fa '.$item->img.'"><strong>'.$item->title.'</strong></span>'
@@ -461,10 +467,17 @@ class AppController extends Controller implements CrudInterface
 		if($category_type != 0){
 			$items = $items->where('category_type','=',$category_type);
 		}
+
+		$count = $items->where('refer_to','=',$refer_to)
+			->where('enabled','=',1)
+			->count();
+
 		$items = $items->where('refer_to','=',$refer_to)
 			->where('enabled','=',1)
 			->orderBy('position','asc')
+			->limit(5)
 			->get();
+
 		if(!empty($items->all())) {
 			$result = '<ul>';
 			foreach($items as $item){
@@ -473,6 +486,9 @@ class AppController extends Controller implements CrudInterface
 					$result .= $this->categoriesLinks($category_type, $item->id);
 				}
 				$result .= '</li>';
+			}
+			if($count > 5){
+				$result .= '<li>&hellip; и еще '.($count - 5).'</li>';
 			}
 			$result .= '</ul>';
 		}

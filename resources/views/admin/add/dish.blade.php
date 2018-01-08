@@ -121,7 +121,7 @@
 											placeholder="Вес&hellip;"
 											pattern="[0-9\.,]+"
 											value="@if(isset($content)){{ $content->dish_weight }}@endif">
-									<span>Вес, Кг</span>
+									<span>Вес, грамм</span>
 								@else
 									<span>Вес: {{ $content->dish_weight }}, Кг</span>
 								@endif
@@ -136,7 +136,7 @@
 											placeholder="Калории&hellip;"
 											pattern="[0-9\.,]+"
 											value="@if(isset($content)){{ $content->calories }}@endif">
-									<span>Калории, ККал/100 грамм</span>
+									<span>Калории</span>
 								@else
 									<span>Калории: {{ $content->calories }}, ККал/100 грамм</span>
 								@endif

@@ -78,9 +78,11 @@
 				</td>
 				<td>{{ $item['text'] }}</td>
 				<td>
+					@if(isset($item['post']['id']))
 					<a href="{{ route('admin.restaurant.edit', $item['post']['id']) }}">
 						{{ $item['post']['title'] }}
 					</a>
+					@endif
 				</td>
 				<td>{{ $item['created'] }}</td>
 				<td>{{ $item['updated'] }}</td>

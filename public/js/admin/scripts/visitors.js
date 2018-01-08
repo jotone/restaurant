@@ -16,6 +16,7 @@ $(document).ready(function() {
 		e.preventDefault();
 		var validation = validate('form[name=visitors]');
 		if(validation){
+			$('.overlay-popup').show();
 			var name = $('input[name=name]').val().trim();
 			var id = $('input[name=id]').val().trim();
 			var id = (id.length > 0)? '/'+id: '';

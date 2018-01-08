@@ -277,6 +277,7 @@ $(document).ready(function(){
 		e.preventDefault();
 		var validation = validate('form[name=pages]');
 		if(validation){
+			$('.overlay-popup').show();
 			var title = $('input[name=title]').val();
 
 			var data = {

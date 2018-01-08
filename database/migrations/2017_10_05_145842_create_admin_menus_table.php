@@ -20,6 +20,7 @@ class CreateAdminMenusTable extends Migration
 			$table->string('img',63);
 			$table->integer('refer_to')->unsigned();
 			$table->tinyInteger('position')->unsigned();
+			$table->boolean('enabled')->unsigned();
 			$table->timestamps();
 		});
 	}

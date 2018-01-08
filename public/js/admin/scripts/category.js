@@ -15,6 +15,7 @@ $(document).ready(function(){
 		e.preventDefault();
 		var validation = validate('form[name=category]');
 		if(validation){
+			$('.overlay-popup').show();
 			var title = $('input[name=title]').val();
 
 			var image = {

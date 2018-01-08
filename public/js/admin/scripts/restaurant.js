@@ -30,7 +30,9 @@ $(document).ready(function(){
 	$('button[name=save]').click(function(e){
 		e.preventDefault();
 		var validation = validate('form[name=restaurant]');
-		if(validation){
+
+		if((validation) && (typeof _button.attr('disabled') == 'undefined')){
+			$('.overlay-popup').show();
 			saveImages(function(){
 				var title = $('input[name=title]').val();
 				var id = $('input[name=id]').val().trim();

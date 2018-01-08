@@ -36,6 +36,7 @@ $(document).ready(function(){
 		e.preventDefault();
 		var validation = validate('form[name=role]');
 		if(validation){
+			$('.overlay-popup').show();
 			var pages = {};
 			$('.chbox-selector-wrap .chbox-selector-item').each(function(){
 				var pageID = $(this).find('.crud-control').val();

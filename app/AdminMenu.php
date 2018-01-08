@@ -8,6 +8,6 @@ class AdminMenu extends Model
 {
 	protected $table = 'admin_menus';
 	protected $fillable = [
-		'title','slug','img','refer_to','position'
+		'title','slug','img','refer_to','position','enabled'
 	];
 }

@@ -152,6 +152,7 @@ $(document).ready(function(){
 		e.preventDefault();
 		var validation = validate('form[name=mealDish]');
 		if(validation){
+			$('.overlay-popup').show();
 			saveImages(function() {
 				if($('input[name=model_3d]').prop('files').length > 0){
 					var formData = new FormData();
