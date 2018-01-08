@@ -53,6 +53,9 @@ Route::group(['middleware'=>'api', 'namespace'=> 'Api'], function(){
 
 
 	//Get page data
+	Route::get(	'/get_page_data/restaurant_recomended',
+		'PageController@getRecommendedList');
 	Route::get(	'/get_page_data/{slug}',
 				'PageController@getPageData');
+
 });
