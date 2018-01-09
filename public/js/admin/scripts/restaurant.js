@@ -31,7 +31,7 @@ $(document).ready(function(){
 		e.preventDefault();
 		var validation = validate('form[name=restaurant]');
 
-		if((validation) && (typeof _button.attr('disabled') == 'undefined')){
+		if(validation){
 			$('.overlay-popup').show();
 			saveImages(function(){
 				var title = $('input[name=title]').val();
