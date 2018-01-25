@@ -39,13 +39,7 @@ class VisitorsController extends ApiController
 		}
 
 		if(isset($data['order'])){
-			if(!is_array($data['order'])){
-				return response(json_encode([
-					'message' => 'Отправлять нечего'
-				]), 400);
-			}
-
-			if(empty($data['order'])){
+			if(!is_array($data['order']) || empty($data['order'])){
 				return response(json_encode([
 					'message' => 'Отправлять нечего'
 				]), 400);
