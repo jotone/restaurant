@@ -39,8 +39,16 @@ class VisitorsController extends ApiController
 		}
 
 		if(isset($data['order'])){
-			if($this->isJson($data['order'])){
-				$data['order'] = json_decode($data['order'], true);
+			if(!is_array($data['order'])){
+				return response(json_encode([
+					'message' => 'Отправлять нечего'
+				]), 400);
+			}
+
+			if(empty($data['order'])){
+				return response(json_encode([
+					'message' => 'Отправлять нечего'
+				]), 400);
 			}
 
 			foreach($data['order'] as $restaurant_id => $order_list){
@@ -80,7 +88,7 @@ class VisitorsController extends ApiController
 			]), 201);
 		}else{
 			return response(json_encode([
-				'message' => 'Отплавлять нечего'
+				'message' => 'Отправлять нечего'
 			]), 400);
 		}
 	}
