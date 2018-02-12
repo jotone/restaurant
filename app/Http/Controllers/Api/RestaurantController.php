@@ -94,7 +94,10 @@ class RestaurantController extends ApiController
 				'title'			=> $restaurant->title,
 				'large_img'		=> $large_img,
 				'address'		=> $restaurant->address,
-				'coordinates'	=> $restaurant->coordinates,
+				'coordinates'	=> [
+					'latitude'		=> (float)$restaurant->coordinates['x'],
+					'longitude'		=> (float)$restaurant->coordinates['y']
+				],
 				'rating'		=> $restaurant->rating,
 				'rating_points'	=> $restaurant->rating['p'] - $restaurant->rating['n'],
 				'dishes_count'	=> $dishes['dish_count'],
@@ -204,7 +207,10 @@ class RestaurantController extends ApiController
 				'text'			=> $restaurant->text,
 				'address'		=> $restaurant->address,
 				'work_time'		=> json_decode($restaurant->work_time),
-				'coordinates'	=> $restaurant->coordinates,
+				'coordinates'	=> [
+					'latitude'		=> (float)$restaurant->coordinates['x'],
+					'longitude'		=> (float)$restaurant->coordinates['y']
+				],
 				'rating'		=> $restaurant->rating,
 				'vote_users'	=> $visitors,
 				'has_delivery'	=> $restaurant->has_delivery,
@@ -290,64 +296,70 @@ class RestaurantController extends ApiController
 			$large_img = json_decode($restaurant->large_img, true);
 			$large_img = (!empty($large_img['src']))? asset($large_img['src']): '';
 
-			$inner_dishes = (isset($dish_list[$restaurant->id]))
+			/*$inner_dishes = (isset($dish_list[$restaurant->id]))
 				? $dish_list[$restaurant->id]
 				: [];
 			$dishes_count = count($inner_dishes);
 
-			if(empty($inner_dishes)){
+			if(empty($inner_dishes)){*/
 				//Get restaurant menus
-				$menus = \DB::table('meal_menus')
-					->select('dishes')
-					->where('restaurant_id','=',$restaurant->id)
-					->where('enabled','=',1)
-					->get();
+			$menus = \DB::table('meal_menus')
+				->select('dishes')
+				->where('restaurant_id','=',$restaurant->id)
+				->where('enabled','=',1)
+				->get();
 
-				//Search for dishes IDs in menu
-				$dishes_list = [];
-				foreach($menus as $menu){
-					$dishes = json_decode($menu->dishes);
-					$dishes_list = array_merge($dishes_list, $dishes);
-				}
-				$dishes_list = array_values(array_unique($dishes_list));
-				//Get dishes total count for current restaurant
-				$dishes_count = count($dishes_list);
-
-				//Get dishes data
-				$inner_dishes = \DB::table('meal_dishes')
-					->select('id','title','price')
-					->where('enabled','=',1)
-					->whereIn('id',$dishes_list);
-
-				//Check for dish belongs to kitchen
-				if(isset($request->kitchen_id) && ($request->kitchen_id > 0)){
-					$inner_dishes = $inner_dishes->where('category_id','LIKE','%"'.$request->kitchen_id.'"%');
-				}
-
-				//Check for price limit
-				if(isset($request->price) && ($request->price > 0)){
-					$inner_dishes = $inner_dishes->where('price','<',$request->price);
-				}
-
-				//Get dishes limited quantity
-				if(isset($request->quant) && ($request->quant > 0)){
-					$inner_dishes = $inner_dishes->limit($request->quant);
-				}
-				$inner_dishes = $inner_dishes->get();
-
-				$inner_dishes = $inner_dishes->toArray();
+			//Search for dishes IDs in menu
+			$dishes_list = [];
+			foreach($menus as $menu){
+				$dishes = json_decode($menu->dishes);
+				$dishes_list = array_merge($dishes_list, $dishes);
 			}
+			$dishes_list = array_values(array_unique($dishes_list));
+			//Get dishes total count for current restaurant
+			$dishes_count = count($dishes_list);
+
+			//Get dishes data
+			$inner_dishes = \DB::table('meal_dishes')
+				->select('id','title','price')
+				->where('enabled','=',1)
+				->whereIn('id',$dishes_list);
+
+			//Check for dish belongs to kitchen
+			if(isset($request->kitchen_id) && ($request->kitchen_id > 0)){
+				$inner_dishes = $inner_dishes->where('category_id','LIKE','%"'.$request->kitchen_id.'"%');
+			}
+
+			//Check for price limit
+			if(isset($request->price) && ($request->price > 0)){
+				$inner_dishes = $inner_dishes->where('price','<',$request->price);
+			}
+
+			//Get dishes limited quantity
+			if(isset($request->quant) && ($request->quant > 0)){
+				$inner_dishes = $inner_dishes->limit($request->quant);
+			}
+			$inner_dishes = $inner_dishes->get();
+
+			$inner_dishes = $inner_dishes->toArray();
+			/*}else{
+
+			}*/
 
 			usort($inner_dishes, function($a, $b){
 				return $a->price > $b->price;
 			});
 
+			$coords = json_decode($restaurant->coordinates, true);
 			$content[] = [
 				'id'			=> $restaurant->id,
 				'title'			=> $restaurant->title,
 				'large_img'		=> $large_img,
 				'address'		=> $restaurant->address,
-				'coordinates'	=> json_decode($restaurant->coordinates),
+				'coordinates'	=> [
+					'latitude'		=> (float)$coords['x'],
+					'longitude'		=> (float)$coords['y']
+				],
 				'rating'		=> json_decode($restaurant->rating, true),
 				'dishes_count'	=> $dishes_count,
 				'dishes'		=> $inner_dishes

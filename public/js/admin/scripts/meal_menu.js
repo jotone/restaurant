@@ -100,9 +100,9 @@ $(document).ready(function(){
 //Drop meal menu
 	$('.items-list a.drop').click(function(e){
 		e.preventDefault();
-		var _this = $(this);
+		var _this = $(this);$(document).on('customEvent', function(e){
 		showConfirm('Вы действительно хотите удалить меню "'+$(this).attr('data-title')+'"?');
-		$(document).on('customEvent', function(e){
+
 			if(e.message === true){
 				var id = _this.attr('data-id');
 				$.ajax({
