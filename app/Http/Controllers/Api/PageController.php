@@ -119,12 +119,16 @@ class PageController extends ApiController
 				$large_img = json_decode($restaurant->large_img, true);
 				$large_img = (!empty($large_img['src']))? asset($large_img['src']): '';
 
+				$coordinates = json_decode($restaurant->coordinates, true);
 				$content[] = [
 					'id'			=> $restaurant->id,
 					'title'			=> $restaurant->title,
 					'large_img'		=> $large_img,
 					'address'		=> $restaurant->address,
-					'coordinates'	=> json_decode($restaurant->coordinates),
+					'coordinates'	=> [
+						'latitude'		=> (float)$coordinates['x'],
+						'longitude'		=> (float)$coordinates['y']
+					],
 					'rating'		=> json_decode($restaurant->rating, true),
 					'dishes_count'	=> $dishes_count,
 					'dishes'		=> $dishes

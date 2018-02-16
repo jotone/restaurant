@@ -392,7 +392,7 @@ class RestaurantController extends ApiController
 	 */
 	public function getRestaurantReviews($id){
 		$reviews = [];
-		$comments = Comments::select('user_id','text','created_at')
+		$comments = Comments::select('user_id','text','created_at','type')
 			->where('post_id','=',$id)
 			->orderBy('created_at','desc')
 			->limit(50)
@@ -401,21 +401,16 @@ class RestaurantController extends ApiController
 		foreach($comments as $comment){
 			$user = $comment->user()->select('name','surname','img_url')->first();
 
-			$rating = VisitorsRates::select('rating')
-				->where('visitor_id','=',$comment->user_id)
-				->where('restaurant_id','=',$id)
-				->first();
-
 			$reviews[] = [
-				'user'		=> [
-					'name'		=> $user->name,
-					'surname'	=> $user->surname,
-					'img_url'	=> asset($user->img_url)
+				'user' => [
+					'name' => $user->name,
+					'surname' => $user->surname,
+					'img_url' => asset($user->img_url)
 				],
-				'comment'	=> [
-					'text'		=> $comment->text,
-					'date'		=> date('d.m.Y', strtotime($comment->created_at)),
-					'rating'	=> $rating->rating
+				'comment' => [
+					'text' => $comment->text,
+					'date' => date('d.m.Y', strtotime($comment->created_at)),
+					'rating' => $comment->type
 				]
 			];
 		}
